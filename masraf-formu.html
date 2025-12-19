@@ -163,6 +163,24 @@
                 </div>
             </div>
 
+            <!-- Demo Test Panel - Yeni Özellikler -->
+            <div class="alert alert-info" style="margin-bottom: 20px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #2196F3;">
+                <span class="alert-icon" style="font-size: 24px;">🆕</span>
+                <div style="flex: 1;">
+                    <strong style="color: #1565C0; font-size: 15px;">YENİ ÖZELLİKLER - Demo Test Butonu</strong>
+                    <ul style="margin: 8px 0 12px 0; padding-left: 20px; font-size: 13px; color: #333;">
+                        <li><b>Çoklu fiş girişi:</b> Tek talepte birden fazla belge (Migros örneği: yemek + kırtasiye + temizlik)</li>
+                        <li><b>Satır bazlı gider detayı:</b> Her kalem için tutar ve KDV ayrı gösterilir</li>
+                        <li><b>Masraf harici satır çıkarma:</b> OCR'dan okunan gereksiz satırları çıkarabilirsiniz</li>
+                        <li><b>Çoklu KDV oranı:</b> Aynı fişte %10 ve %20 KDV'li ürünler olabilir</li>
+                    </ul>
+                    <button type="button" onclick="demoKarmaFisYukle()" class="btn-primary" style="background: #2196F3; border-color: #1976D2; padding: 10px 24px; font-size: 14px;">
+                        🧪 Demo: Karma Fiş Yükle (Migros Örneği)
+                    </button>
+                    <span style="font-size: 11px; color: #666; margin-left: 12px;">Tıklayarak satır bazlı gider detaylarını test edin</span>
+                </div>
+            </div>
+
             <div class="form-container">
                 <!-- Section 1: Belge Yükleme -->
                 <div class="form-section">
@@ -1089,6 +1107,61 @@
             showAlert('success', `${ornek.firmaAdi} fişi okundu! ${ornek.satirlar.length} gider satırı eklendi. (Karma KDV: %10 ve %20)`);
         }
 
+        // Demo: Karma Fiş Yükle (Migros Örneği) - Sayfa başındaki test butonu için
+        function demoKarmaFisYukle() {
+            // Önce mevcut satırları temizle
+            giderSatirlari = [];
+            satirIdSayaci = 0;
+
+            // Migros karma fiş örneği (Gıda + Kırtasiye + Temizlik + karışık KDV)
+            const migrosOrnek = {
+                belgeTuru: 'fis',
+                firmaAdi: 'MIGROS TİCARET A.Ş.',
+                vergiNo: '9876543210',
+                belgeNo: 'MIG-2024-' + Math.floor(Math.random() * 100000),
+                belgeTarihi: new Date().toISOString().split('T')[0],
+                satirlar: [
+                    { kalem: 'Gıda', aciklama: 'Kahvaltılık Ürünler (Peynir, Zeytin, Yumurta)', hesapKodu: '770.01', netTutar: 245.00, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'İçecekler (Su, Meyve Suyu)', hesapKodu: '770.01', netTutar: 85.00, kdvOrani: 10 },
+                    { kalem: 'Temizlik', aciklama: 'Temizlik Malzemeleri (Deterjan, Çamaşır Suyu)', hesapKodu: '770.04', netTutar: 180.00, kdvOrani: 20 },
+                    { kalem: 'Kırtasiye', aciklama: 'Ofis Kırtasiye (Kalem, Defter, Dosya)', hesapKodu: '770.04', netTutar: 125.00, kdvOrani: 20 },
+                    { kalem: 'Mutfak', aciklama: 'Mutfak Malzemeleri (Peçete, Bulaşık Süngeri)', hesapKodu: '770.04', netTutar: 65.00, kdvOrani: 20 },
+                    { kalem: 'Gıda', aciklama: 'Atıştırmalık (Bisküvi, Çikolata)', hesapKodu: '770.01', netTutar: 95.00, kdvOrani: 10 }
+                ]
+            };
+
+            // Belge bilgilerini doldur
+            document.getElementById('belgeTuru').value = migrosOrnek.belgeTuru;
+            document.getElementById('firmaAdi').value = migrosOrnek.firmaAdi;
+            document.getElementById('vergiNo').value = migrosOrnek.vergiNo;
+            document.getElementById('belgeNo').value = migrosOrnek.belgeNo;
+            document.getElementById('belgeTarihi').value = migrosOrnek.belgeTarihi;
+
+            // Gider satırlarını ekle
+            migrosOrnek.satirlar.forEach(satir => {
+                satirIdSayaci++;
+                giderSatirlari.push({
+                    id: satirIdSayaci,
+                    ...satir
+                });
+            });
+
+            // Tabloyu render et ve göster
+            renderGiderSatirlari();
+
+            // Belgeler listesi container'ını da göster
+            document.getElementById('belgelerListesiContainer').style.display = 'block';
+            document.getElementById('belgeSayisi').textContent = '1 Belge';
+
+            // Bilgi mesajı göster
+            showAlert('success', '🛒 Migros karma fişi yüklendi! 6 gider satırı: 3 Gıda (%10 KDV), 2 Temizlik/Kırtasiye (%20 KDV), 1 Mutfak (%20 KDV). Masraf harici satırları çıkarabilirsiniz.');
+
+            // Gider satırları section'ına scroll yap
+            setTimeout(() => {
+                document.getElementById('giderSatirlariSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
         // Yeni belge ekle
         function yeniBelgeEkle() {
             // Karma fiş yükle (demo için)
@@ -1222,6 +1295,11 @@
                     { name: 'Havalimanı Transfer', price: '₺185.00' },
                     { name: 'Servis Bedeli', price: '₺35.00' },
                     { name: 'Bahşiş', price: '₺25.00' }
+                ],
+                satirlar: [
+                    { kalem: 'Ulaşım', aciklama: 'Havalimanı Transfer', hesapKodu: '770.02', netTutar: 168.18, kdvOrani: 10 },
+                    { kalem: 'Ulaşım', aciklama: 'Servis Bedeli', hesapKodu: '770.02', netTutar: 31.82, kdvOrani: 10 },
+                    { kalem: 'Ulaşım', aciklama: 'Bahşiş', hesapKodu: '770.02', netTutar: 22.73, kdvOrani: 10 }
                 ]
             },
             {
@@ -1242,6 +1320,11 @@
                     { name: 'Kahvaltı Dahil', price: '₺0.00' },
                     { name: 'Otopark Ücreti', price: '₺200.00' },
                     { name: 'Minibar', price: '₺300.00' }
+                ],
+                satirlar: [
+                    { kalem: 'Konaklama', aciklama: '2 Gece Konaklama', hesapKodu: '770.03', netTutar: 2727.27, kdvOrani: 10 },
+                    { kalem: 'Konaklama', aciklama: 'Otopark Ücreti', hesapKodu: '770.03', netTutar: 181.82, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Minibar', hesapKodu: '770.01', netTutar: 272.73, kdvOrani: 10 }
                 ]
             },
             {
@@ -1262,6 +1345,12 @@
                     { name: 'S3 Storage', price: '₺1,200.00' },
                     { name: 'RDS Database', price: '₺2,000.00' },
                     { name: 'Data Transfer', price: '₺800.00' }
+                ],
+                satirlar: [
+                    { kalem: 'Bilişim', aciklama: 'EC2 Instance', hesapKodu: '740.01', netTutar: 3750.00, kdvOrani: 20 },
+                    { kalem: 'Bilişim', aciklama: 'S3 Storage', hesapKodu: '740.01', netTutar: 1000.00, kdvOrani: 20 },
+                    { kalem: 'Bilişim', aciklama: 'RDS Database', hesapKodu: '740.01', netTutar: 1666.67, kdvOrani: 20 },
+                    { kalem: 'Bilişim', aciklama: 'Data Transfer', hesapKodu: '740.01', netTutar: 666.67, kdvOrani: 20 }
                 ]
             }
         ];
