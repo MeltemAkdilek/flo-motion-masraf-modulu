@@ -71,10 +71,224 @@ body {
     gap: 6px;
     font-size: 14px;
     transition: background 0.3s;
+    position: relative;
 }
 
 .notification-btn:hover {
     background: rgba(255, 255, 255, 0.3);
+}
+
+.notification-badge {
+    background: var(--warning-red);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Notification Dropdown */
+.notification-wrapper {
+    position: relative;
+}
+
+.notification-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 380px;
+    max-height: 500px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none;
+    overflow: hidden;
+}
+
+.notification-dropdown.active {
+    display: block;
+    animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    background: #f8f9fa;
+}
+
+.notification-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.notification-header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.mark-all-read {
+    background: none;
+    border: none;
+    color: var(--primary-orange);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.mark-all-read:hover {
+    background: rgba(230, 126, 80, 0.1);
+}
+
+.notification-list {
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.notification-item:hover {
+    background: #f8f9fa;
+}
+
+.notification-item.unread {
+    background: #FFF8E1;
+}
+
+.notification-item.unread:hover {
+    background: #FFF3CD;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.notification-icon.approval {
+    background: var(--status-pending);
+}
+
+.notification-icon.approved {
+    background: var(--status-approved);
+}
+
+.notification-icon.rejected {
+    background: var(--status-rejected);
+}
+
+.notification-icon.info {
+    background: var(--status-waiting);
+}
+
+.notification-icon.sap {
+    background: linear-gradient(135deg, #107C41, #1DB954);
+    color: white;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.notification-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.notification-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+}
+
+.notification-unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary-orange);
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+.notification-footer {
+    padding: 12px 20px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    background: #f8f9fa;
+}
+
+.notification-footer a {
+    color: var(--primary-orange);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.notification-footer a:hover {
+    text-decoration: underline;
+}
+
+.notification-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.notification-empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+/* Responsive Notification Dropdown */
+@media (max-width: 480px) {
+    .notification-dropdown {
+        width: calc(100vw - 24px);
+        right: -12px;
+    }
 }
 
 /* Layout */

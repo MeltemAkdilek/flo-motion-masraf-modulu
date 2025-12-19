@@ -244,9 +244,28 @@
     <!-- Header -->
     <header class="header">
         <div class="logo">FLO<span style="font-weight: 300;">Connect</span></div>
-        <button class="notification-btn">
-            🔔 3 Yeni Bildirim
-        </button>
+        <div class="header-actions">
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Bildirimler</h3>
+                        <div class="notification-header-actions">
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tümünü okundu işaretle</button>
+                        </div>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="bildirimler.html">Tüm bildirimleri görüntüle</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </header>
 
     <!-- Main Container -->

@@ -1026,10 +1026,197 @@ function openCamera() {
 }
 
 // ========================================
+// BİLDİRİM SİSTEMİ
+// ========================================
+
+// Örnek bildirimler
+const sampleNotifications = [
+    {
+        id: 1,
+        type: 'approval',
+        title: 'Yeni onay talebi',
+        desc: 'Ayşe Kaya ₺1,250.00 tutarında masraf talebi gönderdi',
+        time: '5 dakika önce',
+        unread: true,
+        link: 'masraf-detay.html?id=0048&role=manager'
+    },
+    {
+        id: 2,
+        type: 'approved',
+        title: 'Masrafınız onaylandı',
+        desc: 'MSR-2024-0045 numaralı masraf talebiniz onaylandı',
+        time: '1 saat önce',
+        unread: true,
+        link: 'masraf-detay.html?id=0045'
+    },
+    {
+        id: 3,
+        type: 'rejected',
+        title: 'Masrafınız reddedildi',
+        desc: 'MSR-2024-0039 numaralı talep eksik belge nedeniyle reddedildi',
+        time: '2 saat önce',
+        unread: true,
+        link: 'masraf-detay.html?id=0039'
+    },
+    {
+        id: 4,
+        type: 'sap',
+        title: 'SAP aktarımı tamamlandı',
+        desc: '8 adet masraf başarıyla SAP sistemine aktarıldı',
+        time: '3 saat önce',
+        unread: false,
+        link: 'muhasebe-sap-aktarim.html'
+    },
+    {
+        id: 5,
+        type: 'info',
+        title: 'Hatırlatma',
+        desc: 'Bu ay 3 adet masraf talebiniz onay bekliyor',
+        time: 'Dün',
+        unread: false,
+        link: 'masraf-listesi.html'
+    },
+    {
+        id: 6,
+        type: 'approval',
+        title: 'Limit üstü talep',
+        desc: 'Murat Koç ₺12,500.00 tutarında yüksek limitli talep gönderdi',
+        time: 'Dün',
+        unread: false,
+        link: 'masraf-detay.html?id=0042&role=manager'
+    }
+];
+
+// Bildirim dropdown'ı aç/kapat
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    if (dropdown) {
+        dropdown.classList.toggle('active');
+
+        // Dropdown dışına tıklanınca kapat
+        if (dropdown.classList.contains('active')) {
+            setTimeout(() => {
+                document.addEventListener('click', closeNotificationsOnClickOutside);
+            }, 100);
+        } else {
+            document.removeEventListener('click', closeNotificationsOnClickOutside);
+        }
+    }
+}
+
+// Dışarıya tıklanınca kapat
+function closeNotificationsOnClickOutside(e) {
+    const dropdown = document.getElementById('notificationDropdown');
+    const wrapper = document.querySelector('.notification-wrapper');
+
+    if (dropdown && wrapper && !wrapper.contains(e.target)) {
+        dropdown.classList.remove('active');
+        document.removeEventListener('click', closeNotificationsOnClickOutside);
+    }
+}
+
+// Tüm bildirimleri okundu işaretle
+function markAllNotificationsRead() {
+    const unreadItems = document.querySelectorAll('.notification-item.unread');
+    unreadItems.forEach(item => {
+        item.classList.remove('unread');
+        const dot = item.querySelector('.notification-unread-dot');
+        if (dot) dot.remove();
+    });
+
+    // Badge'i güncelle
+    updateNotificationBadge(0);
+
+    showAlert('success', 'Tüm bildirimler okundu olarak işaretlendi.');
+}
+
+// Tek bir bildirimi okundu işaretle
+function markNotificationRead(notificationId, link) {
+    const item = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+    if (item && item.classList.contains('unread')) {
+        item.classList.remove('unread');
+        const dot = item.querySelector('.notification-unread-dot');
+        if (dot) dot.remove();
+
+        // Badge'i güncelle
+        const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+        updateNotificationBadge(unreadCount);
+    }
+
+    // Linke git
+    if (link) {
+        window.location.href = link;
+    }
+}
+
+// Bildirim badge'ini güncelle
+function updateNotificationBadge(count) {
+    const badge = document.querySelector('.notification-badge');
+    if (badge) {
+        if (count > 0) {
+            badge.textContent = count;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+}
+
+// Bildirim listesini render et
+function renderNotifications(notifications) {
+    const list = document.getElementById('notificationList');
+    if (!list) return;
+
+    if (notifications.length === 0) {
+        list.innerHTML = `
+            <div class="notification-empty">
+                <div class="notification-empty-icon">📭</div>
+                <p>Henüz bildiriminiz yok</p>
+            </div>
+        `;
+        return;
+    }
+
+    const iconMap = {
+        'approval': '⏳',
+        'approved': '✅',
+        'rejected': '❌',
+        'sap': '📤',
+        'info': 'ℹ️'
+    };
+
+    list.innerHTML = notifications.map(n => `
+        <div class="notification-item ${n.unread ? 'unread' : ''}" data-id="${n.id}" onclick="markNotificationRead(${n.id}, '${n.link}')">
+            <div class="notification-icon ${n.type}">${iconMap[n.type] || '🔔'}</div>
+            <div class="notification-content">
+                <div class="notification-title">${n.title}</div>
+                <div class="notification-desc">${n.desc}</div>
+                <div class="notification-time">${n.time}</div>
+            </div>
+            ${n.unread ? '<div class="notification-unread-dot"></div>' : ''}
+        </div>
+    `).join('');
+}
+
+// Bildirim sistemini başlat
+function initNotifications() {
+    const list = document.getElementById('notificationList');
+    if (list) {
+        renderNotifications(sampleNotifications);
+
+        // Okunmamış bildirim sayısını hesapla
+        const unreadCount = sampleNotifications.filter(n => n.unread).length;
+        updateNotificationBadge(unreadCount);
+    }
+}
+
+// ========================================
 // INITIALIZATION
 // ========================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Bildirim sistemini başlat
+    initNotifications();
     initFileUpload();
     initTabs();
     initSearch();

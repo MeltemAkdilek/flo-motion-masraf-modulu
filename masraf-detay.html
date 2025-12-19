@@ -187,15 +187,62 @@
             .detail-amount {
                 text-align: left;
             }
+            .manager-action-buttons .action-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .manager-action-buttons .action-btns {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
         }
 
-        /* Yönetici Onay Butonları */
+        /* Yönetici Onay Butonları - Temiz tasarım */
         .manager-action-buttons {
-            margin-top: 24px;
-            padding: 24px;
             background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 4px 20px rgba(230, 126, 80, 0.15);
+            border-left: 5px solid var(--primary-orange);
+        }
+        .manager-action-buttons .action-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .manager-action-buttons .action-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy));
             border-radius: 12px;
-            border: 2px solid var(--primary-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .manager-action-buttons .action-text h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        .manager-action-buttons .action-text p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .manager-action-buttons .action-btns {
+            display: flex;
+            gap: 12px;
+        }
+        .manager-action-buttons .btn-approve,
+        .manager-action-buttons .btn-reject {
+            padding: 14px 32px;
+            font-size: 15px;
+            min-width: 130px;
+            font-weight: 600;
         }
         .btn-approve {
             padding: 14px 32px;
@@ -283,6 +330,18 @@
             padding: 16px 24px;
             border-top: 1px solid var(--border-color);
         }
+
+        /* User Badge - Standardized */
+        .user-badge {
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 8px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -291,7 +350,26 @@
         <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         <div class="logo">FLO<span style="font-weight: 300;">Connect</span></div>
         <div class="header-actions">
-            <button class="notification-btn">🔔 Bildirimler</button>
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Bildirimler</h3>
+                        <div class="notification-header-actions">
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tümünü okundu işaretle</button>
+                        </div>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="bildirimler.html">Tüm bildirimleri görüntüle</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -300,8 +378,8 @@
 
     <!-- Main Container -->
     <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
+        <!-- Sidebar - Employee View -->
+        <aside class="sidebar" id="sidebarEmployee">
             <button class="sidebar-close" onclick="closeMobileMenu()">✕</button>
             <div class="user-profile">
                 <div class="user-avatar">BT</div>
@@ -336,18 +414,78 @@
             </button>
         </aside>
 
+        <!-- Sidebar - Manager View -->
+        <aside class="sidebar" id="sidebarManager" style="display: none;">
+            <button class="sidebar-close" onclick="closeMobileMenu()">✕</button>
+            <div class="user-profile">
+                <div class="user-avatar">MY</div>
+                <div class="user-name">Mehmet Yılmaz</div>
+                <div class="user-title">Dijital Ürünler Direktörü</div>
+                <div class="user-badge">4. Derece Onay Yetkisi</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="yonetici-anasayfa.html" class="nav-link">
+                        <span class="nav-icon">🏠</span>
+                        Anasayfa
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="onay-listesi.html" class="nav-link active">
+                        <span class="nav-icon">⏳</span>
+                        Onay Bekleyenler
+                        <span style="background: var(--warning-red); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">7</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="masraf-listesi.html?view=all" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        Masraflarım
+                        <span style="background: var(--primary-orange); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">5</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="masraf-listesi.html?view=team" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        Ekip Masrafları
+                        <span style="background: var(--text-secondary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">23</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="masraf-formu.html?role=manager" class="nav-link">
+                        <span class="nav-icon">🧾</span>
+                        Masraf Girişi
+                    </a>
+                </li>
+            </ul>
+
+            <button class="logout-btn" onclick="window.location.href='index.html'">
+                🚪 Çıkış Yap
+            </button>
+        </aside>
+
         <!-- Main Content -->
         <main class="main-content">
             <!-- Alert Container -->
             <div id="alertContainer"></div>
 
-            <!-- Breadcrumb -->
-            <div class="breadcrumb">
+            <!-- Breadcrumb - Employee View -->
+            <div class="breadcrumb" id="breadcrumbEmployee">
                 <a href="calisan-anasayfa.html">Anasayfa</a>
                 <span>›</span>
                 <a href="masraf-listesi.html">Masraf Taleplerim</a>
                 <span>›</span>
-                <span id="breadcrumbId">MSR-2024-0047</span>
+                <span id="breadcrumbIdEmployee">MSR-2024-0047</span>
+            </div>
+
+            <!-- Breadcrumb - Manager View -->
+            <div class="breadcrumb" id="breadcrumbManager" style="display: none;">
+                <a href="yonetici-anasayfa.html">Anasayfa</a>
+                <span>›</span>
+                <a href="onay-listesi.html">Onay Bekleyenler</a>
+                <span>›</span>
+                <span id="breadcrumbIdManager">MSR-2024-0047</span>
             </div>
 
             <div class="detail-container">
@@ -365,6 +503,25 @@
                     <div class="detail-amount">
                         <div class="label">Toplam Tutar</div>
                         <div class="amount" id="detailAmount">₺350.00</div>
+                    </div>
+                </div>
+
+                <!-- Yönetici Onay Paneli -->
+                <div class="manager-action-buttons" id="managerActions" style="display: none;">
+                    <div class="action-header">
+                        <div class="action-icon">👔</div>
+                        <div class="action-text">
+                            <h4>Yönetici Onay Paneli</h4>
+                            <p>Bu masraf talebini inceleyip onaylayabilir veya reddedebilirsiniz.</p>
+                        </div>
+                    </div>
+                    <div class="action-btns">
+                        <button class="btn-approve" onclick="approveFromDetail()">
+                            ✓ Onayla
+                        </button>
+                        <button class="btn-reject" onclick="showRejectModal()">
+                            ✕ Reddet
+                        </button>
                     </div>
                 </div>
 
@@ -561,21 +718,6 @@
                     </button>
                 </div>
 
-                <!-- Yönetici Onay Butonları (Sadece onay bekliyor statüsünde ve yönetici görünümünde gösterilir) -->
-                <div class="manager-action-buttons" id="managerActions" style="display: none;">
-                    <div style="background: #FFF3CD; border: 1px solid #FFE69C; border-radius: 12px; padding: 16px; margin-bottom: 16px;">
-                        <strong style="color: #856404;">⚠️ Yönetici Onay Paneli</strong>
-                        <p style="font-size: 13px; color: #856404; margin-top: 8px;">Bu masraf talebini inceleyip onaylayabilir veya reddedebilirsiniz.</p>
-                    </div>
-                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                        <button class="btn-approve" onclick="approveFromDetail()">
-                            ✓ Onayla
-                        </button>
-                        <button class="btn-reject" onclick="showRejectModal()">
-                            ✕ Reddet
-                        </button>
-                    </div>
-                </div>
 
                 <!-- Red Nedeni Modal -->
                 <div class="modal-overlay" id="rejectModal" style="display: none;">
@@ -585,21 +727,11 @@
                             <button class="modal-close" onclick="closeRejectModal()">×</button>
                         </div>
                         <div class="modal-body">
-                            <p style="margin-bottom: 16px;">Lütfen red nedenini belirtiniz:</p>
+                            <p style="margin-bottom: 16px;">Lütfen red nedenini açıklayınız:</p>
                             <div class="form-group">
-                                <label class="form-label">Red Nedeni</label>
-                                <select class="form-select" id="rejectReason">
-                                    <option value="">Seçiniz...</option>
-                                    <option value="belge_eksik">Belge eksik veya okunamıyor</option>
-                                    <option value="tutar_uyumsuz">Tutar uyuşmazlığı</option>
-                                    <option value="kategori_hatali">Yanlış kategori seçimi</option>
-                                    <option value="politika_disi">Şirket politikasına aykırı</option>
-                                    <option value="diger">Diğer</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Açıklama (İsteğe bağlı)</label>
-                                <textarea class="form-textarea" id="rejectNote" rows="3" placeholder="Ek açıklama giriniz..."></textarea>
+                                <label class="form-label">Red Nedeni <span style="color: var(--warning-red);">*</span></label>
+                                <textarea class="form-textarea" id="rejectReason" rows="4" placeholder="Red nedenini detaylı olarak açıklayınız..." required></textarea>
+                                <span class="field-hint" style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: block;">Bu alan zorunludur. Çalışanın düzeltme yapabilmesi için detaylı açıklama giriniz.</span>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -616,6 +748,96 @@
     <script>
         // Örnek masraf verileri
         const masrafData = {
+            '0058': {
+                id: 'MSR-2024-0058',
+                status: 'approved',
+                statusText: 'Onaylandı',
+                date: '11 Aralık 2024',
+                belgeTuru: 'Fiş',
+                belgeNo: 'YKF-2024-847521',
+                belgeTarihi: '11.12.2024',
+                firma: 'KARADENIZ SOFRASI',
+                vergiNo: '1234567890',
+                brutTutar: 585.00,
+                kdvOran: 10,
+                hesapKodu: '770.01 - Yemek Giderleri',
+                aciklama: 'Ekip toplantısı öğle yemeği - 4 kişi',
+                ocrScore: 94,
+                calisan: 'Ayşe Kaya',
+                unvan: 'Kıdemli Uzman'
+            },
+            '0057': {
+                id: 'MSR-2024-0057',
+                status: 'approved',
+                statusText: 'Onaylandı',
+                date: '11 Aralık 2024',
+                belgeTuru: 'Fatura',
+                belgeNo: 'UBR-2024-984521',
+                belgeTarihi: '11.12.2024',
+                firma: 'UBER TURKEY TEKNOLOJİ A.Ş.',
+                vergiNo: '5554443332',
+                brutTutar: 1250.00,
+                kdvOran: 10,
+                hesapKodu: '770.02 - Ulaşım Giderleri',
+                aciklama: 'Havalimanı - Ofis transferi, iş seyahati dönüşü',
+                ocrScore: 92,
+                calisan: 'Mehmet Yılmaz',
+                unvan: 'Direktör'
+            },
+            '0056': {
+                id: 'MSR-2024-0056',
+                status: 'waiting',
+                statusText: 'SAP Bekliyor',
+                date: '10 Aralık 2024',
+                belgeTuru: 'Fatura',
+                belgeNo: 'FTR-2024-158742',
+                belgeTarihi: '10.12.2024',
+                firma: 'MIGROS TİCARET A.Ş.',
+                vergiNo: '9876543210',
+                brutTutar: 3200.00,
+                kdvOran: 20,
+                hesapKodu: '770.04 - Ofis Malzemesi',
+                aciklama: 'Ofis kırtasiye ve temizlik malzemeleri',
+                ocrScore: 97,
+                calisan: 'Can Yılmaz',
+                unvan: 'Uzman'
+            },
+            '0055': {
+                id: 'MSR-2024-0055',
+                status: 'approved',
+                statusText: 'Onaylandı',
+                date: '10 Aralık 2024',
+                belgeTuru: 'Fatura',
+                belgeNo: 'EGT-2024-005847',
+                belgeTarihi: '10.12.2024',
+                firma: 'EĞİTİM AKADEMİSİ A.Ş.',
+                vergiNo: '1112223334',
+                brutTutar: 4500.00,
+                kdvOran: 10,
+                hesapKodu: '770.05 - Eğitim ve Konferans',
+                aciklama: 'Liderlik ve Yönetim Becerileri eğitimi kayıt ücreti',
+                ocrScore: 98,
+                calisan: 'Zeynep Arslan',
+                unvan: 'Müdür'
+            },
+            '0054': {
+                id: 'MSR-2024-0054',
+                status: 'approved',
+                statusText: 'SAP Aktarıldı',
+                date: '09 Aralık 2024',
+                belgeTuru: 'Fatura',
+                belgeNo: 'AWS-2024-INV-45821',
+                belgeTarihi: '09.12.2024',
+                firma: 'AMAZON WEB SERVICES',
+                vergiNo: '7778889990',
+                brutTutar: 8500.00,
+                kdvOran: 20,
+                hesapKodu: '740.01 - Yazılım ve Lisans',
+                aciklama: 'AWS bulut altyapı hizmetleri - Aralık 2024',
+                ocrScore: 99,
+                calisan: 'Berat Tanrıverdi',
+                unvan: 'Kıdemli Uzman'
+            },
             '0049': {
                 id: 'MSR-2024-0049',
                 status: 'approved',
@@ -786,16 +1008,23 @@
         function loadMasrafDetail() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id') || '0047';
+            const role = urlParams.get('role');
             const data = masrafData[id];
 
             if (!data) {
                 alert('Masraf bulunamadı!');
-                window.location.href = 'masraf-listesi.html';
+                // Role'e göre doğru sayfaya yönlendir
+                if (role === 'muhasebe' || document.referrer.includes('muhasebe-')) {
+                    window.location.href = 'muhasebe-raporlar.html';
+                } else {
+                    window.location.href = 'masraf-listesi.html';
+                }
                 return;
             }
 
             // Sayfayı doldur
-            document.getElementById('breadcrumbId').textContent = data.id;
+            document.getElementById('breadcrumbIdEmployee').textContent = data.id;
+            document.getElementById('breadcrumbIdManager').textContent = data.id;
             document.getElementById('detailTitle').textContent = data.id;
             document.getElementById('detailDate').textContent = data.date;
             document.getElementById('detailBelgeTuru').textContent = data.belgeTuru;
@@ -824,22 +1053,53 @@
             alert('PDF indirme özelliği aktif edilecek.');
         }
 
-        // Yönetici görünümü kontrolü ve onay butonlarını göster
+        // Yönetici/Muhasebe görünümü kontrolü ve onay butonlarını göster
         function checkManagerView() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id') || '0047';
             const data = masrafData[id];
             const referrer = document.referrer;
+            const role = urlParams.get('role');
+
+            // Muhasebe görünümü kontrolü
+            const isMuhasebeRole = role === 'muhasebe' || referrer.includes('muhasebe-');
 
             // Yönetici görünümü kontrolü:
             // 1. URL'de role=manager parametresi varsa
             // 2. VEYA onay-listesi.html sayfasından geliyorsa
-            // 3. VE masraf statüsü "pending" (Onay Bekliyor) ise
-            const isManagerRole = urlParams.get('role') === 'manager' || referrer.includes('onay-listesi.html');
+            const isManagerRole = role === 'manager' || referrer.includes('onay-listesi.html');
             const isPending = data && data.status === 'pending';
 
-            if (isManagerRole && isPending) {
-                document.getElementById('managerActions').style.display = 'block';
+            if (isMuhasebeRole) {
+                // Muhasebe için özel breadcrumb güncellemesi
+                const breadcrumbEmployee = document.getElementById('breadcrumbEmployee');
+                if (breadcrumbEmployee) {
+                    breadcrumbEmployee.innerHTML = `
+                        <a href="muhasebe-panel.html">Panel</a>
+                        <span>›</span>
+                        <a href="muhasebe-raporlar.html">Raporlar</a>
+                        <span>›</span>
+                        <span>${data ? data.id : 'MSR-2024-' + id}</span>
+                    `;
+                }
+                // Muhasebe için geri butonu ekle
+                const backBtn = document.querySelector('.btn-secondary[onclick*="history.back"]');
+                if (backBtn) {
+                    backBtn.onclick = () => window.location.href = 'muhasebe-raporlar.html';
+                }
+            } else if (isManagerRole) {
+                // Yönetici sidebar'ını göster, çalışan sidebar'ını gizle
+                document.getElementById('sidebarEmployee').style.display = 'none';
+                document.getElementById('sidebarManager').style.display = 'block';
+
+                // Yönetici breadcrumb'ını göster, çalışan breadcrumb'ını gizle
+                document.getElementById('breadcrumbEmployee').style.display = 'none';
+                document.getElementById('breadcrumbManager').style.display = 'flex';
+
+                // Sadece bekleyen masraflar için onay butonlarını göster
+                if (isPending) {
+                    document.getElementById('managerActions').style.display = 'block';
+                }
             }
         }
 
@@ -869,16 +1129,21 @@
         function closeRejectModal() {
             document.getElementById('rejectModal').style.display = 'none';
             document.getElementById('rejectReason').value = '';
-            document.getElementById('rejectNote').value = '';
         }
 
         // Reddi onayla
         function confirmReject() {
-            const reason = document.getElementById('rejectReason').value;
-            const note = document.getElementById('rejectNote').value;
+            const reason = document.getElementById('rejectReason').value.trim();
 
             if (!reason) {
-                alert('Lütfen red nedenini seçiniz.');
+                alert('Lütfen red nedenini açıklayınız. Bu alan zorunludur.');
+                document.getElementById('rejectReason').focus();
+                return;
+            }
+
+            if (reason.length < 10) {
+                alert('Lütfen daha detaylı bir açıklama giriniz (en az 10 karakter).');
+                document.getElementById('rejectReason').focus();
                 return;
             }
 

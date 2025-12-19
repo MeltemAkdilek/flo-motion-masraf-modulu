@@ -155,6 +155,37 @@
                 </div>
             </div>
 
+            <!-- Tarih Filtresi -->
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;">
+                    <div class="form-group" style="margin: 0;">
+                        <label class="form-label" style="font-size: 12px;">Onaylanma Tarihi (Başlangıç)</label>
+                        <input type="date" class="form-input" id="tarihBaslangic" onchange="filterByDate()" style="width: 160px;">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label class="form-label" style="font-size: 12px;">Onaylanma Tarihi (Bitiş)</label>
+                        <input type="date" class="form-input" id="tarihBitis" onchange="filterByDate()" style="width: 160px;">
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label class="form-label" style="font-size: 12px;">Hızlı Seçim</label>
+                        <select class="form-select" id="hizliTarihSecim" onchange="hizliTarihSec()" style="width: 160px;">
+                            <option value="">Seçiniz...</option>
+                            <option value="bugun">Bugün</option>
+                            <option value="dun">Dün</option>
+                            <option value="son7gun">Son 7 Gün</option>
+                            <option value="son30gun">Son 30 Gün</option>
+                            <option value="buay">Bu Ay</option>
+                        </select>
+                    </div>
+                    <button class="btn-outline" onclick="temizleTarihFiltre()" style="padding: 10px 16px;">
+                        🗑️ Filtreyi Temizle
+                    </button>
+                </div>
+                <div id="tarihFiltreInfo" style="margin-top: 12px; font-size: 12px; color: var(--text-secondary); display: none;">
+                    📅 Seçilen tarih aralığında <strong id="filtreliKayitSayisi">0</strong> kayıt bulundu.
+                </div>
+            </div>
+
             <!-- Aktarım Bekleyen Liste -->
             <div class="sap-card ready">
                 <div class="sap-list-header">
@@ -162,7 +193,7 @@
                         <div class="sap-list-title">
                             <span style="color: #107C41;">📤</span> EBA2SAP Aktarım Listesi
                         </div>
-                        <div class="sap-list-meta">8 masraf - Toplam ₺28,450.00</div>
+                        <div class="sap-list-meta" id="listeMeta">8 masraf - Toplam ₺28,450.00</div>
                     </div>
                     <button class="btn-sap" onclick="createSAPExport()">
                         📥 SAP Dosyası Oluştur
@@ -182,42 +213,78 @@
                                 <th>Onay Tarihi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
+                        <tbody id="sapTableBody">
+                            <tr data-onay-tarihi="2024-12-19" data-tutar="2450">
                                 <td><input type="checkbox" class="row-select" checked></td>
                                 <td><strong>MSR-2024-0055</strong></td>
                                 <td>Ayşe Kaya</td>
                                 <td>770.04</td>
                                 <td><strong>₺2,450.00</strong></td>
                                 <td>FLO Mağazacılık</td>
-                                <td>10 Ara 2024</td>
+                                <td>19 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">14:30</span></td>
                             </tr>
-                            <tr>
+                            <tr data-onay-tarihi="2024-12-19" data-tutar="8900">
                                 <td><input type="checkbox" class="row-select" checked></td>
                                 <td><strong>MSR-2024-0054</strong></td>
                                 <td>Can Yılmaz</td>
                                 <td>760.02</td>
                                 <td><strong>₺8,900.00</strong></td>
                                 <td>FLO Mağazacılık</td>
-                                <td>10 Ara 2024</td>
+                                <td>19 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">10:15</span></td>
                             </tr>
-                            <tr>
+                            <tr data-onay-tarihi="2024-12-18" data-tutar="15600">
                                 <td><input type="checkbox" class="row-select" checked></td>
                                 <td><strong>MSR-2024-0053</strong></td>
                                 <td>Elif Öztürk</td>
                                 <td>770.04</td>
                                 <td><strong>₺15,600.00</strong></td>
                                 <td>FLO Teknoloji</td>
-                                <td>9 Ara 2024</td>
+                                <td>18 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">16:45</span></td>
                             </tr>
-                            <tr>
+                            <tr data-onay-tarihi="2024-12-18" data-tutar="4500">
                                 <td><input type="checkbox" class="row-select" checked></td>
                                 <td><strong>MSR-2024-0051</strong></td>
                                 <td>Zeynep Arslan</td>
                                 <td>770.05</td>
                                 <td><strong>₺4,500.00</strong></td>
                                 <td>Turuncu</td>
-                                <td>9 Ara 2024</td>
+                                <td>18 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">09:30</span></td>
+                            </tr>
+                            <tr data-onay-tarihi="2024-12-17" data-tutar="3200">
+                                <td><input type="checkbox" class="row-select" checked></td>
+                                <td><strong>MSR-2024-0050</strong></td>
+                                <td>Murat Koç</td>
+                                <td>770.02</td>
+                                <td><strong>₺3,200.00</strong></td>
+                                <td>Turuncu</td>
+                                <td>17 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">11:20</span></td>
+                            </tr>
+                            <tr data-onay-tarihi="2024-12-16" data-tutar="1850">
+                                <td><input type="checkbox" class="row-select" checked></td>
+                                <td><strong>MSR-2024-0049</strong></td>
+                                <td>Selin Aydın</td>
+                                <td>770.03</td>
+                                <td><strong>₺1,850.00</strong></td>
+                                <td>FLO Mağazacılık</td>
+                                <td>16 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">15:10</span></td>
+                            </tr>
+                            <tr data-onay-tarihi="2024-12-15" data-tutar="2750">
+                                <td><input type="checkbox" class="row-select" checked></td>
+                                <td><strong>MSR-2024-0048</strong></td>
+                                <td>Ahmet Yıldız</td>
+                                <td>770.06</td>
+                                <td><strong>₺2,750.00</strong></td>
+                                <td>FLO Teknoloji</td>
+                                <td>15 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">13:45</span></td>
+                            </tr>
+                            <tr data-onay-tarihi="2024-12-14" data-tutar="5400">
+                                <td><input type="checkbox" class="row-select" checked></td>
+                                <td><strong>MSR-2024-0047</strong></td>
+                                <td>Deniz Kara</td>
+                                <td>770.07</td>
+                                <td><strong>₺5,400.00</strong></td>
+                                <td>FLO Mağazacılık</td>
+                                <td>14 Ara 2024 <span style="font-size: 10px; color: var(--text-secondary);">10:00</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -288,6 +355,116 @@
                 showAlert('success', `EBA2SAP dosyası başarıyla oluşturuldu! ${checked.length} masraf SAP'ye aktarım için hazır.`);
             }
         }
+
+        // =====================
+        // TARİH FİLTRELEME FONKSİYONLARI
+        // =====================
+
+        function filterByDate() {
+            const baslangic = document.getElementById('tarihBaslangic').value;
+            const bitis = document.getElementById('tarihBitis').value;
+            const rows = document.querySelectorAll('#sapTableBody tr');
+            const tarihFiltreInfo = document.getElementById('tarihFiltreInfo');
+            const filtreliKayitSayisi = document.getElementById('filtreliKayitSayisi');
+
+            let gorunenSayisi = 0;
+            let toplamTutar = 0;
+
+            rows.forEach(row => {
+                const rowTarihi = row.getAttribute('data-onay-tarihi');
+                const rowTutar = parseFloat(row.getAttribute('data-tutar')) || 0;
+
+                let goster = true;
+
+                if (baslangic && rowTarihi < baslangic) {
+                    goster = false;
+                }
+                if (bitis && rowTarihi > bitis) {
+                    goster = false;
+                }
+
+                if (goster) {
+                    row.style.display = '';
+                    gorunenSayisi++;
+                    toplamTutar += rowTutar;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filtre bilgisini güncelle
+            if (baslangic || bitis) {
+                tarihFiltreInfo.style.display = 'block';
+                filtreliKayitSayisi.textContent = gorunenSayisi;
+            } else {
+                tarihFiltreInfo.style.display = 'none';
+            }
+
+            // Liste meta bilgisini güncelle
+            document.getElementById('listeMeta').textContent = `${gorunenSayisi} masraf - Toplam ₺${toplamTutar.toLocaleString('tr-TR', {minimumFractionDigits: 2})}`;
+        }
+
+        function hizliTarihSec() {
+            const secim = document.getElementById('hizliTarihSecim').value;
+            const bugun = new Date();
+            let baslangic = '';
+            let bitis = '';
+
+            switch(secim) {
+                case 'bugun':
+                    baslangic = formatDate(bugun);
+                    bitis = formatDate(bugun);
+                    break;
+                case 'dun':
+                    const dun = new Date(bugun);
+                    dun.setDate(dun.getDate() - 1);
+                    baslangic = formatDate(dun);
+                    bitis = formatDate(dun);
+                    break;
+                case 'son7gun':
+                    const yediGunOnce = new Date(bugun);
+                    yediGunOnce.setDate(yediGunOnce.getDate() - 7);
+                    baslangic = formatDate(yediGunOnce);
+                    bitis = formatDate(bugun);
+                    break;
+                case 'son30gun':
+                    const otuzGunOnce = new Date(bugun);
+                    otuzGunOnce.setDate(otuzGunOnce.getDate() - 30);
+                    baslangic = formatDate(otuzGunOnce);
+                    bitis = formatDate(bugun);
+                    break;
+                case 'buay':
+                    const ayBaslangic = new Date(bugun.getFullYear(), bugun.getMonth(), 1);
+                    baslangic = formatDate(ayBaslangic);
+                    bitis = formatDate(bugun);
+                    break;
+            }
+
+            document.getElementById('tarihBaslangic').value = baslangic;
+            document.getElementById('tarihBitis').value = bitis;
+            filterByDate();
+        }
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function temizleTarihFiltre() {
+            document.getElementById('tarihBaslangic').value = '';
+            document.getElementById('tarihBitis').value = '';
+            document.getElementById('hizliTarihSecim').value = '';
+            filterByDate();
+            showAlert('info', 'Tarih filtresi temizlendi.');
+        }
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            // İlk yükleme için toplamı hesapla
+            filterByDate();
+        });
     </script>
 </body>
 </html>

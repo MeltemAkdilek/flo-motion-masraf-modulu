@@ -44,7 +44,26 @@
         <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         <div class="logo">FLO<span style="font-weight: 300;">Connect</span> <span style="font-size: 14px; opacity: 0.8;">Muhasebe</span></div>
         <div class="header-actions">
-            <button class="notification-btn">🔔 12 Onay Bekliyor</button>
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">12</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Bildirimler</h3>
+                        <div class="notification-header-actions">
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tümünü okundu işaretle</button>
+                        </div>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="bildirimler.html">Tüm bildirimleri görüntüle</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -57,10 +76,18 @@
         <aside class="sidebar">
             <button class="sidebar-close" onclick="closeMobileMenu()">✕</button>
             <div class="user-profile">
-                <div class="user-avatar" style="background: linear-gradient(135deg, #107C41, #1DB954);">FA</div>
-                <div class="user-name">Fatma Aktaş</div>
-                <div class="user-title">Muhasebe Uzmanı</div>
-                <div class="user-role">Muhasebe Departmanı</div>
+                <div class="user-avatar" style="background: linear-gradient(135deg, #107C41, #1DB954);" id="userAvatar">FA</div>
+                <div class="user-name" id="userName">Fatma Aktaş</div>
+                <div class="user-title" id="userTitle">Muhasebe Uzmanı</div>
+                <div class="user-role" id="userRole">Muhasebe Departmanı</div>
+                <!-- Rol Değiştirme (Demo) -->
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                    <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">Demo: Rol Değiştir</label>
+                    <select class="form-select" id="rolSecimi" onchange="muhasebeRoluDegistir()" style="font-size: 12px; padding: 8px;">
+                        <option value="uzman">Muhasebe Uzmanı</option>
+                        <option value="yonetici">Perakende Muhasebe Yöneticisi</option>
+                    </select>
+                </div>
             </div>
 
             <ul class="nav-menu">
@@ -99,6 +126,20 @@
                     <a href="muhasebe-hesap-eslestirme.html" class="nav-link">
                         <span class="nav-icon">⚙️</span>
                         Hesap Eşleştirme
+                    </a>
+                </li>
+                <!-- Yönetici Özel Menüleri -->
+                <li class="nav-item yonetici-menu" style="display: none;">
+                    <a href="muhasebe-personel-atama.html" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        Personel-Mağaza Atama
+                    </a>
+                </li>
+                <li class="nav-item yonetici-menu" style="display: none;">
+                    <a href="muhasebe-cari-kontrol.html" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        Cari Kontrol Akışı
+                        <span style="background: var(--warning-yellow); color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">5</span>
                     </a>
                 </li>
             </ul>
@@ -152,6 +193,14 @@
                         <option value="FLO Mağazacılık">FLO Mağazacılık</option>
                         <option value="Turuncu">Turuncu</option>
                         <option value="FLO Teknoloji">FLO Teknoloji</option>
+                    </select>
+                    <!-- Mağaza Filtresi (Uzman için SAP hiyerarşisine göre) -->
+                    <select class="form-select" id="magazaSelect" onchange="applyFilters()" style="width: 180px;">
+                        <option value="">Tüm Mağazalar</option>
+                        <option value="IST-001">IST-001 - İstanbul Kadıköy</option>
+                        <option value="IST-002">IST-002 - İstanbul Beşiktaş</option>
+                        <option value="ANK-001">ANK-001 - Ankara Kızılay</option>
+                        <option value="IZM-001">IZM-001 - İzmir Konak</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 12px;">
@@ -880,7 +929,111 @@
         // Sayfa yüklendiğinde ilk tab'ı uygula
         document.addEventListener('DOMContentLoaded', function() {
             applyFilters();
+            // URL'den rol parametresini kontrol et
+            const urlParams = new URLSearchParams(window.location.search);
+            const rol = urlParams.get('rol');
+            if (rol === 'yonetici') {
+                document.getElementById('rolSecimi').value = 'yonetici';
+                muhasebeRoluDegistir();
+            }
         });
+
+        // =====================
+        // MUHASEBE ROL YÖNETİMİ
+        // =====================
+
+        // Muhasebe uzmanı mağaza atamaları (SAP hiyerarşisine göre)
+        const uzmanMagazaAtamalari = {
+            'Fatma Aktaş': ['IST-001', 'IST-002'],
+            'Ahmet Yılmaz': ['ANK-001', 'ANK-002'],
+            'Zeynep Kaya': ['IZM-001', 'IZM-002']
+        };
+
+        let currentMuhasebeRol = 'uzman';
+
+        function muhasebeRoluDegistir() {
+            const rol = document.getElementById('rolSecimi').value;
+            currentMuhasebeRol = rol;
+
+            const userName = document.getElementById('userName');
+            const userTitle = document.getElementById('userTitle');
+            const userAvatar = document.getElementById('userAvatar');
+            const magazaSelect = document.getElementById('magazaSelect');
+            const yoneticiMenuler = document.querySelectorAll('.yonetici-menu');
+
+            if (rol === 'yonetici') {
+                // Yönetici rolü
+                userName.textContent = 'Mehmet Özkan';
+                userTitle.textContent = 'Perakende Muhasebe Yöneticisi';
+                userAvatar.textContent = 'MÖ';
+                userAvatar.style.background = 'linear-gradient(135deg, #FF6B6B, #FF8E53)';
+
+                // Tüm mağazaları göster
+                magazaSelect.innerHTML = `
+                    <option value="">Tüm Mağazalar (${getAllMagazalar().length})</option>
+                    ${getAllMagazalar().map(m => `<option value="${m.kod}">${m.kod} - ${m.ad}</option>`).join('')}
+                `;
+
+                // Yönetici menülerini göster
+                yoneticiMenuler.forEach(menu => menu.style.display = 'block');
+
+                showAlert('info', '🔑 Perakende Muhasebe Yöneticisi rolüne geçildi. Tüm mağaza masraflarını görüntüleyebilirsiniz.');
+            } else {
+                // Uzman rolü
+                userName.textContent = 'Fatma Aktaş';
+                userTitle.textContent = 'Muhasebe Uzmanı';
+                userAvatar.textContent = 'FA';
+                userAvatar.style.background = 'linear-gradient(135deg, #107C41, #1DB954)';
+
+                // Sadece atanmış mağazaları göster
+                const atananMagazalar = uzmanMagazaAtamalari['Fatma Aktaş'] || [];
+                const tumMagazalar = getAllMagazalar();
+                const filtreliMagazalar = tumMagazalar.filter(m => atananMagazalar.includes(m.kod));
+
+                magazaSelect.innerHTML = `
+                    <option value="">Atanan Mağazalar (${filtreliMagazalar.length})</option>
+                    ${filtreliMagazalar.map(m => `<option value="${m.kod}">${m.kod} - ${m.ad}</option>`).join('')}
+                `;
+
+                // Yönetici menülerini gizle
+                yoneticiMenuler.forEach(menu => menu.style.display = 'none');
+
+                showAlert('info', '👤 Muhasebe Uzmanı rolüne geçildi. Sadece size atanan mağaza masraflarını görüntüleyebilirsiniz.');
+            }
+
+            applyFilters();
+        }
+
+        function getAllMagazalar() {
+            return [
+                { kod: 'IST-001', ad: 'İstanbul Kadıköy' },
+                { kod: 'IST-002', ad: 'İstanbul Beşiktaş' },
+                { kod: 'IST-003', ad: 'İstanbul Şişli' },
+                { kod: 'IST-004', ad: 'İstanbul Ataşehir' },
+                { kod: 'ANK-001', ad: 'Ankara Kızılay' },
+                { kod: 'ANK-002', ad: 'Ankara Çankaya' },
+                { kod: 'IZM-001', ad: 'İzmir Konak' },
+                { kod: 'IZM-002', ad: 'İzmir Bornova' },
+                { kod: 'BRS-001', ad: 'Bursa Nilüfer' },
+                { kod: 'ANT-001', ad: 'Antalya Lara' }
+            ];
+        }
+
+        // =====================
+        // MASRAF YÖNLENDİRME
+        // =====================
+        function yonlendirmeMasraf(masrafId) {
+            const tumUzmanlar = Object.keys(uzmanMagazaAtamalari);
+            const uzmanListesi = tumUzmanlar.map(u => `<option value="${u}">${u}</option>`).join('');
+
+            const secilenUzman = prompt(`MSR-2024-${masrafId} masrafını hangi uzmanı atamak istiyorsunuz?\n\nMevcut Uzmanlar: ${tumUzmanlar.join(', ')}`);
+
+            if (secilenUzman && tumUzmanlar.includes(secilenUzman)) {
+                showAlert('success', `MSR-2024-${masrafId} masrafı ${secilenUzman} uzmanına yönlendirildi.`);
+            } else if (secilenUzman) {
+                showAlert('error', 'Geçersiz uzman adı girdiniz.');
+            }
+        }
     </script>
 
     <style>

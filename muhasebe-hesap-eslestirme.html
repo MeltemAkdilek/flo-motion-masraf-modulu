@@ -107,7 +107,26 @@
         <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         <div class="logo">FLO<span style="font-weight: 300;">Connect</span> <span style="font-size: 14px; opacity: 0.8;">Muhasebe</span></div>
         <div class="header-actions">
-            <button class="notification-btn">🔔 12 Onay Bekliyor</button>
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">12</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Bildirimler</h3>
+                        <div class="notification-header-actions">
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tümünü okundu işaretle</button>
+                        </div>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="bildirimler.html">Tüm bildirimleri görüntüle</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 

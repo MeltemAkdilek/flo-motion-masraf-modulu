@@ -95,7 +95,26 @@
         <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         <div class="logo">FLO<span style="font-weight: 300;">Connect</span> <span style="font-size: 14px; opacity: 0.8;">Muhasebe</span></div>
         <div class="header-actions">
-            <button class="notification-btn">🔔 12 Onay Bekliyor</button>
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">12</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Bildirimler</h3>
+                        <div class="notification-header-actions">
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tümünü okundu işaretle</button>
+                        </div>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="bildirimler.html">Tüm bildirimleri görüntüle</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -238,11 +257,9 @@
                                 <div style="font-size: 11px; color: var(--text-secondary);">ABC Teknoloji A.Ş.</div>
                             </td>
                             <td>
-                                <select class="form-select" style="font-size: 12px; padding: 6px;">
-                                    <option value="770.04" selected>770.04 - Ofis Malz.</option>
-                                    <option value="770.01">770.01 - Yemek</option>
-                                    <option value="770.02">770.02 - Ulaşım</option>
-                                </select>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.04 - Ofis Malz.
+                                </span>
                             </td>
                             <td><strong>₺2,450.00</strong></td>
                             <td><span style="font-size: 12px;">FLO Mağazacılık</span></td>
@@ -272,10 +289,9 @@
                                 <div style="font-size: 11px; color: var(--text-secondary);">XYZ Reklam Ltd.</div>
                             </td>
                             <td>
-                                <select class="form-select" style="font-size: 12px; padding: 6px; border-color: var(--warning-yellow);">
-                                    <option value="760.02" selected>760.02 - Tanıtım</option>
-                                    <option value="760.01">760.01 - Mağaza</option>
-                                </select>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 760.02 - Tanıtım
+                                </span>
                             </td>
                             <td><strong>₺8,900.00</strong></td>
                             <td><span style="font-size: 12px;">FLO Mağazacılık</span></td>
@@ -302,9 +318,9 @@
                                 <div style="font-size: 11px; color: var(--text-secondary);">Bulut Sistem A.Ş.</div>
                             </td>
                             <td>
-                                <select class="form-select" style="font-size: 12px; padding: 6px;">
-                                    <option value="770.04" selected>770.04 - Ofis Malz.</option>
-                                </select>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.04 - Ofis Malz.
+                                </span>
                             </td>
                             <td><strong>₺15,600.00</strong></td>
                             <td><span style="font-size: 12px;">FLO Teknoloji</span></td>
@@ -334,9 +350,9 @@
                                 <div style="font-size: 11px; color: var(--reject-dark);">⚠️ Yeni Tedarikçi Ltd.</div>
                             </td>
                             <td>
-                                <select class="form-select" style="font-size: 12px; padding: 6px;">
-                                    <option value="770.01" selected>770.01 - Yemek</option>
-                                </select>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.01 - Yemek
+                                </span>
                             </td>
                             <td><strong>₺1,250.00</strong></td>
                             <td><span style="font-size: 12px;">FLO Teknoloji</span></td>
@@ -362,9 +378,9 @@
                                 <div style="font-size: 11px; color: var(--text-secondary);">Eğitim Ltd.</div>
                             </td>
                             <td>
-                                <select class="form-select" style="font-size: 12px; padding: 6px;">
-                                    <option value="770.05" selected>770.05 - Eğitim</option>
-                                </select>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.05 - Eğitim
+                                </span>
                             </td>
                             <td><strong>₺4,500.00</strong></td>
                             <td><span style="font-size: 12px;">Turuncu</span></td>
@@ -377,17 +393,197 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr data-company="FLO Mağazacılık">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td><strong>MSR-2024-0050</strong></td>
+                            <td>
+                                <div>
+                                    <div style="font-weight: 500;">Selin Aydın</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">Satış</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 13px;">FTR-2024-12543</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">Kargo Express A.Ş.</div>
+                            </td>
+                            <td>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.03 - Kargo
+                                </span>
+                            </td>
+                            <td><strong>₺1,850.00</strong></td>
+                            <td><span style="font-size: 12px;">FLO Mağazacılık</span></td>
+                            <td><span class="status-badge status-waiting">Kontrol Bekliyor</span></td>
+                            <td>
+                                <div class="action-icons">
+                                    <button class="icon-btn" title="Düzenle" onclick="openEditModal('0050')">✏️</button>
+                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveExpense('0050')">✓</button>
+                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="openRejectModal('0050')">✕</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="background: #FFF8E1;" data-company="Turuncu">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td>
+                                <strong>MSR-2024-0049</strong>
+                                <span class="edit-indicator" title="Düzenleme yapıldı"></span>
+                            </td>
+                            <td>
+                                <div>
+                                    <div style="font-weight: 500;">Murat Koç</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">Finans</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 13px;">FTR-2024-12542</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">Danışmanlık Ltd.</div>
+                            </td>
+                            <td>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 760.01 - Danışmanlık
+                                </span>
+                            </td>
+                            <td><strong>₺3,200.00</strong></td>
+                            <td><span style="font-size: 12px;">Turuncu</span></td>
+                            <td><span class="status-badge status-pending">Düzenlendi</span></td>
+                            <td>
+                                <div class="action-icons">
+                                    <button class="icon-btn" title="Düzenle" onclick="openEditModal('0049')">✏️</button>
+                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveExpense('0049')">✓</button>
+                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="openRejectModal('0049')">✕</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-company="FLO Teknoloji">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td><strong>MSR-2024-0048</strong></td>
+                            <td>
+                                <div>
+                                    <div style="font-weight: 500;">Ahmet Yıldız</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">Yazılım</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 13px;">FTR-2024-12541</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">Lisans Soft A.Ş.</div>
+                            </td>
+                            <td>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.06 - Yazılım
+                                </span>
+                            </td>
+                            <td><strong>₺2,750.00</strong></td>
+                            <td><span style="font-size: 12px;">FLO Teknoloji</span></td>
+                            <td><span class="status-badge status-waiting">Kontrol Bekliyor</span></td>
+                            <td>
+                                <div class="action-icons">
+                                    <button class="icon-btn" title="Düzenle" onclick="openEditModal('0048')">✏️</button>
+                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveExpense('0048')">✓</button>
+                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="openRejectModal('0048')">✕</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-company="FLO Mağazacılık">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td><strong>MSR-2024-0047</strong></td>
+                            <td>
+                                <div>
+                                    <div style="font-weight: 500;">Deniz Kara</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">Lojistik</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 13px;">FTR-2024-12540</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">Taşımacılık A.Ş.</div>
+                            </td>
+                            <td>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.07 - Nakliye
+                                </span>
+                            </td>
+                            <td><strong>₺5,400.00</strong></td>
+                            <td><span style="font-size: 12px;">FLO Mağazacılık</span></td>
+                            <td><span class="status-badge status-waiting">Kontrol Bekliyor</span></td>
+                            <td>
+                                <div class="action-icons">
+                                    <button class="icon-btn" title="Düzenle" onclick="openEditModal('0047')">✏️</button>
+                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveExpense('0047')">✓</button>
+                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="openRejectModal('0047')">✕</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="background: #FFF8E1;" data-company="FLO Teknoloji">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td>
+                                <strong>MSR-2024-0046</strong>
+                                <span class="edit-indicator" title="Düzenleme yapıldı"></span>
+                            </td>
+                            <td>
+                                <div>
+                                    <div style="font-weight: 500;">Fatma Şahin</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">Muhasebe</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 13px;">FTR-2024-12539</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">Ofis Market Ltd.</div>
+                            </td>
+                            <td>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.04 - Ofis Malz.
+                                </span>
+                            </td>
+                            <td><strong>₺980.00</strong></td>
+                            <td><span style="font-size: 12px;">FLO Teknoloji</span></td>
+                            <td><span class="status-badge status-pending">Düzenlendi</span></td>
+                            <td>
+                                <div class="action-icons">
+                                    <button class="icon-btn" title="Düzenle" onclick="openEditModal('0046')">✏️</button>
+                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveExpense('0046')">✓</button>
+                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="openRejectModal('0046')">✕</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr data-company="Turuncu">
+                            <td><input type="checkbox" class="row-select"></td>
+                            <td><strong>MSR-2024-0045</strong></td>
+                            <td>
+                                <div>
+                                    <div style="font-weight: 500;">Kemal Demir</div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);">Satın Alma</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-size: 13px;">FTR-2024-12538</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">Tedarik A.Ş.</div>
+                            </td>
+                            <td>
+                                <span class="hesap-kodu-locked" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 6px; font-size: 12px; color: #2e7d32;">
+                                    🔒 770.08 - Hammadde
+                                </span>
+                            </td>
+                            <td><strong>₺2,370.00</strong></td>
+                            <td><span style="font-size: 12px;">Turuncu</span></td>
+                            <td><span class="status-badge status-waiting">Kontrol Bekliyor</span></td>
+                            <td>
+                                <div class="action-icons">
+                                    <button class="icon-btn" title="Düzenle" onclick="openEditModal('0045')">✏️</button>
+                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveExpense('0045')">✓</button>
+                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="openRejectModal('0045')">✕</button>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- Pagination -->
             <div class="pagination">
-                <button class="page-btn">‹</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">›</button>
+                <button class="page-btn" onclick="changePage('prev')" title="Önceki Sayfa">‹</button>
+                <button class="page-btn active" onclick="changePage(1)">1</button>
+                <button class="page-btn" onclick="changePage(2)">2</button>
+                <button class="page-btn" onclick="changePage(3)">3</button>
+                <button class="page-btn" onclick="changePage('next')" title="Sonraki Sayfa">›</button>
             </div>
         </main>
     </div>
@@ -402,13 +598,12 @@
             <div class="modal-body" style="padding: 24px;">
                 <div class="form-group">
                     <label class="form-label">Hesap Kodu</label>
-                    <select class="form-select" id="editHesapKodu">
-                        <option value="770.01">770.01 - Yemek Giderleri</option>
-                        <option value="770.02">770.02 - Ulaşım Giderleri</option>
-                        <option value="770.03">770.03 - Kargo ve Posta</option>
-                        <option value="770.04">770.04 - Ofis Malzemesi</option>
-                        <option value="770.05">770.05 - Eğitim ve Konferans</option>
-                    </select>
+                    <div style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: 8px; font-size: 14px; color: #2e7d32; width: 100%; box-sizing: border-box;">
+                        🔒 <span id="editHesapKodu">770.04 - Ofis Malzemesi</span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+                        OCR tarafından otomatik belirlendi, değiştirilemez.
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Düzenleme Nedeni <span style="color: var(--warning-red);">*</span></label>
@@ -458,10 +653,22 @@
     <script>
         let currentExpenseId = null;
 
+        // Pagination settings
+        const ITEMS_PER_PAGE = 5;
+        let currentPage = 1;
+        let totalPages = 1;
+        let filteredRows = [];
+
         function filterTable() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
             const companyValue = document.getElementById('companySelect').value;
             const rows = document.querySelectorAll('#tableBody tr');
+
+            // Reset to first page when filters change
+            currentPage = 1;
+
+            // First pass: filter rows and collect matching ones
+            filteredRows = [];
 
             rows.forEach(row => {
                 const rowText = row.textContent.toLowerCase();
@@ -470,8 +677,128 @@
                 const searchMatch = searchValue === '' || rowText.includes(searchValue);
                 const companyMatch = companyValue === '' || rowCompany === companyValue;
 
-                row.style.display = (searchMatch && companyMatch) ? '' : 'none';
+                if (searchMatch && companyMatch) {
+                    filteredRows.push(row);
+                }
             });
+
+            // Calculate total pages
+            totalPages = Math.ceil(filteredRows.length / ITEMS_PER_PAGE);
+            if (totalPages < 1) totalPages = 1;
+
+            // Apply pagination
+            applyPagination(rows);
+        }
+
+        function applyPagination(allRows) {
+            // Calculate start and end indices
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+
+            // Hide all rows first
+            allRows.forEach(row => {
+                row.style.display = 'none';
+            });
+
+            // Show only rows for current page
+            filteredRows.forEach((row, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    row.style.display = '';
+                }
+            });
+
+            // Update pagination UI
+            updatePaginationUI();
+
+            // Show/hide no results message
+            showNoResultsMessage(filteredRows.length === 0);
+        }
+
+        function showNoResultsMessage(show) {
+            let noResultsRow = document.getElementById('noResultsRow');
+            const tableBody = document.getElementById('tableBody');
+
+            if (show) {
+                if (!noResultsRow) {
+                    noResultsRow = document.createElement('tr');
+                    noResultsRow.id = 'noResultsRow';
+                    noResultsRow.innerHTML = '<td colspan="9" style="text-align: center; padding: 40px; color: var(--text-secondary);"><div style="font-size: 32px; margin-bottom: 12px;">📭</div>Seçilen filtrelere uygun kayıt bulunamadı.</td>';
+                    tableBody.appendChild(noResultsRow);
+                }
+                noResultsRow.style.display = '';
+            } else if (noResultsRow) {
+                noResultsRow.style.display = 'none';
+            }
+        }
+
+        function updatePaginationUI() {
+            const paginationContainer = document.querySelector('.pagination');
+            if (!paginationContainer) return;
+
+            // Clear existing pagination
+            paginationContainer.innerHTML = '';
+
+            // Don't show pagination if only one page
+            if (totalPages <= 1) {
+                updatePaginationInfo();
+                return;
+            }
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '‹';
+            prevBtn.title = 'Önceki Sayfa';
+            prevBtn.onclick = () => changePage('prev');
+            if (currentPage === 1) {
+                prevBtn.disabled = true;
+                prevBtn.style.opacity = '0.5';
+                prevBtn.style.cursor = 'not-allowed';
+            }
+            paginationContainer.appendChild(prevBtn);
+
+            // Page number buttons
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '›';
+            nextBtn.title = 'Sonraki Sayfa';
+            nextBtn.onclick = () => changePage('next');
+            if (currentPage === totalPages) {
+                nextBtn.disabled = true;
+                nextBtn.style.opacity = '0.5';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+            paginationContainer.appendChild(nextBtn);
+
+            // Update info text
+            updatePaginationInfo();
+        }
+
+        function updatePaginationInfo() {
+            let infoDiv = document.querySelector('.pagination-info');
+            const paginationContainer = document.querySelector('.pagination');
+
+            if (!infoDiv && paginationContainer) {
+                infoDiv = document.createElement('div');
+                infoDiv.className = 'pagination-info';
+                infoDiv.style.cssText = 'text-align: center; margin-top: 12px; font-size: 13px; color: var(--text-secondary);';
+                paginationContainer.parentNode.insertBefore(infoDiv, paginationContainer.nextSibling);
+            }
+
+            if (infoDiv) {
+                const startItem = filteredRows.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
+                const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredRows.length);
+                infoDiv.textContent = `${filteredRows.length} kayıttan ${startItem}-${endItem} arası gösteriliyor`;
+            }
         }
 
         function toggleAllCheckboxes(source) {
@@ -544,6 +871,34 @@
                 showAlert('success', `${checkboxes.length} masraf başarıyla onaylandı.`);
             }
         }
+
+        // Change page function
+        function changePage(page) {
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--;
+                } else {
+                    return;
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                } else {
+                    return;
+                }
+            } else {
+                currentPage = page;
+            }
+
+            // Re-apply pagination
+            const rows = document.querySelectorAll('#tableBody tr:not(#noResultsRow)');
+            applyPagination(rows);
+        }
+
+        // Initialize pagination on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            filterTable();
+        });
     </script>
 </body>
 </html>

@@ -5,6 +5,264 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onay Bekleyenler - FLOConnect</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .user-badge {
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy));
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-top: 8px;
+            display: inline-block;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+        .request-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+        .request-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .request-card.limit-warning {
+            border-left: 4px solid var(--warning-red);
+            background: #FFF5F5;
+        }
+        .employee-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .employee-avatar-small {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .employee-info {
+            flex: 1;
+        }
+        .employee-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .employee-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .card-user-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 0 4px 0;
+        }
+        .card-user-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .card-details {
+            margin-bottom: 16px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-color);
+            font-size: 14px;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            color: var(--text-secondary);
+        }
+        .detail-value {
+            font-weight: 500;
+        }
+        .card-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+        .btn-approve {
+            flex: 1;
+            background: linear-gradient(135deg, var(--success-dark), var(--success-green));
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+        }
+        .btn-reject-outline {
+            flex: 1;
+            background: white;
+            color: var(--warning-red);
+            border: 2px solid var(--warning-red);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-reject-outline:hover {
+            background: var(--warning-red);
+            color: white;
+        }
+        .btn-detail {
+            background: #f8f9fa;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-detail:hover {
+            background: #e9ecef;
+        }
+        .limit-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #FFF3CD;
+            color: #856404;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .card-link {
+            display: block;
+            text-align: center;
+            color: var(--primary-orange);
+            font-weight: 500;
+            font-size: 14px;
+            text-decoration: none;
+            margin-top: 12px;
+        }
+        .card-link:hover {
+            text-decoration: underline;
+        }
+        /* Modal Stilleri */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-header h3 {
+            font-size: 18px;
+            margin: 0;
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            line-height: 1;
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            background: #f8f9fa;
+            border-radius: 0 0 16px 16px;
+        }
+        .btn-reject {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-reject:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -12,7 +270,26 @@
         <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         <div class="logo">FLO<span style="font-weight: 300;">Connect</span></div>
         <div class="header-actions">
-            <button class="notification-btn">🔔 7 Onay Bekliyor</button>
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">3</span>
+                </button>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Bildirimler</h3>
+                        <div class="notification-header-actions">
+                            <button class="mark-all-read" onclick="markAllNotificationsRead()">Tümünü okundu işaretle</button>
+                        </div>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <!-- JavaScript ile doldurulacak -->
+                    </div>
+                    <div class="notification-footer">
+                        <a href="bildirimler.html">Tüm bildirimleri görüntüle</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -27,8 +304,8 @@
             <div class="user-profile">
                 <div class="user-avatar">MY</div>
                 <div class="user-name">Mehmet Yılmaz</div>
-                <div class="user-title">Direktör</div>
-                <div class="user-role">Dijital Ürünler</div>
+                <div class="user-title">Dijital Ürünler Direktörü</div>
+                <div class="user-badge">4. Derece Onay Yetkisi</div>
             </div>
 
             <ul class="nav-menu">
@@ -48,19 +325,21 @@
                 <li class="nav-item">
                     <a href="masraf-listesi.html?view=all" class="nav-link">
                         <span class="nav-icon">📋</span>
-                        Tüm Masraflar
+                        Masraflarım
+                        <span style="background: var(--primary-orange); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">5</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="masraf-formu.html" class="nav-link">
+                    <a href="masraf-listesi.html?view=team" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        Ekip Masrafları
+                        <span style="background: var(--text-secondary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">23</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="masraf-formu.html?role=manager" class="nav-link">
                         <span class="nav-icon">🧾</span>
                         Masraf Girişi
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <span class="nav-icon">📈</span>
-                        Raporlar
                     </a>
                 </li>
             </ul>
@@ -85,9 +364,6 @@
             <div class="content-header">
                 <h1 class="page-title">Onay Bekleyen Masraflar</h1>
                 <div style="display: flex; gap: 12px;">
-                    <button class="btn-outline" style="padding: 10px 16px;" onclick="bulkApprove()">
-                        ✓ Toplu Onayla
-                    </button>
                     <button class="btn-secondary" style="padding: 10px 16px;">
                         📊 Excel'e Aktar
                     </button>
@@ -114,18 +390,22 @@
             <div class="filter-section">
                 <div class="filter-controls">
                     <div class="form-group" style="min-width: 200px;">
-                        <input type="text" class="form-input" placeholder="🔍 Çalışan adı veya talep no ara...">
+                        <input type="text" class="form-input" id="searchInput" placeholder="🔍 Çalışan adı veya talep no ara..." oninput="filterCards()">
                     </div>
                     <div class="form-group">
-                        <select class="form-select">
+                        <select class="form-select" id="employeeFilter" onchange="filterCards()">
                             <option value="">Tüm Çalışanlar</option>
                             <option value="ayse">Ayşe Kaya</option>
                             <option value="can">Can Yılmaz</option>
                             <option value="elif">Elif Öztürk</option>
+                            <option value="berat">Berat Tanrıverdi</option>
+                            <option value="selin">Selin Aydın</option>
+                            <option value="murat">Murat Koç</option>
+                            <option value="zeynep">Zeynep Demir</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="form-select">
+                        <select class="form-select" id="amountFilter" onchange="filterCards()">
                             <option value="">Tüm Tutarlar</option>
                             <option value="0-1000">0 - 1.000 TL</option>
                             <option value="1000-5000">1.000 - 5.000 TL</option>
@@ -136,207 +416,279 @@
                 </div>
             </div>
 
-            <!-- Table View -->
-            <div class="table-container">
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 40px;">
-                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
-                            </th>
-                            <th>Talep No</th>
-                            <th>Çalışan</th>
-                            <th>Belge Türü</th>
-                            <th>Açıklama</th>
-                            <th>Tutar</th>
-                            <th>Tarih</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><strong>MSR-2024-0048</strong></td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">AK</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Ayşe Kaya</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Kıdemli Uzman</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Fatura</td>
-                            <td>Müşteri toplantısı yemek masrafı</td>
-                            <td><strong>₺1,250.00</strong></td>
-                            <td>10 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0048')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0048')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0048')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><strong>MSR-2024-0047</strong></td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">CY</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Can Yılmaz</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Uzman</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Fiş</td>
-                            <td>İş seyahati - Taksi masrafı</td>
-                            <td><strong>₺350.00</strong></td>
-                            <td>9 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0047')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0047')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0047')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><strong>MSR-2024-0046</strong></td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">EÖ</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Elif Öztürk</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Kıdemli Uzman</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Fatura</td>
-                            <td>Ofis malzemesi alımı</td>
-                            <td><strong>₺2,800.00</strong></td>
-                            <td>8 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0046')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0046')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0046')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr style="background: #FFF5F5;">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td>
-                                <strong>MSR-2024-0044</strong>
-                                <span style="display: block; font-size: 10px; color: var(--warning-red);">⚠️ Limit Üstü</span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">BT</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Berat Tanrıverdi</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Kıdemli Uzman</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Yurtdışı Fatura</td>
-                            <td>Yurtdışı konferans kayıt ücreti</td>
-                            <td><strong style="color: var(--warning-red);">₺8,750.00</strong></td>
-                            <td>4 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0044')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0044')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0044')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><strong>MSR-2024-0043</strong></td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">SA</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Selin Aydın</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Uzman</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Fatura</td>
-                            <td>Yazılım lisans yenileme</td>
-                            <td><strong>₺4,200.00</strong></td>
-                            <td>3 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0043')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0043')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0043')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr style="background: #FFF5F5;">
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td>
-                                <strong>MSR-2024-0042</strong>
-                                <span style="display: block; font-size: 10px; color: var(--warning-red);">⚠️ Limit Üstü</span>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">MK</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Murat Koç</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Müdür</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Fatura</td>
-                            <td>Ekipman alımı - Sunucu donanımı</td>
-                            <td><strong style="color: var(--warning-red);">₺12,500.00</strong></td>
-                            <td>2 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0042')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0042')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0042')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><input type="checkbox" class="row-select"></td>
-                            <td><strong>MSR-2024-0041</strong></td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <div style="width: 32px; height: 32px; border-radius: 6px; background: linear-gradient(135deg, var(--primary-orange), var(--primary-burgundy)); color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">ZD</div>
-                                    <div>
-                                        <div style="font-weight: 500;">Zeynep Demir</div>
-                                        <div style="font-size: 11px; color: var(--text-secondary);">Uzman</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Fiş</td>
-                            <td>Kargo gönderim masrafı</td>
-                            <td><strong>₺150.00</strong></td>
-                            <td>1 Ara 2024</td>
-                            <td>
-                                <div class="action-icons">
-                                    <button class="icon-btn" title="Detay" onclick="showDetail('0041')">👁️</button>
-                                    <button class="icon-btn" style="background: var(--success-green);" title="Onayla" onclick="approveRequest('0041')">✓</button>
-                                    <button class="icon-btn" style="background: var(--reject-red);" title="Reddet" onclick="rejectRequest('0041')">✕</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Card Grid -->
+            <div class="card-grid" id="pendingCardsGrid">
+                <!-- Card 1 - Ayşe Kaya -->
+                <div class="request-card" data-employee="ayse" data-amount="1250">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">AK</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Ayşe Kaya</div>
+                            <div class="employee-title">Kıdemli Uzman</div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0048</h3>
+                            <p>10 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Fatura</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value">₺1,250.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">Müşteri toplantısı yemek masrafı</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0048')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0048')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0048&role=manager">Detayları Görüntüle →</a>
+                </div>
+
+                <!-- Card 2 - Can Yılmaz -->
+                <div class="request-card" data-employee="can" data-amount="350">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">CY</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Can Yılmaz</div>
+                            <div class="employee-title">Uzman</div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0047</h3>
+                            <p>9 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Fiş</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value">₺350.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">İş seyahati - Taksi masrafı</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0047')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0047')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0047&role=manager">Detayları Görüntüle →</a>
+                </div>
+
+                <!-- Card 3 - Elif Öztürk -->
+                <div class="request-card" data-employee="elif" data-amount="2800">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">EÖ</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Elif Öztürk</div>
+                            <div class="employee-title">Kıdemli Uzman</div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0046</h3>
+                            <p>8 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Fatura</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value">₺2,800.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">Ofis malzemesi alımı</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0046')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0046')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0046&role=manager">Detayları Görüntüle →</a>
+                </div>
+
+                <!-- Card 4 - Berat Tanrıverdi - Limit Üstü -->
+                <div class="request-card limit-warning" data-employee="berat" data-amount="8750">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">BT</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Berat Tanrıverdi</div>
+                            <div class="employee-title">Kıdemli Uzman</div>
+                        </div>
+                        <span class="limit-tag">⚠️ Limit Üstü</span>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0044</h3>
+                            <p>4 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Yurtdışı Fatura</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value" style="color: var(--warning-red); font-weight: 700;">₺8,750.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">Yurtdışı konferans kayıt ücreti</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0044')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0044')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0044&role=manager">Detayları Görüntüle →</a>
+                </div>
+
+                <!-- Card 5 - Selin Aydın -->
+                <div class="request-card" data-employee="selin" data-amount="4200">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">SA</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Selin Aydın</div>
+                            <div class="employee-title">Uzman</div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0043</h3>
+                            <p>3 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Fatura</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value">₺4,200.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">Yazılım lisans yenileme</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0043')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0043')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0043&role=manager">Detayları Görüntüle →</a>
+                </div>
+
+                <!-- Card 6 - Murat Koç - Limit Üstü -->
+                <div class="request-card limit-warning" data-employee="murat" data-amount="12500">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">MK</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Murat Koç</div>
+                            <div class="employee-title">Müdür</div>
+                        </div>
+                        <span class="limit-tag">⚠️ Limit Üstü</span>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0042</h3>
+                            <p>2 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Fatura</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value" style="color: var(--warning-red); font-weight: 700;">₺12,500.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">Ekipman alımı - Sunucu donanımı</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0042')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0042')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0042&role=manager">Detayları Görüntüle →</a>
+                </div>
+
+                <!-- Card 7 - Zeynep Demir -->
+                <div class="request-card" data-employee="zeynep" data-amount="150">
+                    <div class="employee-badge">
+                        <div class="employee-avatar-small">ZD</div>
+                        <div class="employee-info">
+                            <div class="employee-name">Zeynep Demir</div>
+                            <div class="employee-title">Uzman</div>
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-user-info">
+                            <h3>MSR-2024-0041</h3>
+                            <p>1 Aralık 2024</p>
+                        </div>
+                        <span class="status-badge status-pending">Onay Bekliyor</span>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Belge Türü:</span>
+                            <span class="detail-value">Fiş</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Tutar:</span>
+                            <span class="detail-value">₺150.00</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Açıklama:</span>
+                            <span class="detail-value">Kargo gönderim masrafı</span>
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-approve" onclick="approveRequest('0041')">✓ Onayla</button>
+                        <button class="btn-reject-outline" onclick="rejectRequest('0041')">✕ Reddet</button>
+                    </div>
+                    <a class="card-link" href="masraf-detay.html?id=0041&role=manager">Detayları Görüntüle →</a>
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResultsMessage" style="display: none; text-align: center; padding: 60px 20px; background: white; border-radius: 12px; margin-top: 20px;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+                <p style="font-size: 16px; color: var(--text-secondary);">Seçilen filtrelere uygun onay bekleyen masraf bulunamadı.</p>
             </div>
 
             <!-- Pagination -->
-            <div class="pagination">
-                <button class="page-btn">‹</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">›</button>
+            <div class="pagination" id="paginationContainer">
+                <!-- JavaScript ile doldurulacak -->
             </div>
 
             <!-- Info Box -->
@@ -347,31 +699,260 @@
                     50.000 TL üzeri masraflar GMY (3. Derece) onayına yönlendirilecektir.
                 </p>
             </div>
+
+            <!-- Red Nedeni Modal -->
+            <div class="modal-overlay" id="rejectModal" style="display: none;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>❌ Masraf Reddi</h3>
+                        <button class="modal-close" onclick="closeRejectModal()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p style="margin-bottom: 16px;">Lütfen red nedenini açıklayınız:</p>
+                        <div class="form-group">
+                            <label class="form-label">Red Nedeni <span style="color: var(--warning-red);">*</span></label>
+                            <textarea class="form-textarea" id="rejectReason" rows="4" placeholder="Red nedenini detaylı olarak açıklayınız..." required></textarea>
+                            <span class="field-hint" style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; display: block;">Bu alan zorunludur. Çalışanın düzeltme yapabilmesi için detaylı açıklama giriniz.</span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="closeRejectModal()">İptal</button>
+                        <button class="btn-reject" onclick="confirmReject()">Reddet</button>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script src="js/main.js"></script>
     <script>
-        function toggleSelectAll() {
-            const selectAll = document.getElementById('selectAll');
-            const checkboxes = document.querySelectorAll('.row-select');
-            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        let currentRejectId = null;
+
+        function approveRequest(id) {
+            if (confirm(`MSR-2024-${id} numaralı masrafı onaylamak istediğinize emin misiniz?`)) {
+                showAlert('success', `MSR-2024-${id} numaralı masraf başarıyla onaylandı.`);
+                // Kartı kaldır veya güncelle
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
         }
 
-        function bulkApprove() {
-            const selected = document.querySelectorAll('.row-select:checked');
-            if (selected.length === 0) {
-                alert('Lütfen onaylanacak masrafları seçiniz.');
+        function rejectRequest(id) {
+            currentRejectId = id;
+            document.getElementById('rejectModal').style.display = 'flex';
+        }
+
+        function closeRejectModal() {
+            document.getElementById('rejectModal').style.display = 'none';
+            document.getElementById('rejectReason').value = '';
+            currentRejectId = null;
+        }
+
+        function confirmReject() {
+            const reason = document.getElementById('rejectReason').value.trim();
+
+            if (!reason) {
+                alert('Lütfen red nedenini açıklayınız. Bu alan zorunludur.');
+                document.getElementById('rejectReason').focus();
                 return;
             }
-            if (confirm(`${selected.length} adet masrafı onaylamak istediğinize emin misiniz?`)) {
-                showAlert('success', `${selected.length} masraf başarıyla onaylandı.`);
+
+            if (reason.length < 10) {
+                alert('Lütfen daha detaylı bir açıklama giriniz (en az 10 karakter).');
+                document.getElementById('rejectReason').focus();
+                return;
+            }
+
+            closeRejectModal();
+            showAlert('error', `MSR-2024-${currentRejectId} numaralı masraf talebi reddedildi.`);
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+
+        // Pagination settings
+        const ITEMS_PER_PAGE = 6;
+        let currentPage = 1;
+        let totalPages = 1;
+        let filteredCards = [];
+
+        function filterCards() {
+            const searchValue = document.getElementById('searchInput').value.toLowerCase();
+            const employeeValue = document.getElementById('employeeFilter').value;
+            const amountValue = document.getElementById('amountFilter').value;
+            const cards = document.querySelectorAll('#pendingCardsGrid .request-card');
+
+            // Reset to first page when filters change
+            currentPage = 1;
+
+            // First pass: filter cards and collect matching ones
+            filteredCards = [];
+
+            cards.forEach(card => {
+                const cardText = card.textContent.toLowerCase();
+                const cardEmployee = card.dataset.employee || '';
+                const cardAmount = parseFloat(card.dataset.amount) || 0;
+
+                // Search filter
+                const searchMatch = searchValue === '' || cardText.includes(searchValue);
+
+                // Employee filter
+                const employeeMatch = employeeValue === '' || cardEmployee === employeeValue;
+
+                // Amount filter
+                let amountMatch = true;
+                if (amountValue) {
+                    switch (amountValue) {
+                        case '0-1000':
+                            amountMatch = cardAmount >= 0 && cardAmount <= 1000;
+                            break;
+                        case '1000-5000':
+                            amountMatch = cardAmount > 1000 && cardAmount <= 5000;
+                            break;
+                        case '5000-10000':
+                            amountMatch = cardAmount > 5000 && cardAmount <= 10000;
+                            break;
+                        case '10000+':
+                            amountMatch = cardAmount > 10000;
+                            break;
+                    }
+                }
+
+                // Add to filtered list if matches
+                if (searchMatch && employeeMatch && amountMatch) {
+                    filteredCards.push(card);
+                }
+            });
+
+            // Calculate total pages
+            totalPages = Math.ceil(filteredCards.length / ITEMS_PER_PAGE);
+            if (totalPages < 1) totalPages = 1;
+
+            // Apply pagination
+            applyPagination(cards);
+        }
+
+        function applyPagination(allCards) {
+            // Calculate start and end indices
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+
+            // Hide all cards first
+            allCards.forEach(card => {
+                card.style.display = 'none';
+            });
+
+            // Show only cards for current page
+            filteredCards.forEach((card, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    card.style.display = 'block';
+                }
+            });
+
+            // Update pagination UI
+            updatePaginationUI();
+
+            // Show/hide no results message
+            document.getElementById('noResultsMessage').style.display = filteredCards.length === 0 ? 'block' : 'none';
+        }
+
+        function updatePaginationUI() {
+            const paginationContainer = document.getElementById('paginationContainer');
+            if (!paginationContainer) return;
+
+            // Clear existing pagination
+            paginationContainer.innerHTML = '';
+
+            // Don't show pagination if only one page
+            if (totalPages <= 1) {
+                updatePaginationInfo();
+                return;
+            }
+
+            // Previous button
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'page-btn';
+            prevBtn.innerHTML = '‹';
+            prevBtn.title = 'Önceki Sayfa';
+            prevBtn.onclick = () => changePage('prev');
+            if (currentPage === 1) {
+                prevBtn.disabled = true;
+                prevBtn.style.opacity = '0.5';
+                prevBtn.style.cursor = 'not-allowed';
+            }
+            paginationContainer.appendChild(prevBtn);
+
+            // Page number buttons
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => changePage(i);
+                paginationContainer.appendChild(pageBtn);
+            }
+
+            // Next button
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'page-btn';
+            nextBtn.innerHTML = '›';
+            nextBtn.title = 'Sonraki Sayfa';
+            nextBtn.onclick = () => changePage('next');
+            if (currentPage === totalPages) {
+                nextBtn.disabled = true;
+                nextBtn.style.opacity = '0.5';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+            paginationContainer.appendChild(nextBtn);
+
+            // Update info text
+            updatePaginationInfo();
+        }
+
+        function updatePaginationInfo() {
+            let infoDiv = document.querySelector('.pagination-info');
+            const paginationContainer = document.getElementById('paginationContainer');
+
+            if (!infoDiv && paginationContainer) {
+                infoDiv = document.createElement('div');
+                infoDiv.className = 'pagination-info';
+                infoDiv.style.cssText = 'text-align: center; margin-top: 12px; font-size: 13px; color: var(--text-secondary);';
+                paginationContainer.parentNode.insertBefore(infoDiv, paginationContainer.nextSibling);
+            }
+
+            if (infoDiv) {
+                const startItem = filteredCards.length === 0 ? 0 : (currentPage - 1) * ITEMS_PER_PAGE + 1;
+                const endItem = Math.min(currentPage * ITEMS_PER_PAGE, filteredCards.length);
+                infoDiv.textContent = `${filteredCards.length} kayıttan ${startItem}-${endItem} arası gösteriliyor`;
             }
         }
 
-        function showDetail(id) {
-            window.location.href = `masraf-detay.html?id=${id}&role=manager`;
+        function changePage(page) {
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--;
+                } else {
+                    return;
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                } else {
+                    return;
+                }
+            } else {
+                currentPage = page;
+            }
+
+            // Re-apply pagination
+            const cards = document.querySelectorAll('#pendingCardsGrid .request-card');
+            applyPagination(cards);
         }
+
+        // Initialize pagination on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            filterCards();
+        });
     </script>
 </body>
 </html>
