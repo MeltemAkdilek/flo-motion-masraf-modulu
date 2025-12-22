@@ -163,212 +163,76 @@
                 </div>
             </div>
 
-            <!-- Demo Test Panel - Yeni Özellikler -->
-            <div class="alert alert-info" style="margin-bottom: 20px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border: 2px solid #2196F3;">
-                <span class="alert-icon" style="font-size: 24px;">🆕</span>
-                <div style="flex: 1;">
-                    <strong style="color: #1565C0; font-size: 15px;">YENİ ÖZELLİKLER - Demo Test Butonu</strong>
-                    <ul style="margin: 8px 0 12px 0; padding-left: 20px; font-size: 13px; color: #333;">
-                        <li><b>Çoklu fiş girişi:</b> Tek talepte birden fazla belge (Migros örneği: yemek + kırtasiye + temizlik)</li>
-                        <li><b>Satır bazlı gider detayı:</b> Her kalem için tutar ve KDV ayrı gösterilir</li>
-                        <li><b>Masraf harici satır çıkarma:</b> OCR'dan okunan gereksiz satırları çıkarabilirsiniz</li>
-                        <li><b>Çoklu KDV oranı:</b> Aynı fişte %10 ve %20 KDV'li ürünler olabilir</li>
-                    </ul>
-                    <button type="button" onclick="demoKarmaFisYukle()" class="btn-primary" style="background: #2196F3; border-color: #1976D2; padding: 10px 24px; font-size: 14px;">
-                        🧪 Demo: Karma Fiş Yükle (Migros Örneği)
-                    </button>
-                    <span style="font-size: 11px; color: #666; margin-left: 12px;">Tıklayarak satır bazlı gider detaylarını test edin</span>
-                </div>
-            </div>
-
             <div class="form-container">
-                <!-- Section 1: Belge Yükleme -->
+                <!-- Section 1: Belgeler ve Gider Kalemleri -->
                 <div class="form-section">
                     <h2 class="section-title">
                         <span class="section-number">1</span>
-                        Belge Yükleme (OCR) - Çoklu Fiş Desteği
+                        Belgeler ve Gider Kalemleri
                     </h2>
 
                     <div class="alert alert-info" style="margin-bottom: 20px;">
                         <span class="alert-icon">💡</span>
                         <div>
-                            <strong>Çoklu Fiş Girişi:</strong> Tek bir masraf talebinde birden fazla fiş/fatura yükleyebilirsiniz.
-                            Örneğin Migros'tan aldığınız yemek, kırtasiye ve temizlik malzemelerini aynı talepte toplayabilirsiniz.
+                            <strong>Çoklu Belge Girişi:</strong> Tek masraf talebinde birden fazla fiş/fatura ekleyebilirsiniz.
+                            Her belge OCR ile okunur ve gider kalemleri otomatik oluşturulur. Masraf harici satırları çıkarabilirsiniz.
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required">Belge Türü</label>
-                            <select class="form-select" id="belgeTuru">
-                                <option value="">Seçiniz...</option>
-                                <option value="fatura">Fatura</option>
-                                <option value="tevkifatli">Tevkifatlı Fatura</option>
-                                <option value="fis">Yazar Kasa / Perakende Satış Fişi</option>
-                                <option value="yurtdisi">Yurtdışı Faturası</option>
-                                <option value="dekont">Dekont / Harç / Makbuz</option>
-                                <option value="su">Su Faturası</option>
-                                <option value="gider_pusulasi">Gider Pusulası</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Masraf Tipi</label>
-                            <select class="form-select" id="masrafTipi">
-                                <option value="">Seçiniz...</option>
-                                <option value="normal">Normal Masraf</option>
-                                <option value="seyahat">Seyahat Masrafı</option>
-                                <option value="kredi_karti">Kredi Kartı Masrafı</option>
-                                <option value="kiralama">Kiralama Faturası</option>
-                            </select>
-                        </div>
+                    <!-- Yüklenen Belgeler Container -->
+                    <div id="belgelerContainer">
+                        <!-- Belgeler buraya dinamik olarak eklenecek -->
                     </div>
 
-                    <!-- Belge Görseli Preview -->
-                    <div class="document-preview-card" id="documentPreviewCard">
-                        <h3 class="preview-title">🖼️ Belge Görseli (OCR ile Okundu)</h3>
-                        <div class="document-preview-container">
-                            <!-- Simüle edilmiş fiş görseli -->
-                            <div class="receipt-simple" id="receiptSimple">
-                                <div class="receipt-simple-header">
-                                    <strong class="receipt-simple-company">KARADENIZ SOFRASI</strong>
-                                    <span class="receipt-simple-sub">Restoran & Lokanta</span>
-                                </div>
-                                <div class="receipt-simple-divider"></div>
-                                <div class="receipt-simple-info">
-                                    VKN: 1234567890<br>
-                                    Tarih: 09.12.2024 13:45<br>
-                                    Fiş No: YKF-2024-847521
-                                </div>
-                                <div class="receipt-simple-divider"></div>
-                                <div class="receipt-simple-items">
-                                    <div class="receipt-simple-item">
-                                        <span>2x Karışık Izgara</span>
-                                        <span>₺380.00</span>
-                                    </div>
-                                    <div class="receipt-simple-item">
-                                        <span>2x Pilav</span>
-                                        <span>₺60.00</span>
-                                    </div>
-                                    <div class="receipt-simple-item">
-                                        <span>2x İçecek</span>
-                                        <span>₺50.00</span>
-                                    </div>
-                                    <div class="receipt-simple-item">
-                                        <span>1x Künefe</span>
-                                        <span>₺95.00</span>
-                                    </div>
-                                </div>
-                                <div class="receipt-simple-totals">
-                                    <div class="receipt-simple-item">
-                                        <span>KDV (%10)</span>
-                                        <span>₺53.18</span>
-                                    </div>
-                                    <div class="receipt-simple-item total">
-                                        <strong>TOPLAM</strong>
-                                        <strong>₺585.00</strong>
-                                    </div>
-                                </div>
-                                <div class="receipt-simple-footer">
-                                    * TEŞEKKÜRLER *<br>
-                                    Bu belge mali değer taşır
-                                </div>
-                            </div>
-
-                            <div class="ocr-confidence-badge">
-                                <span>🤖 OCR Güven Skoru:</span>
-                                <span class="confidence-tag" id="ocrConfidenceTag">%94 Başarılı</span>
-                            </div>
+                    <!-- Yeni Belge Ekleme Alanı -->
+                    <div class="yeni-belge-ekle-alani" id="yeniBelgeEkleAlani">
+                        <div class="file-upload-area" id="uploadArea" style="margin: 0;">
+                            <input type="file" id="fileInput" accept="image/*,.pdf" multiple>
+                            <div class="upload-icon">📤</div>
+                            <div class="upload-text">Belge Yükle veya Sürükle</div>
+                            <div class="upload-hint">JPG, PNG, PDF - Max 10MB</div>
                         </div>
-
-                        <div class="document-actions">
-                            <button class="btn-action-primary" onclick="processOCR()">
-                                ✨ OCR ile Tekrar Oku
+                        <div style="text-align: center; margin-top: 12px;">
+                            <button type="button" class="btn-primary" onclick="demoBelgeEkle()" style="padding: 12px 24px;">
+                                📄 Demo Belge Ekle (Test İçin)
                             </button>
                         </div>
                     </div>
 
-                    <!-- OCR Processing Animation -->
-                    <div class="ocr-processing" id="ocrProcessing" style="display: none;">
-                        <div class="processing-animation">
-                            <div class="scan-line"></div>
-                            <div class="processing-icon">🔍</div>
-                        </div>
-                        <div class="processing-text">Belge Okunuyor...</div>
-                        <div class="processing-steps">
-                            <div class="step-item" id="step1">
-                                <span class="step-dot"></span>
-                                <span>Görüntü analiz ediliyor...</span>
+                    <!-- Toplam Özet -->
+                    <div id="toplamOzetAlani" style="display: none; margin-top: 24px; padding: 20px; background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-radius: 12px; border: 2px solid var(--primary-orange);">
+                        <h4 style="margin: 0 0 16px 0; color: var(--primary-orange); font-size: 16px;">📊 Toplam Özet</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px;">
+                            <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 12px; color: #666;">Toplam Belge</div>
+                                <div style="font-size: 24px; font-weight: 700; color: var(--primary-orange);" id="toplamBelgeSayisi">0</div>
                             </div>
-                            <div class="step-item" id="step2">
-                                <span class="step-dot"></span>
-                                <span>Metin tanınıyor...</span>
+                            <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 12px; color: #666;">Toplam Satır</div>
+                                <div style="font-size: 24px; font-weight: 700; color: var(--primary-orange);" id="toplamSatirSayisi">0</div>
                             </div>
-                            <div class="step-item" id="step3">
-                                <span class="step-dot"></span>
-                                <span>Veriler çıkarılıyor...</span>
+                            <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 12px; color: #666;">Net Tutar</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #333;" id="toplamNetTutarOzet">₺0</div>
                             </div>
-                            <div class="step-item" id="step4">
-                                <span class="step-dot"></span>
-                                <span>Form dolduruluyor...</span>
+                            <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 12px; color: #666;">KDV Tutarı</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #2196F3;" id="toplamKdvTutarOzet">₺0</div>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- OCR Success Result -->
-                    <div class="ocr-success" id="ocrSuccess" style="display: none;">
-                        <div class="success-header">
-                            <div class="success-icon">✅</div>
-                            <div class="success-text">
-                                <h3>OCR Başarılı!</h3>
-                                <p>Belge bilgileri otomatik olarak dolduruldu</p>
-                            </div>
-                            <div class="confidence-score">
-                                <div class="score-circle">
-                                    <span class="score-value">94%</span>
-                                </div>
-                                <span class="score-label">Doğruluk</span>
+                            <div style="background: white; padding: 12px; border-radius: 8px; text-align: center;">
+                                <div style="font-size: 12px; color: #666;">Genel Toplam</div>
+                                <div style="font-size: 24px; font-weight: 700; color: var(--success-green);" id="toplamBrutTutarOzet">₺0</div>
                             </div>
                         </div>
-                        <div class="ocr-extracted-preview">
-                            <div class="extracted-item">
-                                <span class="extracted-label">Firma:</span>
-                                <span class="extracted-value">KARADENIZ SOFRASI</span>
-                            </div>
-                            <div class="extracted-item">
-                                <span class="extracted-label">Tarih:</span>
-                                <span class="extracted-value">09.12.2024</span>
-                            </div>
-                            <div class="extracted-item">
-                                <span class="extracted-label">Tutar:</span>
-                                <span class="extracted-value highlight">₺585.00</span>
-                            </div>
+                        <!-- KDV Dağılımı -->
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.1);">
+                            <div style="font-size: 13px; color: #666; margin-bottom: 8px;">KDV Dağılımı:</div>
+                            <div id="kdvDagilimiOzet" style="display: flex; gap: 12px; flex-wrap: wrap;"></div>
                         </div>
-                    </div>
-
-                    <!-- File Upload Area (Yeni Belge Yükleme) -->
-                    <div class="file-upload-area collapsed" id="uploadArea">
-                        <input type="file" id="fileInput" accept="image/*,.pdf" multiple>
-                        <div class="upload-icon">📤</div>
-                        <div class="upload-text">Farklı Bir Belge Yükle</div>
-                        <div class="upload-hint">veya tıklayarak dosya seçin (JPG, PNG, PDF - Max 10MB)</div>
-                    </div>
-
-                    <!-- Uploaded Files List -->
-                    <div class="uploaded-files" id="uploadedFiles"></div>
-
-                    <!-- Yüklenen Belgeler Listesi (Çoklu) -->
-                    <div id="belgelerListesiContainer" style="display: none; margin-top: 20px;">
-                        <h4 style="font-size: 15px; color: var(--primary-orange); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                            📑 Yüklenen Belgeler <span id="belgeSayisi" class="status-badge status-waiting">0 Belge</span>
-                        </h4>
-                        <div id="belgelerListesi" class="belgeler-listesi"></div>
-                        <button type="button" class="btn-outline" onclick="yeniBelgeEkle()" style="margin-top: 12px; padding: 10px 20px;">
-                            ➕ Yeni Belge Ekle
-                        </button>
                     </div>
                 </div>
 
-                <!-- Section 2: Okunan Gider Satırları (YENİ) -->
+                <!-- Section 2: Belge Bilgileri (Gizli - eski yapı için) -->
                 <div class="form-section" id="giderSatirlariSection" style="display: none;">
                     <h2 class="section-title">
                         <span class="section-number">2</span>
@@ -844,67 +708,416 @@
     <script src="js/main.js"></script>
     <script>
         // ============================================
-        // OCR OTOMATİK DOLDURMA SİSTEMİ
+        // YENİ BELGE YÖNETİM SİSTEMİ
+        // Her belge kendi görsel kartı ve gider satırlarıyla birlikte
         // ============================================
 
-        // ============================================
-        // ÇOKLU FİŞ VE SATIR BAZLI GİDER SİSTEMİ
-        // ============================================
-
-        // Tüm yüklenen belgeler ve gider satırları
-        let yukluBelgeler = [];
-        let giderSatirlari = [];
-        let satirIdSayaci = 0;
+        // Tüm yüklenen belgeler
+        let belgeler = [];
         let belgeIdSayaci = 0;
+        let satirIdSayaci = 0;
 
-        // Karma gider kalemleri için örnek veriler (Migros fişi gibi)
-        const karmaGiderOrnekleri = [
+        // Demo belge örnekleri
+        const demoBelgeOrnekleri = [
             {
                 belgeTuru: 'fis',
                 firmaAdi: 'MIGROS TİCARET A.Ş.',
+                firmaTuru: 'Market',
                 vergiNo: '9876543210',
                 belgeNo: 'MIG-2024-458712',
                 belgeTarihi: '2024-12-15',
                 ocrGuvenSkoru: 96,
+                fisKalemleri: [
+                    { urun: '2x Kahvaltılık Peynir', tutar: '₺89.00' },
+                    { urun: '1x Zeytin (500g)', tutar: '₺45.00' },
+                    { urun: '6x Yumurta', tutar: '₺36.00' },
+                    { urun: '2x Süt (1L)', tutar: '₺48.00' },
+                    { urun: '1x Deterjan (3kg)', tutar: '₺145.00' },
+                    { urun: '2x Bulaşık Süngeri', tutar: '₺28.00' },
+                    { urun: '1x A4 Kağıt (500)', tutar: '₺95.00' },
+                    { urun: '3x Tükenmez Kalem', tutar: '₺24.00' },
+                    { urun: 'Poşet Ücreti', tutar: '₺2.00' }
+                ],
                 satirlar: [
-                    { kalem: 'Gıda', aciklama: 'Kahvaltılık Ürünler', hesapKodu: '770.01', netTutar: 245.00, kdvOrani: 10 },
-                    { kalem: 'Gıda', aciklama: 'İçecekler', hesapKodu: '770.01', netTutar: 85.00, kdvOrani: 10 },
-                    { kalem: 'Temizlik', aciklama: 'Temizlik Malzemeleri', hesapKodu: '770.04', netTutar: 180.00, kdvOrani: 20 },
-                    { kalem: 'Kırtasiye', aciklama: 'Ofis Kırtasiye', hesapKodu: '770.04', netTutar: 120.00, kdvOrani: 20 },
-                    { kalem: 'Mutfak', aciklama: 'Mutfak Gereçleri', hesapKodu: '770.04', netTutar: 95.00, kdvOrani: 20 }
+                    { kalem: 'Gıda', aciklama: 'Kahvaltılık Peynir (2 adet)', hesapKodu: '770.01', netTutar: 80.91, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Zeytin 500g', hesapKodu: '770.01', netTutar: 40.91, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Yumurta (6\'lı)', hesapKodu: '770.01', netTutar: 32.73, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Süt 1L (2 adet)', hesapKodu: '770.01', netTutar: 43.64, kdvOrani: 10 },
+                    { kalem: 'Temizlik', aciklama: 'Deterjan 3kg', hesapKodu: '770.04', netTutar: 120.83, kdvOrani: 20 },
+                    { kalem: 'Temizlik', aciklama: 'Bulaşık Süngeri (2 adet)', hesapKodu: '770.04', netTutar: 23.33, kdvOrani: 20 },
+                    { kalem: 'Kırtasiye', aciklama: 'A4 Kağıt 500\'lü', hesapKodu: '770.04', netTutar: 79.17, kdvOrani: 20 },
+                    { kalem: 'Kırtasiye', aciklama: 'Tükenmez Kalem (3 adet)', hesapKodu: '770.04', netTutar: 20.00, kdvOrani: 20 },
+                    { kalem: 'Diğer', aciklama: 'Poşet Ücreti', hesapKodu: '770.99', netTutar: 1.67, kdvOrani: 20, cikarilabilir: true }
                 ]
             },
             {
                 belgeTuru: 'fis',
                 firmaAdi: 'BİM BİRLEŞİK MAĞAZALAR A.Ş.',
+                firmaTuru: 'Market',
                 vergiNo: '8765432109',
                 belgeNo: 'BIM-2024-123456',
                 belgeTarihi: '2024-12-14',
                 ocrGuvenSkoru: 94,
+                fisKalemleri: [
+                    { urun: '1x Çikolata', tutar: '₺35.00' },
+                    { urun: '2x Su (1.5L)', tutar: '₺24.00' },
+                    { urun: '1x Meyve Suyu', tutar: '₺18.00' },
+                    { urun: '1x Çöp Poşeti', tutar: '₺22.00' },
+                    { urun: '1x Peçete', tutar: '₺15.00' }
+                ],
                 satirlar: [
-                    { kalem: 'Gıda', aciklama: 'Atıştırmalık', hesapKodu: '770.01', netTutar: 65.00, kdvOrani: 10 },
-                    { kalem: 'Gıda', aciklama: 'Su ve Meşrubat', hesapKodu: '770.01', netTutar: 45.00, kdvOrani: 10 },
-                    { kalem: 'Temizlik', aciklama: 'Çöp Poşeti ve Peçete', hesapKodu: '770.04', netTutar: 35.00, kdvOrani: 20 }
+                    { kalem: 'Gıda', aciklama: 'Çikolata', hesapKodu: '770.01', netTutar: 31.82, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Su 1.5L (2 adet)', hesapKodu: '770.01', netTutar: 21.82, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Meyve Suyu', hesapKodu: '770.01', netTutar: 16.36, kdvOrani: 10 },
+                    { kalem: 'Temizlik', aciklama: 'Çöp Poşeti', hesapKodu: '770.04', netTutar: 18.33, kdvOrani: 20 },
+                    { kalem: 'Temizlik', aciklama: 'Peçete', hesapKodu: '770.04', netTutar: 12.50, kdvOrani: 20 }
                 ]
             },
             {
                 belgeTuru: 'fis',
                 firmaAdi: 'A101 YENİ MAĞAZACILIK A.Ş.',
+                firmaTuru: 'Market',
                 vergiNo: '7654321098',
                 belgeNo: 'A101-2024-789012',
                 belgeTarihi: '2024-12-13',
                 ocrGuvenSkoru: 95,
+                fisKalemleri: [
+                    { urun: '2x Çay (500g)', tutar: '₺86.00' },
+                    { urun: '1x Kahve (250g)', tutar: '₺65.00' },
+                    { urun: '1x Defter (3\'lü)', tutar: '₺45.00' },
+                    { urun: '5x Kurşun Kalem', tutar: '₺30.00' },
+                    { urun: '1x Bisküvi', tutar: '₺28.00' },
+                    { urun: '1x Şeker (1kg)', tutar: '₺35.00' }
+                ],
                 satirlar: [
-                    { kalem: 'Gıda', aciklama: 'Çay ve Kahve', hesapKodu: '770.01', netTutar: 125.00, kdvOrani: 10 },
-                    { kalem: 'Kırtasiye', aciklama: 'Kalem ve Defter', hesapKodu: '770.04', netTutar: 75.00, kdvOrani: 20 },
-                    { kalem: 'Gıda', aciklama: 'Bisküvi ve Şeker', hesapKodu: '770.01', netTutar: 55.00, kdvOrani: 10 }
+                    { kalem: 'Gıda', aciklama: 'Çay 500g (2 adet)', hesapKodu: '770.01', netTutar: 78.18, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Kahve 250g', hesapKodu: '770.01', netTutar: 59.09, kdvOrani: 10 },
+                    { kalem: 'Kırtasiye', aciklama: 'Defter 3\'lü', hesapKodu: '770.04', netTutar: 37.50, kdvOrani: 20 },
+                    { kalem: 'Kırtasiye', aciklama: 'Kurşun Kalem (5 adet)', hesapKodu: '770.04', netTutar: 25.00, kdvOrani: 20 },
+                    { kalem: 'Gıda', aciklama: 'Bisküvi', hesapKodu: '770.01', netTutar: 25.45, kdvOrani: 10 },
+                    { kalem: 'Gıda', aciklama: 'Şeker 1kg', hesapKodu: '770.01', netTutar: 31.82, kdvOrani: 10 }
                 ]
             }
         ];
 
-        let karmaOrnekIndex = 0;
+        let demoOrnekIndex = 0;
 
-        // Gider satırlarını tabloya render et
+        // ============================================
+        // BELGE KARTI RENDER FONKSİYONLARI
+        // ============================================
+
+        // Demo belge ekle
+        function demoBelgeEkle() {
+            const ornek = demoBelgeOrnekleri[demoOrnekIndex];
+            demoOrnekIndex = (demoOrnekIndex + 1) % demoBelgeOrnekleri.length;
+
+            belgeIdSayaci++;
+            const yeniBelge = {
+                id: belgeIdSayaci,
+                ...ornek,
+                satirlar: ornek.satirlar.map(satir => {
+                    satirIdSayaci++;
+                    return {
+                        id: satirIdSayaci,
+                        belgeId: belgeIdSayaci,
+                        aktif: true,
+                        ...satir
+                    };
+                })
+            };
+
+            belgeler.push(yeniBelge);
+            renderBelgeler();
+            guncelleToplamOzet();
+
+            showAlert('success', `📄 ${ornek.firmaAdi} belgesi eklendi! ${ornek.satirlar.length} gider satırı okundu.`);
+        }
+
+        // Tüm belgeleri render et
+        function renderBelgeler() {
+            const container = document.getElementById('belgelerContainer');
+            container.innerHTML = '';
+
+            if (belgeler.length === 0) {
+                document.getElementById('toplamOzetAlani').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('toplamOzetAlani').style.display = 'block';
+
+            belgeler.forEach((belge, index) => {
+                const belgeKarti = document.createElement('div');
+                belgeKarti.className = 'belge-karti-wrapper';
+                belgeKarti.id = `belge-${belge.id}`;
+                belgeKarti.style.cssText = 'margin-bottom: 24px; border: 2px solid #e0e0e0; border-radius: 12px; overflow: hidden; background: white;';
+
+                // Belge toplamlarını hesapla
+                const aktifSatirlar = belge.satirlar.filter(s => s.aktif);
+                const belgeToplam = aktifSatirlar.reduce((acc, s) => {
+                    const kdv = s.netTutar * s.kdvOrani / 100;
+                    return { net: acc.net + s.netTutar, kdv: acc.kdv + kdv, brut: acc.brut + s.netTutar + kdv };
+                }, { net: 0, kdv: 0, brut: 0 });
+
+                belgeKarti.innerHTML = `
+                    <!-- Belge Başlığı -->
+                    <div style="background: linear-gradient(135deg, var(--primary-orange) 0%, #e65100 100%); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 4px;">BELGE ${index + 1}</div>
+                            <div style="font-size: 18px; font-weight: 700;">${belge.firmaAdi}</div>
+                            <div style="font-size: 12px; opacity: 0.9;">${belge.belgeNo} • ${formatTarih(belge.belgeTarihi)}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 8px;">
+                                🤖 OCR %${belge.ocrGuvenSkoru}
+                            </div>
+                            <button onclick="belgeSil(${belge.id})" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;">
+                                🗑️ Belgeyi Kaldır
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Belge İçeriği: Sol tarafta fiş görseli, sağda gider satırları -->
+                    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 0;">
+                        <!-- Sol: Fiş Görseli -->
+                        <div style="background: #f5f5f5; padding: 20px; border-right: 1px solid #e0e0e0;">
+                            <div style="font-size: 12px; color: #666; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                                🖼️ Belge Görseli (OCR ile Okundu)
+                            </div>
+                            <div class="receipt-simple" style="background: white; padding: 16px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 11px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="text-align: center; border-bottom: 1px dashed #ccc; padding-bottom: 8px; margin-bottom: 8px;">
+                                    <strong style="font-size: 12px;">${belge.firmaAdi}</strong><br>
+                                    <span style="font-size: 10px; color: #666;">${belge.firmaTuru || 'Ticaret'}</span>
+                                </div>
+                                <div style="font-size: 10px; color: #666; margin-bottom: 8px;">
+                                    VKN: ${belge.vergiNo}<br>
+                                    Tarih: ${formatTarih(belge.belgeTarihi)}<br>
+                                    Fiş No: ${belge.belgeNo}
+                                </div>
+                                <div style="border-top: 1px dashed #ccc; border-bottom: 1px dashed #ccc; padding: 8px 0; margin: 8px 0;">
+                                    ${belge.fisKalemleri.map(k => `
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                            <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${k.urun}</span>
+                                            <span style="margin-left: 8px; font-weight: 600;">${k.tutar}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 13px; color: var(--primary-orange);">
+                                    <span>TOPLAM</span>
+                                    <span>₺${belgeToplam.brut.toFixed(2)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sağ: Gider Satırları -->
+                        <div style="padding: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                <div style="font-size: 14px; font-weight: 600; color: #333;">
+                                    📊 Okunan Gider Kalemleri <span style="color: #666; font-weight: 400;">(${aktifSatirlar.length} satır)</span>
+                                </div>
+                                <div style="font-size: 12px; color: #666;">
+                                    Masraf harici satırları çıkarabilirsiniz
+                                </div>
+                            </div>
+
+                            <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #e0e0e0;">Kalem</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #e0e0e0;">Açıklama</th>
+                                        <th style="padding: 8px; text-align: left; border-bottom: 2px solid #e0e0e0;">Hesap</th>
+                                        <th style="padding: 8px; text-align: right; border-bottom: 2px solid #e0e0e0;">Net</th>
+                                        <th style="padding: 8px; text-align: center; border-bottom: 2px solid #e0e0e0;">KDV</th>
+                                        <th style="padding: 8px; text-align: right; border-bottom: 2px solid #e0e0e0;">Brüt</th>
+                                        <th style="padding: 8px; text-align: center; border-bottom: 2px solid #e0e0e0; width: 40px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${belge.satirlar.map(satir => {
+                                        const kdvTutar = satir.netTutar * satir.kdvOrani / 100;
+                                        const brutTutar = satir.netTutar + kdvTutar;
+                                        const opacity = satir.aktif ? '1' : '0.4';
+                                        const textDecoration = satir.aktif ? 'none' : 'line-through';
+                                        return `
+                                            <tr style="opacity: ${opacity}; text-decoration: ${textDecoration};" id="satir-${satir.id}">
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee;">
+                                                    <span style="background: ${getKalemRenk(satir.kalem)}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">
+                                                        ${satir.kalem}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee;">${satir.aciklama}</td>
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee;">
+                                                    <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${satir.hesapKodu}</code>
+                                                </td>
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">₺${satir.netTutar.toFixed(2)}</td>
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">
+                                                    <span style="background: ${getKdvRenk(satir.kdvOrani)}; color: white; padding: 2px 6px; border-radius: 10px; font-size: 10px;">
+                                                        %${satir.kdvOrani}
+                                                    </span>
+                                                </td>
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right; font-weight: 600;">₺${brutTutar.toFixed(2)}</td>
+                                                <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">
+                                                    ${satir.aktif ? `
+                                                        <button onclick="satirCikar(${belge.id}, ${satir.id})" style="background: none; border: none; color: #f44336; cursor: pointer; font-size: 14px;" title="Bu satırı çıkar">
+                                                            ✕
+                                                        </button>
+                                                    ` : `
+                                                        <button onclick="satirGeriAl(${belge.id}, ${satir.id})" style="background: none; border: none; color: #4CAF50; cursor: pointer; font-size: 14px;" title="Bu satırı geri al">
+                                                            ↩️
+                                                        </button>
+                                                    `}
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                                <tfoot>
+                                    <tr style="background: #fff3e0; font-weight: 600;">
+                                        <td colspan="3" style="padding: 10px; text-align: right;">BELGE TOPLAMI:</td>
+                                        <td style="padding: 10px; text-align: right;">₺${belgeToplam.net.toFixed(2)}</td>
+                                        <td style="padding: 10px; text-align: center; color: #2196F3;">₺${belgeToplam.kdv.toFixed(2)}</td>
+                                        <td style="padding: 10px; text-align: right; color: var(--primary-orange);">₺${belgeToplam.brut.toFixed(2)}</td>
+                                        <td></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(belgeKarti);
+            });
+        }
+
+        // Tarih formatla
+        function formatTarih(tarihStr) {
+            const tarih = new Date(tarihStr);
+            return tarih.toLocaleDateString('tr-TR');
+        }
+
+        // Satırı çıkar (pasif yap)
+        function satirCikar(belgeId, satirId) {
+            const belge = belgeler.find(b => b.id === belgeId);
+            if (belge) {
+                const satir = belge.satirlar.find(s => s.id === satirId);
+                if (satir) {
+                    satir.aktif = false;
+                    renderBelgeler();
+                    guncelleToplamOzet();
+                    showAlert('info', `"${satir.aciklama}" satırı çıkarıldı.`);
+                }
+            }
+        }
+
+        // Satırı geri al
+        function satirGeriAl(belgeId, satirId) {
+            const belge = belgeler.find(b => b.id === belgeId);
+            if (belge) {
+                const satir = belge.satirlar.find(s => s.id === satirId);
+                if (satir) {
+                    satir.aktif = true;
+                    renderBelgeler();
+                    guncelleToplamOzet();
+                    showAlert('success', `"${satir.aciklama}" satırı geri alındı.`);
+                }
+            }
+        }
+
+        // Belgeyi sil
+        function belgeSil(belgeId) {
+            const belge = belgeler.find(b => b.id === belgeId);
+            if (belge && confirm(`"${belge.firmaAdi}" belgesini ve tüm gider satırlarını silmek istediğinize emin misiniz?`)) {
+                belgeler = belgeler.filter(b => b.id !== belgeId);
+                renderBelgeler();
+                guncelleToplamOzet();
+                showAlert('info', `"${belge.firmaAdi}" belgesi kaldırıldı.`);
+            }
+        }
+
+        // Toplam özeti güncelle
+        function guncelleToplamOzet() {
+            let toplamBelge = belgeler.length;
+            let toplamSatir = 0;
+            let toplamNet = 0;
+            let toplamKdv = 0;
+            let toplamBrut = 0;
+            const kdvDagilimi = {};
+
+            belgeler.forEach(belge => {
+                belge.satirlar.filter(s => s.aktif).forEach(satir => {
+                    toplamSatir++;
+                    const kdv = satir.netTutar * satir.kdvOrani / 100;
+                    toplamNet += satir.netTutar;
+                    toplamKdv += kdv;
+                    toplamBrut += satir.netTutar + kdv;
+
+                    // KDV dağılımı
+                    if (!kdvDagilimi[satir.kdvOrani]) {
+                        kdvDagilimi[satir.kdvOrani] = { net: 0, kdv: 0 };
+                    }
+                    kdvDagilimi[satir.kdvOrani].net += satir.netTutar;
+                    kdvDagilimi[satir.kdvOrani].kdv += kdv;
+                });
+            });
+
+            document.getElementById('toplamBelgeSayisi').textContent = toplamBelge;
+            document.getElementById('toplamSatirSayisi').textContent = toplamSatir;
+            document.getElementById('toplamNetTutarOzet').textContent = '₺' + toplamNet.toFixed(2);
+            document.getElementById('toplamKdvTutarOzet').textContent = '₺' + toplamKdv.toFixed(2);
+            document.getElementById('toplamBrutTutarOzet').textContent = '₺' + toplamBrut.toFixed(2);
+
+            // KDV dağılımı render
+            const kdvContainer = document.getElementById('kdvDagilimiOzet');
+            kdvContainer.innerHTML = Object.keys(kdvDagilimi).sort((a, b) => a - b).map(oran => `
+                <div style="background: white; padding: 8px 12px; border-radius: 6px; border: 1px solid #e0e0e0;">
+                    <span style="background: ${getKdvRenk(parseInt(oran))}; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-right: 8px;">
+                        %${oran}
+                    </span>
+                    <span style="font-weight: 600;">₺${kdvDagilimi[oran].kdv.toFixed(2)}</span>
+                    <span style="color: #666; font-size: 11px;"> (Matrah: ₺${kdvDagilimi[oran].net.toFixed(2)})</span>
+                </div>
+            `).join('');
+
+            // Ana form alanlarını da güncelle
+            if (document.getElementById('brutTutar')) {
+                document.getElementById('brutTutar').value = toplamBrut.toFixed(2);
+            }
+            if (document.getElementById('netTutar')) {
+                document.getElementById('netTutar').value = toplamNet.toFixed(2);
+            }
+            if (document.getElementById('kdvTutari')) {
+                document.getElementById('kdvTutari').value = toplamKdv.toFixed(2);
+            }
+        }
+
+        // Gider kalemi rengini al
+        function getKalemRenk(kalem) {
+            const renkler = {
+                'Gıda': '#4CAF50',
+                'Temizlik': '#2196F3',
+                'Kırtasiye': '#FF9800',
+                'Mutfak': '#9C27B0',
+                'Ulaşım': '#E91E63',
+                'Konaklama': '#00BCD4',
+                'Bilişim': '#3F51B5',
+                'Diğer': '#607D8B'
+            };
+            return renkler[kalem] || renkler['Diğer'];
+        }
+
+        // KDV oranı rengini al
+        function getKdvRenk(oran) {
+            if (oran === 0) return '#607D8B';
+            if (oran === 1) return '#9E9E9E';
+            if (oran === 10) return '#4CAF50';
+            if (oran === 20) return '#FF9800';
+            return '#2196F3';
+        }
+
+        // ============================================
+        // ESKİ FONKSİYONLAR (geriye uyumluluk için)
+        // ============================================
+
+        // Gider satırlarını tabloya render et (eski)
         function renderGiderSatirlari() {
             const tbody = document.getElementById('giderSatirlariBody');
             const section = document.getElementById('giderSatirlariSection');
