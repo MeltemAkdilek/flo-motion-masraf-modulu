@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Müşteriden Beklenen Konular</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #FF671D;
+            --flo-gray: #6c757d;
+            --flo-light: #f8f9fa;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 50px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 15px;
+            color: var(--flo-gray);
+        }
+        .requirements-list {
+            margin: 30px 0;
+        }
+        .requirement-item {
+            display: flex;
+            gap: 20px;
+            padding: 25px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .requirement-item:last-child {
+            border-bottom: none;
+        }
+        .req-number {
+            width: 36px;
+            height: 36px;
+            background: var(--flo-primary);
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .req-content {
+            flex: 1;
+        }
+        .req-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .req-details {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .req-details li {
+            font-size: 14px;
+            color: var(--flo-gray);
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        .req-details li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--flo-accent);
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Müşteriden Beklenen Konular</h1>
+            <p class="subtitle">Proje ilerleyişi için FLO tarafından sağlanması gereken bilgiler</p>
+        </div>
+
+        <div class="requirements-list">
+            <div class="requirement-item">
+                <div class="req-number">1</div>
+                <div class="req-content">
+                    <div class="req-title">Tevkifat Hesaplama Kuralları</div>
+                    <ul class="req-details">
+                        <li>Tevkifat oranları (2/10, 4/10, 5/10, 7/10, 9/10 vb.)</li>
+                        <li>Hangi hizmet türlerinin hangi orana tabi olduğu</li>
+                        <li>KDV tevkifat hesaplama formülü</li>
+                        <li>SAP'ye aktarılacak kayıt formatı</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="requirement-item">
+                <div class="req-number">2</div>
+                <div class="req-content">
+                    <div class="req-title">Şirket VKN Bilgileri</div>
+                    <ul class="req-details">
+                        <li>Turuncu Ayakkabı A.Ş. - VKN</li>
+                        <li>FLO Teknoloji A.Ş. - VKN</li>
+                        <li>FLO İç Dış Ticaret A.Ş. - VKN</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="requirement-item">
+                <div class="req-number">3</div>
+                <div class="req-content">
+                    <div class="req-title">SAP Entegrasyon Spesifikasyonları</div>
+                    <ul class="req-details">
+                        <li>SAP API endpoint ve erişim bilgileri</li>
+                        <li>Personel hiyerarşisi veri formatı</li>
+                        <li>Cari listesi senkronizasyon yöntemi</li>
+                        <li>Masraf kaydı gönderim formatı (YF/KR)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="requirement-item">
+                <div class="req-number">4</div>
+                <div class="req-content">
+                    <div class="req-title">Yurtdışı Harcama Kuralları</div>
+                    <ul class="req-details">
+                        <li>Döviz kuru hesaplama yöntemi</li>
+                        <li>Yurtdışı masraf kategorileri</li>
+                        <li>Yurtdışı hesap kodları</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="requirement-item">
+                <div class="req-number">5</div>
+                <div class="req-content">
+                    <div class="req-title">Kabul Edilmeyen Gider Listesi</div>
+                    <ul class="req-details">
+                        <li>Tekel ürünleri detay listesi</li>
+                        <li>Kişisel harcama tanımları</li>
+                        <li>Diğer yasak kalemler</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">FLO Motion | Masraf Yönetim Sistemi</p>
+        </div>
+    </div>
+</body>
+</html>

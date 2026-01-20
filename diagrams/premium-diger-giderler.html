@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Diğer Gider Kategorileri Hesap Kodu Matrisi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-light: #f8f9fa;
+            --flo-gray: #6c757d;
+            --flo-success: #198754;
+            --flo-info: #0dcaf0;
+            --flo-purple: #6f42c1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 50px;
+        }
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 40px 0;
+        }
+        .category-card {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+        .category-card:nth-child(1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .category-card:nth-child(2) { background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%); }
+        .category-card:nth-child(3) { background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%); }
+        .category-card:nth-child(4) { background: linear-gradient(135deg, var(--flo-success) 0%, #20c997 100%); }
+        .category-card:nth-child(5) { background: linear-gradient(135deg, var(--flo-info) 0%, #0d6efd 100%); }
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .category-name {
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .matrix-section {
+            margin-top: 50px;
+        }
+        .matrix-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .matrix-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .matrix-title h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+        .matrix-title span {
+            font-size: 14px;
+            color: var(--flo-gray);
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        thead {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+        }
+        th {
+            color: white;
+            padding: 18px 12px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        th:first-child {
+            text-align: left;
+            padding-left: 20px;
+        }
+        td {
+            padding: 14px 12px;
+            font-size: 13px;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--flo-primary);
+            text-align: center;
+        }
+        td:first-child {
+            text-align: left;
+            padding-left: 20px;
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-50g {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+            color: white;
+        }
+        .badge-merkez {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .badge-magaza {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            color: white;
+        }
+        .badge-fabrika {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        .badge-proje {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0d6efd 100%);
+            color: white;
+        }
+        .code-cell {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            background: #f8f9fa;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            display: inline-block;
+        }
+        .na-cell {
+            color: #ccc;
+            font-style: italic;
+            font-size: 12px;
+        }
+        .gider-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .gider-icon {
+            font-size: 18px;
+        }
+        .note-box {
+            background: linear-gradient(135deg, #fef9e7 0%, #fdf2d5 100%);
+            border-left: 4px solid var(--flo-gold);
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 30px;
+        }
+        .note-title {
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .note-text {
+            font-size: 14px;
+            color: var(--flo-gray);
+            line-height: 1.6;
+        }
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d1e8fa 100%);
+            border-left: 4px solid var(--flo-info);
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Diğer Gider Kategorileri Hesap Kodu Matrisi</h1>
+            <p class="subtitle">Bina bakım, vergi, demirbaş, temizlik ve sağlık giderleri</p>
+        </div>
+
+        <!-- Category Cards -->
+        <div class="category-grid">
+            <div class="category-card">
+                <div class="category-icon">🏗️</div>
+                <div class="category-name">Bina Bakım Onarım</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">📋</div>
+                <div class="category-name">Vergi Resim Harç</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🪑</div>
+                <div class="category-name">Küçük Demirbaş</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">🧹</div>
+                <div class="category-name">Temizlik Gideri</div>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">💊</div>
+                <div class="category-name">Personel Sağlık</div>
+            </div>
+        </div>
+
+        <!-- Main Matrix -->
+        <div class="matrix-section">
+            <div class="matrix-title">
+                <div class="matrix-icon">📊</div>
+                <div>
+                    <h2>Gider Türü - Masraf Merkezi Matrisi</h2>
+                    <span>Tüm diğer gider kategorileri için hesap kodu ataması</span>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Gider Türü</th>
+                        <th><span class="badge badge-50g">50G</span></th>
+                        <th><span class="badge badge-merkez">Merkez Diğer</span></th>
+                        <th><span class="badge badge-magaza">Mağaza</span></th>
+                        <th><span class="badge badge-fabrika">14U</span></th>
+                        <th><span class="badge badge-proje">50G1012</span></th>
+                        <th><span class="badge badge-merkez">50G1022</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="gider-type">
+                                <span class="gider-icon">🏗️</span>
+                                <strong>Bina Bakım Onarım</strong>
+                            </div>
+                        </td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="code-cell">7605002706</span></td>
+                        <td><span class="code-cell">7303000701</span></td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="na-cell">-</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="gider-type">
+                                <span class="gider-icon">📋</span>
+                                <strong>Diğer Vergi Resim Harç</strong>
+                            </div>
+                        </td>
+                        <td><span class="code-cell">7705002709</span></td>
+                        <td><span class="code-cell">7605002709</span></td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="code-cell">7305002709</span></td>
+                        <td><span class="code-cell">7705002709</span></td>
+                        <td><span class="code-cell">7405002709</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="gider-type">
+                                <span class="gider-icon">🪑</span>
+                                <strong>Küçük Demirbaş</strong>
+                            </div>
+                        </td>
+                        <td><span class="code-cell">7704002201</span></td>
+                        <td><span class="code-cell">7604002201</span></td>
+                        <td><span class="code-cell">7604002201</span></td>
+                        <td><span class="code-cell">7304002201</span></td>
+                        <td><span class="code-cell">7704002201</span></td>
+                        <td><span class="code-cell">7404002201</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="gider-type">
+                                <span class="gider-icon">🧹</span>
+                                <strong>Temizlik Gideri</strong>
+                            </div>
+                        </td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="code-cell">7604000701</span></td>
+                        <td><span class="code-cell">7303000302</span></td>
+                        <td><span class="na-cell">-</span></td>
+                        <td><span class="na-cell">-</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="gider-type">
+                                <span class="gider-icon">💊</span>
+                                <strong>Personel Sağlık Tedavi</strong>
+                            </div>
+                        </td>
+                        <td><span class="code-cell">7703000303</span></td>
+                        <td><span class="code-cell">7603000303</span></td>
+                        <td><span class="code-cell">7603000303</span></td>
+                        <td><span class="code-cell">7303000303</span></td>
+                        <td><span class="code-cell">7703000303</span></td>
+                        <td><span class="code-cell">7403000303</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Detailed Sections -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <!-- Bina Bakım -->
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 16px; padding: 25px;">
+                <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--flo-primary);">
+                    🏗️ Bina Bakım Onarım Gideri
+                </h3>
+                <p style="font-size: 14px; color: var(--flo-gray); line-height: 1.6; margin-bottom: 15px;">
+                    Sadece <strong>Mağaza</strong> ve <strong>Fabrika (14U)</strong> masraf merkezlerinde kullanılır.
+                    Merkez personeli bu gider türünü kullanamaz.
+                </p>
+                <div style="display: flex; gap: 15px;">
+                    <div style="background: white; padding: 12px 16px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--flo-gray); margin-bottom: 5px;">Mağaza</div>
+                        <span class="code-cell">7605002706</span>
+                    </div>
+                    <div style="background: white; padding: 12px 16px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--flo-gray); margin-bottom: 5px;">Fabrika</div>
+                        <span class="code-cell">7303000701</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temizlik -->
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 16px; padding: 25px;">
+                <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px; color: var(--flo-primary);">
+                    🧹 Temizlik Gideri
+                </h3>
+                <p style="font-size: 14px; color: var(--flo-gray); line-height: 1.6; margin-bottom: 15px;">
+                    Sadece <strong>Mağaza</strong> ve <strong>Fabrika (14U)</strong> masraf merkezlerinde kullanılır.
+                    Temizlik malzemeleri bu hesap koduna kaydedilir.
+                </p>
+                <div style="display: flex; gap: 15px;">
+                    <div style="background: white; padding: 12px 16px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--flo-gray); margin-bottom: 5px;">Mağaza</div>
+                        <span class="code-cell">7604000701</span>
+                    </div>
+                    <div style="background: white; padding: 12px 16px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 11px; color: var(--flo-gray); margin-bottom: 5px;">Fabrika</div>
+                        <span class="code-cell">7303000302</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <div class="note-title">💡 Önemli Bilgi</div>
+            <div class="note-text">
+                <strong>"-" işareti:</strong> İlgili masraf merkezi için bu gider türü kullanılamaz demektir.
+                Örneğin, Merkez (50G) personeli "Bina Bakım Onarım" gideri giremez.<br><br>
+                <strong>Hesap kodu ataması:</strong> Tüm bu gider türleri için hesap kodu
+                <strong>otomatik olarak</strong> masraf merkezi bazında sistem tarafından atanır.
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="note-title">📋 OCR Anahtar Kelimeler</div>
+            <div class="note-text">
+                <strong>Küçük Demirbaş:</strong> Hırdavat, Mobilya Malzemesi, Anahtar Yapımı, Ethernet Kablosu<br>
+                <strong>Temizlik:</strong> Tuvalet Kağıdı, Temizlik Malzemesi, Deterjan<br>
+                <strong>Sağlık:</strong> Yara Bandı, İlaç, Sargı Bezi, Ecza Malzemesi
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.3
+            </p>
+        </div>
+    </div>
+</body>
+</html>

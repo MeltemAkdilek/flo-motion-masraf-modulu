@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personel-Mağaza Atama - Muhasebe Paneli</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .muhasebe-header {
+            background: linear-gradient(90deg, #107C41 0%, #1DB954 100%);
+        }
+        .btn-sap {
+            background: #107C41;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-sap:hover {
+            background: #0D5F31;
+        }
+        .assignment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+        }
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .person-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .person-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #107C41, #1DB954);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .person-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .person-title {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .store-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .store-tag {
+            background: #E8F5E9;
+            color: #2E7D32;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .store-tag .remove-btn {
+            background: none;
+            border: none;
+            color: #c62828;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            margin-left: 4px;
+        }
+        .add-store-btn {
+            background: #f5f5f5;
+            border: 2px dashed #ccc;
+            color: #666;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .add-store-btn:hover {
+            background: #e0e0e0;
+            border-color: #999;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .store-checkbox-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .store-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .store-checkbox-item:hover {
+            background: #f5f5f5;
+        }
+        .store-checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+        .store-checkbox-item.assigned {
+            background: #E8F5E9;
+        }
+        .store-checkbox-item.assigned-other {
+            background: #FFF3E0;
+            opacity: 0.7;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #107C41;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #107C41;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header muhasebe-header">
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        <div class="logo">FLO<span style="font-weight: 300;">Connect</span> <span style="font-size: 14px; opacity: 0.8;">Muhasebe</span></div>
+        <div class="header-actions">
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button class="sidebar-close" onclick="closeMobileMenu()">✕</button>
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar" style="background: linear-gradient(135deg, #FF6B6B, #FF8E53);">MÖ</div>
+                <div class="user-name" id="userName">Mehmet Özkan</div>
+                <div class="user-title" id="userTitle">Perakende Muhasebe Yöneticisi</div>
+                <div class="user-role">Muhasebe Departmanı</div>
+                <!-- Rol Değiştirme (Demo) -->
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                    <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">Demo: Rol Değiştir</label>
+                    <select class="form-select" id="rolSecimi" onchange="muhasebeRoluDegistir()" style="font-size: 12px; padding: 8px;">
+                        <option value="uzman">Muhasebe Uzmanı</option>
+                        <option value="yonetici" selected>Perakende Muhasebe Yöneticisi</option>
+                    </select>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="muhasebe-panel.html" class="nav-link">
+                        <span class="nav-icon">🏠</span>
+                        Panel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-onay-bekleyenler.html" class="nav-link">
+                        <span class="nav-icon">⏳</span>
+                        Onay Bekleyenler
+                        <span style="background: var(--warning-red); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">12</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-onaylananlar.html" class="nav-link">
+                        <span class="nav-icon">✅</span>
+                        Onaylananlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-sap-aktarim.html" class="nav-link">
+                        <span class="nav-icon">📤</span>
+                        SAP Aktarım (EBA2SAP)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-raporlar.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        Raporlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-hesap-eslestirme.html" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        Hesap Eşleştirme
+                    </a>
+                </li>
+                <!-- Yönetici Özel Menüleri -->
+                <li class="nav-item yonetici-menu">
+                    <a href="muhasebe-personel-atama.html" class="nav-link active">
+                        <span class="nav-icon">👥</span>
+                        Personel-Mağaza Atama
+                    </a>
+                </li>
+                <li class="nav-item yonetici-menu">
+                    <a href="muhasebe-cari-kontrol.html" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        Cari Kontrol Akışı
+                        <span style="background: var(--warning-yellow); color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">5</span>
+                    </a>
+                </li>
+            </ul>
+
+            <button class="logout-btn" onclick="window.location.href='index.html'">
+                🚪 Çıkış Yap
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Alert Container -->
+            <div id="alertContainer"></div>
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="muhasebe-panel.html">Panel</a>
+                <span>›</span>
+                <span>Personel-Mağaza Atama</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h1 class="page-title" style="margin: 0;">Muhasebe Uzmanı - Mağaza Atamaları</h1>
+                <button class="btn-sap" onclick="openNewPersonModal()">
+                    + Yeni Uzman Ekle
+                </button>
+            </div>
+
+            <!-- Info Box -->
+            <div style="background: #E3F2FD; border: 1px solid #BBDEFB; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">ℹ️</span>
+                    <div>
+                        <strong style="color: #1565C0;">SAP Hiyerarşisi ile Entegrasyon</strong>
+                        <p style="margin: 4px 0 0; font-size: 13px; color: #555;">
+                            Muhasebe uzmanlarına atanan mağazalar SAP organizasyon hiyerarşisinden çekilmektedir.
+                            Her uzman sadece kendisine atanan mağazaların masraflarını görüntüleyebilir ve işleyebilir.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-value" id="totalPersonel">3</div>
+                    <div class="stat-label">Toplam Muhasebe Uzmanı</div>
+                </div>
+                <div class="stat-box" style="border-left-color: #FF9800;">
+                    <div class="stat-value" style="color: #FF9800;" id="totalMagaza">10</div>
+                    <div class="stat-label">Toplam Mağaza</div>
+                </div>
+                <div class="stat-box" style="border-left-color: #4CAF50;">
+                    <div class="stat-value" style="color: #4CAF50;" id="atananMagaza">6</div>
+                    <div class="stat-label">Atanan Mağaza</div>
+                </div>
+                <div class="stat-box" style="border-left-color: #f44336;">
+                    <div class="stat-value" style="color: #f44336;" id="atanmamiMagaza">4</div>
+                    <div class="stat-label">Atanmamış Mağaza</div>
+                </div>
+            </div>
+
+            <!-- Personnel List -->
+            <div id="personnelList">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+
+            <!-- Atanmamış Mağazalar Uyarısı -->
+            <div id="unassignedWarning" style="background: #FFF3E0; border: 1px solid #FFE0B2; border-radius: 12px; padding: 16px; margin-top: 24px; display: none;">
+                <div style="display: flex; align-items: flex-start; gap: 12px;">
+                    <span style="font-size: 24px;">⚠️</span>
+                    <div>
+                        <strong style="color: #E65100;">Atanmamış Mağazalar</strong>
+                        <p style="margin: 4px 0 8px; font-size: 13px; color: #555;">
+                            Aşağıdaki mağazalar henüz bir muhasebe uzmanına atanmamış. Bu mağazalardan gelen masraflar işlenemeyecektir.
+                        </p>
+                        <div id="unassignedStoresList" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- JavaScript ile doldurulacak -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mağaza Atama Modal -->
+    <div class="modal-overlay" id="storeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Mağaza Ata</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 16px; color: #666; font-size: 14px;">
+                    <strong id="modalPersonName">Fatma Aktaş</strong> için mağaza atamalarını düzenleyin.
+                </p>
+                <input type="text" class="form-input" id="storeSearch" placeholder="🔍 Mağaza ara..." style="margin-bottom: 16px;" oninput="filterStores()">
+                <div class="store-checkbox-list" id="storeCheckboxList">
+                    <!-- JavaScript ile doldurulacak -->
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button class="btn-sap" onclick="saveAssignments()" style="flex: 1;">Kaydet</button>
+                    <button class="btn-secondary" onclick="closeModal()" style="flex: 1;">İptal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script>
+        // Muhasebe uzmanları ve atamaları
+        let muhasebePersoneli = [
+            {
+                id: 1,
+                ad: 'Fatma Aktaş',
+                basHarfler: 'FA',
+                unvan: 'Muhasebe Uzmanı',
+                magazalar: ['IST-001', 'IST-002']
+            },
+            {
+                id: 2,
+                ad: 'Ahmet Yılmaz',
+                basHarfler: 'AY',
+                unvan: 'Muhasebe Uzmanı',
+                magazalar: ['ANK-001', 'ANK-002']
+            },
+            {
+                id: 3,
+                ad: 'Zeynep Kaya',
+                basHarfler: 'ZK',
+                unvan: 'Kıdemli Muhasebe Uzmanı',
+                magazalar: ['IZM-001', 'IZM-002']
+            }
+        ];
+
+        // Tüm mağazalar (SAP'den çekilmiş gibi)
+        const tumMagazalar = [
+            { kod: 'IST-001', ad: 'İstanbul Kadıköy', bolge: 'Marmara' },
+            { kod: 'IST-002', ad: 'İstanbul Beşiktaş', bolge: 'Marmara' },
+            { kod: 'IST-003', ad: 'İstanbul Şişli', bolge: 'Marmara' },
+            { kod: 'IST-004', ad: 'İstanbul Ataşehir', bolge: 'Marmara' },
+            { kod: 'ANK-001', ad: 'Ankara Kızılay', bolge: 'İç Anadolu' },
+            { kod: 'ANK-002', ad: 'Ankara Çankaya', bolge: 'İç Anadolu' },
+            { kod: 'IZM-001', ad: 'İzmir Konak', bolge: 'Ege' },
+            { kod: 'IZM-002', ad: 'İzmir Bornova', bolge: 'Ege' },
+            { kod: 'BRS-001', ad: 'Bursa Nilüfer', bolge: 'Marmara' },
+            { kod: 'ANT-001', ad: 'Antalya Lara', bolge: 'Akdeniz' }
+        ];
+
+        let currentEditPersonId = null;
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            // Rol kontrolü - bu sayfa sadece yöneticiler için
+            const savedRol = localStorage.getItem('muhasebeRol');
+            if (savedRol !== 'yonetici') {
+                localStorage.setItem('muhasebeRol', 'yonetici');
+            }
+            document.getElementById('rolSecimi').value = 'yonetici';
+
+            renderPersonnelList();
+            updateStats();
+        });
+
+        function renderPersonnelList() {
+            const container = document.getElementById('personnelList');
+            container.innerHTML = '';
+
+            muhasebePersoneli.forEach(person => {
+                const card = document.createElement('div');
+                card.className = 'assignment-card';
+
+                const magazaTags = person.magazalar.map(kod => {
+                    const magaza = tumMagazalar.find(m => m.kod === kod);
+                    return `
+                        <span class="store-tag">
+                            🏪 ${kod} - ${magaza ? magaza.ad : 'Bilinmiyor'}
+                            <button class="remove-btn" onclick="removeStore(${person.id}, '${kod}')" title="Kaldır">×</button>
+                        </span>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="assignment-header">
+                        <div class="person-info">
+                            <div class="person-avatar">${person.basHarfler}</div>
+                            <div>
+                                <div class="person-name">${person.ad}</div>
+                                <div class="person-title">${person.unvan}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <span style="background: #E8F5E9; color: #2E7D32; padding: 4px 12px; border-radius: 20px; font-size: 13px;">
+                                ${person.magazalar.length} Mağaza
+                            </span>
+                        </div>
+                    </div>
+                    <div class="store-tags">
+                        ${magazaTags}
+                        <button class="add-store-btn" onclick="openStoreModal(${person.id})">+ Mağaza Ekle</button>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function updateStats() {
+            const totalPersonel = muhasebePersoneli.length;
+            const totalMagaza = tumMagazalar.length;
+            const atananKodlar = new Set(muhasebePersoneli.flatMap(p => p.magazalar));
+            const atananMagaza = atananKodlar.size;
+            const atanmamiMagaza = totalMagaza - atananMagaza;
+
+            document.getElementById('totalPersonel').textContent = totalPersonel;
+            document.getElementById('totalMagaza').textContent = totalMagaza;
+            document.getElementById('atananMagaza').textContent = atananMagaza;
+            document.getElementById('atanmamiMagaza').textContent = atanmamiMagaza;
+
+            // Atanmamış mağazalar uyarısı
+            const unassignedWarning = document.getElementById('unassignedWarning');
+            const unassignedList = document.getElementById('unassignedStoresList');
+
+            if (atanmamiMagaza > 0) {
+                unassignedWarning.style.display = 'block';
+                const atanmamiMagazalar = tumMagazalar.filter(m => !atananKodlar.has(m.kod));
+                unassignedList.innerHTML = atanmamiMagazalar.map(m => `
+                    <span style="background: #FFCCBC; color: #BF360C; padding: 6px 12px; border-radius: 20px; font-size: 13px;">
+                        🏪 ${m.kod} - ${m.ad}
+                    </span>
+                `).join('');
+            } else {
+                unassignedWarning.style.display = 'none';
+            }
+        }
+
+        function openStoreModal(personId) {
+            currentEditPersonId = personId;
+            const person = muhasebePersoneli.find(p => p.id === personId);
+
+            document.getElementById('modalPersonName').textContent = person.ad;
+            document.getElementById('storeSearch').value = '';
+
+            renderStoreCheckboxList();
+            document.getElementById('storeModal').style.display = 'flex';
+        }
+
+        function renderStoreCheckboxList() {
+            const container = document.getElementById('storeCheckboxList');
+            const person = muhasebePersoneli.find(p => p.id === currentEditPersonId);
+            const searchValue = document.getElementById('storeSearch').value.toLowerCase();
+
+            // Tüm atanmış mağaza kodları
+            const tumAtananlar = new Set(muhasebePersoneli.flatMap(p => p.magazalar));
+
+            container.innerHTML = tumMagazalar
+                .filter(m => m.kod.toLowerCase().includes(searchValue) || m.ad.toLowerCase().includes(searchValue))
+                .map(magaza => {
+                    const isAssigned = person.magazalar.includes(magaza.kod);
+                    const isAssignedToOther = !isAssigned && tumAtananlar.has(magaza.kod);
+                    const otherPerson = isAssignedToOther ? muhasebePersoneli.find(p => p.magazalar.includes(magaza.kod)) : null;
+
+                    let className = 'store-checkbox-item';
+                    if (isAssigned) className += ' assigned';
+                    else if (isAssignedToOther) className += ' assigned-other';
+
+                    return `
+                        <label class="${className}">
+                            <input type="checkbox" value="${magaza.kod}" ${isAssigned ? 'checked' : ''} ${isAssignedToOther ? 'disabled' : ''}>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 500;">${magaza.kod} - ${magaza.ad}</div>
+                                <div style="font-size: 12px; color: #666;">Bölge: ${magaza.bolge}</div>
+                                ${isAssignedToOther ? `<div style="font-size: 11px; color: #E65100;">⚠️ ${otherPerson.ad}'a atanmış</div>` : ''}
+                            </div>
+                        </label>
+                    `;
+                }).join('');
+        }
+
+        function filterStores() {
+            renderStoreCheckboxList();
+        }
+
+        function closeModal() {
+            document.getElementById('storeModal').style.display = 'none';
+            currentEditPersonId = null;
+        }
+
+        function saveAssignments() {
+            const checkboxes = document.querySelectorAll('#storeCheckboxList input[type="checkbox"]:checked:not(:disabled)');
+            const selectedStores = Array.from(checkboxes).map(cb => cb.value);
+
+            const person = muhasebePersoneli.find(p => p.id === currentEditPersonId);
+            person.magazalar = selectedStores;
+
+            closeModal();
+            renderPersonnelList();
+            updateStats();
+            showAlert('success', `${person.ad} için mağaza atamaları güncellendi.`);
+        }
+
+        function removeStore(personId, storeCode) {
+            const person = muhasebePersoneli.find(p => p.id === personId);
+            person.magazalar = person.magazalar.filter(k => k !== storeCode);
+
+            renderPersonnelList();
+            updateStats();
+
+            const magaza = tumMagazalar.find(m => m.kod === storeCode);
+            showAlert('info', `${storeCode} - ${magaza.ad} mağazası ${person.ad}'dan kaldırıldı.`);
+        }
+
+        function openNewPersonModal() {
+            showAlert('info', 'Yeni uzman ekleme özelliği SAP HR entegrasyonu ile yapılacaktır.');
+        }
+
+        // =====================
+        // MUHASEBE ROL YÖNETİMİ
+        // =====================
+
+        function muhasebeRoluDegistir() {
+            const rol = document.getElementById('rolSecimi').value;
+            localStorage.setItem('muhasebeRol', rol);
+
+            if (rol === 'uzman') {
+                // Uzman bu sayfaya erişemez, panele yönlendir
+                window.location.href = 'muhasebe-panel.html';
+            }
+        }
+
+        // Alert göster
+        function showAlert(type, message) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <span class="alert-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            document.querySelector('.sidebar').classList.toggle('mobile-open');
+            document.querySelector('.mobile-overlay').classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            document.querySelector('.sidebar').classList.remove('mobile-open');
+            document.querySelector('.mobile-overlay').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

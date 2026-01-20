@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Kırtasiye ve Büro Malzemeleri Hesap Kodu Matrisi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-light: #f8f9fa;
+            --flo-gray: #6c757d;
+            --flo-success: #198754;
+            --flo-info: #0dcaf0;
+            --flo-purple: #6f42c1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 50px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+        .decision-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+        .decision-box {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 16px;
+            text-align: center;
+            min-width: 280px;
+        }
+        .decision-box.question {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+        }
+        .decision-box.special {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+        }
+        .decision-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .decision-text {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .decision-sub {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .arrow-down {
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--flo-primary) 0%, var(--flo-accent) 100%);
+            position: relative;
+            margin: 15px 0;
+        }
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: -6px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid var(--flo-accent);
+        }
+        .matrix-section {
+            margin-top: 50px;
+        }
+        .matrix-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .matrix-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .matrix-title h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+        .matrix-title span {
+            font-size: 14px;
+            color: var(--flo-gray);
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        thead {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+        }
+        th {
+            color: white;
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--flo-primary);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+        tbody tr.highlight-row {
+            background: linear-gradient(90deg, rgba(201, 162, 39, 0.1) 0%, rgba(201, 162, 39, 0.05) 100%);
+            border-left: 4px solid var(--flo-gold);
+        }
+        tbody tr.highlight-row:hover {
+            background: linear-gradient(90deg, rgba(201, 162, 39, 0.15) 0%, rgba(201, 162, 39, 0.08) 100%);
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-50g {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+            color: white;
+        }
+        .badge-merkez {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .badge-magaza {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            color: white;
+        }
+        .badge-fabrika {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        .badge-proje {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0d6efd 100%);
+            color: white;
+        }
+        .code-cell {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            background: #f8f9fa;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            display: inline-block;
+            margin: 2px;
+        }
+        .selection-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .selection-auto {
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--flo-success);
+        }
+        .selection-manual {
+            background: rgba(233, 69, 96, 0.1);
+            color: var(--flo-accent);
+        }
+        .special-case {
+            background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            border: 2px solid var(--flo-gold);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin: 30px 0;
+        }
+        .special-case-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .special-case-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--flo-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .special-case-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+        .special-case-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .option-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .option-number {
+            display: inline-flex;
+            width: 28px;
+            height: 28px;
+            background: var(--flo-primary);
+            color: white;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .option-title {
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 8px;
+        }
+        .option-desc {
+            font-size: 13px;
+            color: var(--flo-gray);
+            margin-bottom: 10px;
+        }
+        .note-box {
+            background: linear-gradient(135deg, #fef9e7 0%, #fdf2d5 100%);
+            border-left: 4px solid var(--flo-gold);
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 30px;
+        }
+        .note-title {
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .note-text {
+            font-size: 14px;
+            color: var(--flo-gray);
+            line-height: 1.6;
+        }
+        .product-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .product-tag {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--flo-primary);
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Kırtasiye ve Büro Malzemeleri Hesap Kodu Matrisi</h1>
+            <p class="subtitle">Masraf merkezi bazlı hesap kodu ataması ve mağaza özel durumu</p>
+        </div>
+
+        <!-- Decision Flow -->
+        <div class="decision-flow">
+            <div class="decision-box">
+                <div class="decision-icon">📎</div>
+                <div class="decision-text">KIRTASİYE / BÜRO MALZEMESİ</div>
+                <div class="decision-sub">Tespit Edildi</div>
+            </div>
+            <div class="arrow-down"></div>
+            <div class="decision-box question">
+                <div class="decision-icon">🏢</div>
+                <div class="decision-text">MASRAF MERKEZİ KONTROLÜ</div>
+                <div class="decision-sub">SAP'den Alınır</div>
+            </div>
+            <div class="arrow-down"></div>
+            <div class="decision-box special">
+                <div class="decision-icon">🏬</div>
+                <div class="decision-text">MAĞAZA MI?</div>
+                <div class="decision-sub">Özel Durum: Kullanıcı Seçimi Gerekli</div>
+            </div>
+        </div>
+
+        <!-- Main Matrix -->
+        <div class="matrix-section">
+            <div class="matrix-title">
+                <div class="matrix-icon">📊</div>
+                <div>
+                    <h2>Kırtasiye Giderleri - Hesap Kodu Tablosu</h2>
+                    <span>Masraf merkezi bazlı otomatik ve manuel atama</span>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Masraf Merkezi</th>
+                        <th>Seçim Tipi</th>
+                        <th>Hesap Kodu</th>
+                        <th>Hesap Adı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-50g">50G</span> Merkez Genel</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7704001101</span></td>
+                        <td>Kırtasiye ve Büro Malzemeleri Gid.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-merkez">Merkez Diğer</span></td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7604001101</span></td>
+                        <td>Kırtasiye ve Büro Malzemeleri Gid.</td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td><span class="badge badge-magaza">Mağaza</span></td>
+                        <td><span class="selection-tag selection-manual">👤 Kullanıcı Seçer</span></td>
+                        <td>
+                            <span class="code-cell">7604001101</span>
+                            <span class="code-cell">7604000506</span>
+                        </td>
+                        <td>
+                            ① Kırtasiye ve Büro Malz. Gid.<br>
+                            ② Görsel Gider
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-fabrika">14U</span> Fabrika</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7304001101</span></td>
+                        <td>Kırtasiye ve Büro Malzemeleri Gid.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-proje">50G1012</span> Projede</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7504001101</span></td>
+                        <td>Kırtasiye ve Büro Malzemeleri Gid.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-proje">50G1012</span> Projede Değil</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7704001101</span></td>
+                        <td>Kırtasiye ve Büro Malzemeleri Gid.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-merkez">50G1022</span></td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7404001101</span></td>
+                        <td>Kırtasiye ve Büro Malzemeleri Gid.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Special Case: Mağaza -->
+        <div class="special-case">
+            <div class="special-case-header">
+                <div class="special-case-icon">🏬</div>
+                <div class="special-case-title">Mağaza Özel Durumu: İki Seçenekli Hesap Kodu</div>
+            </div>
+            <p style="color: var(--flo-gray); font-size: 14px; margin-bottom: 15px;">
+                Mağaza masraf merkezinden kırtasiye gideri girildiğinde kullanıcıya iki seçenek sunulur:
+            </p>
+            <div class="special-case-content">
+                <div class="option-card">
+                    <div class="option-number">1</div>
+                    <div class="option-title">Kırtasiye ve Büro Malzemeleri</div>
+                    <div class="option-desc">Genel kırtasiye ve ofis malzemeleri için kullanılır</div>
+                    <span class="code-cell">7604001101</span>
+                    <div class="product-examples">
+                        <span class="product-tag">Kalem</span>
+                        <span class="product-tag">Defter</span>
+                        <span class="product-tag">Dosya</span>
+                        <span class="product-tag">Zımba</span>
+                        <span class="product-tag">Fotokopi Kağıdı</span>
+                    </div>
+                </div>
+                <div class="option-card">
+                    <div class="option-number">2</div>
+                    <div class="option-title">Görsel Gider</div>
+                    <div class="option-desc">Mağaza vitrin ve görsel malzemeleri için kullanılır</div>
+                    <span class="code-cell">7604000506</span>
+                    <div class="product-examples">
+                        <span class="product-tag">Renkli Ozalit</span>
+                        <span class="product-tag">Poster</span>
+                        <span class="product-tag">Afiş</span>
+                        <span class="product-tag">Vitrin Süsleme</span>
+                        <span class="product-tag">Etiketleme</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <div class="note-title">💡 Önemli Bilgi</div>
+            <div class="note-text">
+                <strong>Mağaza dışındaki</strong> tüm masraf merkezleri için kırtasiye hesap kodu
+                <strong>otomatik olarak</strong> sistem tarafından atanır.<br><br>
+                <strong>Mağaza</strong> masraf merkezi için kullanıcı, harcamanın niteliğine göre
+                <strong>Kırtasiye</strong> veya <strong>Görsel Gider</strong> seçeneğinden birini seçmelidir.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.3
+            </p>
+        </div>
+    </div>
+</body>
+</html>

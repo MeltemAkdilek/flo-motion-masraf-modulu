@@ -285,7 +285,147 @@
                     Her profil için farklı yetkiler ve özellikler mevcuttur.
                 </p>
             </div>
+
+            <!-- İş Analizi Diyagramları -->
+            <div class="diagrams-section" style="margin-top: 80px; padding-top: 40px; border-top: 2px solid #e0e0e0;">
+                <div class="main-title" style="margin-bottom: 40px;">
+                    <h2 style="font-size: 32px; font-weight: 700; background: linear-gradient(90deg, #1a1a2e 0%, #e94560 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 12px;">
+                        İş Analizi Diyagramları
+                    </h2>
+                    <p style="font-size: 16px; color: var(--text-secondary);">
+                        Masraf modülü iş akışları ve hesap kodu karar hiyerarşileri
+                    </p>
+                </div>
+
+                <!-- İş Akışı Diyagramları -->
+                <div style="margin-bottom: 40px;">
+                    <h3 style="font-size: 20px; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: linear-gradient(135deg, #e94560, #ff6b6b); color: white; width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px;">1</span>
+                        İş Akışı Diyagramları
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                        <a href="diagrams/premium-is-akisi.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #e94560;">
+                            <span style="font-size: 24px;">📋</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Ana Masraf Giriş Akışı</div>
+                                <div style="font-size: 12px; color: #666;">Belge yükleme → SAP aktarım</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-onay-akisi.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #e94560;">
+                            <span style="font-size: 24px;">✅</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Onay Akışı</div>
+                                <div style="font-size: 12px; color: #666;">Yönetici → Muhasebe → SAP</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-magaza-akisi.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #e94560;">
+                            <span style="font-size: 24px;">🏪</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Mağaza Masraf Akışı</div>
+                                <div style="font-size: 12px; color: #666;">ATF süreci dahil</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-tevkifat-akisi.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #e94560;">
+                            <span style="font-size: 24px;">📄</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Tevkifatlı Fatura Akışı</div>
+                                <div style="font-size: 12px; color: #666;">İki kayıt süreci</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-cari-acilis.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #e94560;">
+                            <span style="font-size: 24px;">🏢</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Cari Açılış Akışı</div>
+                                <div style="font-size: 12px; color: #666;">Yeni cari hesap süreci</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hesap Kodu Diyagramları -->
+                <div style="margin-bottom: 40px;">
+                    <h3 style="font-size: 20px; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: linear-gradient(135deg, #107C41, #1DB954); color: white; width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px;">2</span>
+                        Hesap Kodu Karar Matrisleri
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                        <a href="diagrams/premium-yemek-giderleri.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">🍽️</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Yemek Giderleri</div>
+                                <div style="font-size: 12px; color: #666;">İstanbul içi/dışı ayrımı</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-taksi-giderleri.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">🚕</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Taksi Giderleri</div>
+                                <div style="font-size: 12px; color: #666;">TESK/KDV ayrımı</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-ulasim-giderleri.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">🚌</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Diğer Ulaşım Giderleri</div>
+                                <div style="font-size: 12px; color: #666;">Otobüs, Havaş, Dolmuş vb.</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-kirtasiye-giderleri.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">📎</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Kırtasiye Giderleri</div>
+                                <div style="font-size: 12px; color: #666;">Büro malzemeleri</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-kkeg.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">🚗</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Binek Araç (KKEG)</div>
+                                <div style="font-size: 12px; color: #666;">%70 Gider / %30 KKEG</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-diger-giderler.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">📦</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Diğer Giderler</div>
+                                <div style="font-size: 12px; color: #666;">Bakım, temizlik, demirbaş</div>
+                            </div>
+                        </a>
+                        <a href="diagrams/premium-ozel-durumlar.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #107C41;">
+                            <span style="font-size: 24px;">⚡</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Özel Durumlar</div>
+                                <div style="font-size: 12px; color: #666;">Elektrik, damacana, lostra</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Diğer Diyagramlar -->
+                <div>
+                    <h3 style="font-size: 20px; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <span style="background: linear-gradient(135deg, #8B4367, #A0516D); color: white; width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 16px;">3</span>
+                        Diğer Dokümanlar
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                        <a href="diagrams/premium-musteriden-beklenen.html" style="display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: white; border-radius: 12px; text-decoration: none; color: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 4px solid #8B4367;">
+                            <span style="font-size: 24px;">📋</span>
+                            <div>
+                                <div style="font-weight: 600; font-size: 15px;">Müşteriden Beklenenler</div>
+                                <div style="font-size: 12px; color: #666;">Açık kalan konular listesi</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <style>
+        .diagrams-section a:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+    </style>
 </body>
 </html>

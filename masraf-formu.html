@@ -185,16 +185,46 @@
                     </div>
 
                     <!-- Yeni Belge Ekleme Alanı -->
-                    <div class="yeni-belge-ekle-alani" id="yeniBelgeEkleAlani">
-                        <div class="file-upload-area" id="uploadArea" style="margin: 0;">
+                    <div class="yeni-belge-ekle-alani" id="yeniBelgeEkleAlani" style="background: #f8f9fa; padding: 24px; border-radius: 12px; border: 2px dashed #ccc;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h4 style="margin: 0 0 8px 0; color: #333;">Yeni Belge Ekle</h4>
+                            <p style="margin: 0; color: #666; font-size: 13px;">Önce belge türünü seçin, sonra belgeyi yükleyin</p>
+                        </div>
+
+                        <!-- Belge Türü Seçimi -->
+                        <div style="display: flex; gap: 16px; justify-content: center; margin-bottom: 20px;">
+                            <label style="display: flex; align-items: center; gap: 8px; padding: 12px 24px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;" id="belgeTuruFisLabel">
+                                <input type="radio" name="yeniBelgeTuru" value="fis" checked onchange="belgeTuruDegisti()">
+                                <span style="font-size: 20px;">🧾</span>
+                                <span style="font-weight: 600;">Fiş</span>
+                                <span style="font-size: 11px; color: #666;">(Cari gerekmez)</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; padding: 12px 24px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; transition: all 0.2s;" id="belgeTuruFaturaLabel">
+                                <input type="radio" name="yeniBelgeTuru" value="fatura" onchange="belgeTuruDegisti()">
+                                <span style="font-size: 20px;">📄</span>
+                                <span style="font-weight: 600;">Fatura</span>
+                                <span style="font-size: 11px; color: #666;">(Cari gerekli)</span>
+                            </label>
+                        </div>
+
+                        <!-- Dosya Yükleme -->
+                        <div class="file-upload-area" id="uploadArea" style="margin: 0 0 16px 0;">
                             <input type="file" id="fileInput" accept="image/*,.pdf" multiple>
                             <div class="upload-icon">📤</div>
                             <div class="upload-text">Belge Yükle veya Sürükle</div>
                             <div class="upload-hint">JPG, PNG, PDF - Max 10MB</div>
                         </div>
-                        <div style="text-align: center; margin-top: 12px;">
-                            <button type="button" class="btn-primary" onclick="demoBelgeEkle()" style="padding: 12px 24px;">
-                                📄 Demo Belge Ekle (Test İçin)
+
+                        <!-- Demo ve Manuel Butonları -->
+                        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                            <button type="button" class="btn-outline" onclick="demoFisEkle()" style="padding: 10px 20px;">
+                                🧾 Demo Fiş Ekle
+                            </button>
+                            <button type="button" class="btn-outline" onclick="demoFaturaEkle()" style="padding: 10px 20px;">
+                                📄 Demo Fatura Ekle
+                            </button>
+                            <button type="button" class="btn-primary" onclick="manuelBelgeModalAc()" style="padding: 10px 20px; background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+                                ✏️ Manuel Oluştur
                             </button>
                         </div>
                     </div>
@@ -296,54 +326,32 @@
                     </div>
                 </div>
 
-                <!-- Section 3: Belge Bilgileri -->
-                <div class="form-section">
+                <!-- Section 2: Belge Bilgileri (Dinamik - Gruplu) -->
+                <div class="form-section" id="belgeBilgileriSection" style="display: none;">
                     <h2 class="section-title">
-                        <span class="section-number">3</span>
+                        <span class="section-number">2</span>
                         Belge Bilgileri
+                        <span id="belgeBilgileriBadge" style="background: var(--primary-orange); color: white; padding: 2px 10px; border-radius: 12px; font-size: 12px; margin-left: 8px;">0 Belge</span>
                     </h2>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required">Belge/Fatura No</label>
-                            <input type="text" class="form-input" id="belgeNo" placeholder="Otomatik okunacak">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">Belge Tarihi</label>
-                            <input type="date" class="form-input" id="belgeTarihi">
+                    <div class="alert alert-info" style="margin-bottom: 16px;">
+                        <span class="alert-icon">📋</span>
+                        <div>
+                            <strong>Belge Özeti:</strong> Eklediğiniz tüm belgelerin bilgileri aşağıda listelenmiştir.
+                            Faturalar için cari durumu otomatik kontrol edilir.
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label required">Firma/Tedarikçi Adı</label>
-                            <input type="text" class="form-input" id="firmaAdi" placeholder="Otomatik okunacak">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Vergi Kimlik No</label>
-                            <input type="text" class="form-input" id="vergiNo" placeholder="Otomatik okunacak">
-                        </div>
+                    <!-- Dinamik Belge Bilgileri Listesi -->
+                    <div id="belgeBilgileriListesi">
+                        <!-- JavaScript ile doldurulacak -->
                     </div>
 
-                    <!-- Cari Durumu (Sadece Fatura için görünür) -->
-                    <div class="form-row" id="cariDurumuRow" style="display: none;">
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label">Cari Durumu</label>
-                            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-                                <span class="status-badge status-approved" id="cariDurum">Cari Mevcut</span>
-                                <span style="font-size: 13px; color: var(--text-secondary);" id="cariKoduText">SAP Cari Kodu: 320.01.001</span>
-                            </div>
-                            <div id="cariEksikUyari" style="display: none; margin-top: 8px;">
-                                <div class="alert alert-warning" style="margin-bottom: 0;">
-                                    <span class="alert-icon">⚠️</span>
-                                    <div>
-                                        <strong>Cari Kaydı Bulunamadı!</strong><br>
-                                        <small>Bu tedarikçi için cari kaydı mevcut değil. Masraf talebi "Cari Gerekli" statüsünde işleme alınacaktır.</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Gizli form alanları (eski uyumluluk için) -->
+                    <input type="hidden" id="belgeNo">
+                    <input type="hidden" id="belgeTarihi">
+                    <input type="hidden" id="firmaAdi">
+                    <input type="hidden" id="vergiNo">
                 </div>
 
                 <!-- Section 4: Tutar Bilgileri -->
@@ -475,101 +483,15 @@
                     </div>
                 </div>
 
-                <!-- Section 5: Masraf Detayları -->
-                <div class="form-section">
-                    <h2 class="section-title">
-                        <span class="section-number">5</span>
-                        Masraf Detayları
-                    </h2>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Masraf Merkezi</label>
-                            <input type="text" class="form-input" id="masrafMerkezi" value="50G1022 - Dijital Ürünler" readonly style="background: #f5f5f5;">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">Masraf Türü / Hesap Kodu</label>
-                            <select class="form-select" id="hesapKodu">
-                                <option value="">Seçiniz...</option>
-                                <optgroup label="Genel Yönetim Giderleri - Merkez (770)">
-                                    <option value="770.01">770.01 - Yemek Giderleri</option>
-                                    <option value="770.02">770.02 - Ulaşım Giderleri</option>
-                                    <option value="770.03">770.03 - Konaklama Giderleri</option>
-                                    <option value="770.04">770.04 - Ofis Malzemesi</option>
-                                    <option value="770.05">770.05 - Temsil Ağırlama</option>
-                                    <option value="770.06">770.06 - Haberleşme Giderleri</option>
-                                    <option value="770.07">770.07 - Taşıt Giderleri</option>
-                                </optgroup>
-                                <optgroup label="Pazarlama Satış Dağıtım - Mağazalar (760)">
-                                    <option value="760.01">760.01 - Mağaza Giderleri</option>
-                                    <option value="760.02">760.02 - Tanıtım Giderleri</option>
-                                    <option value="760.03">760.03 - Satış Promosyon</option>
-                                </optgroup>
-                                <optgroup label="Ar-Ge / Tasarım Merkezi (750)">
-                                    <option value="750.01">750.01 - Proje Giderleri</option>
-                                    <option value="750.02">750.02 - Araştırma Giderleri</option>
-                                    <option value="750.03">750.03 - Test ve Geliştirme</option>
-                                </optgroup>
-                                <optgroup label="Teknoloji Teknik Destek (740)">
-                                    <option value="740.01">740.01 - Yazılım Giderleri</option>
-                                    <option value="740.02">740.02 - Donanım Bakım</option>
-                                    <option value="740.03">740.03 - IT Destek Hizmetleri</option>
-                                </optgroup>
-                                <optgroup label="Fabrika Giderleri (730)">
-                                    <option value="730.01">730.01 - Üretim Giderleri</option>
-                                    <option value="730.02">730.02 - Hammadde Giderleri</option>
-                                    <option value="730.03">730.03 - Bakım Onarım</option>
-                                </optgroup>
-                                <optgroup label="Şirketlerarası Yansıtmalar (198)">
-                                    <option value="198.01">198.01 - FLO Mağazacılık Yansıtma</option>
-                                    <option value="198.02">198.02 - FLO Teknoloji Yansıtma</option>
-                                    <option value="198.03">198.03 - Turuncu Yansıtma</option>
-                                </optgroup>
-                                <optgroup label="Kiralama Giderleri (632)">
-                                    <option value="632.04.01">632.04.01 - Mağaza Asgari Kira</option>
-                                    <option value="632.04.02">632.04.02 - Ortak Yönetim Gideri</option>
-                                    <option value="632.04.03">632.04.03 - Ciro Kira Gideri</option>
-                                </optgroup>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Proje Kodu (Opsiyonel)</label>
-                            <select class="form-select" id="projeKodu">
-                                <option value="">Proje seçiniz (opsiyonel)...</option>
-                                <option value="PRJ001">PRJ001 - E-Ticaret Yenileme</option>
-                                <option value="PRJ002">PRJ002 - Mobil Uygulama v2</option>
-                                <option value="PRJ003">PRJ003 - CRM Entegrasyonu</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Şirket</label>
-                            <select class="form-select" id="sirket">
-                                <option value="flo_magazacilik">FLO Mağazacılık</option>
-                                <option value="turuncu">Turuncu Ayakkabı</option>
-                                <option value="flo_teknoloji">FLO Teknoloji</option>
-                                <option value="flo_ic_dis">FLO İç Dış Ticaret</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label class="form-label required">Masraf Açıklaması</label>
-                            <textarea class="form-textarea" id="aciklama" placeholder="Masrafın ne için yapıldığını detaylı açıklayınız..." required></textarea>
-                            <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">
-                                * Bu açıklama hesap eşleştirmesinde kullanılacaktır. Lütfen detaylı yazınız.
-                            </small>
-                        </div>
-                    </div>
+                <!-- Section 5: Masraf Detayları (Dinamik - Her Belge İçin Ayrı) -->
+                <div id="masrafDetaylariContainer">
+                    <!-- JavaScript ile her belge için dinamik olarak oluşturulacak -->
                 </div>
 
-                <!-- Section 6: Onay Bilgileri -->
-                <div class="form-section">
+                <!-- Section: Onay Bilgileri (Dinamik Numara) -->
+                <div class="form-section" id="onayBilgileriSection">
                     <h2 class="section-title">
-                        <span class="section-number">6</span>
+                        <span class="section-number" id="onayBilgileriSectionNumber">6</span>
                         Onay Akışı Bilgileri
                     </h2>
 
@@ -654,7 +576,7 @@
                                 <label class="form-label">Kargo Şirketi</label>
                                 <select class="form-select" id="kargoSirketi" disabled>
                                     <option value="">Seçiniz...</option>
-                                    <option value="yurtici">Yurtiçi Kargo</option>
+                                    <option value="yurtici" selected>Yurtiçi Kargo</option>
                                     <option value="aras">Aras Kargo</option>
                                     <option value="mng">MNG Kargo</option>
                                     <option value="ptt">PTT Kargo</option>
@@ -800,13 +722,142 @@
             }
         ];
 
-        let demoOrnekIndex = 0;
+        let demoFisIndex = 0;
+        let demoFaturaIndex = 0;
+
+        // Fatura örnekleri (Cari bilgisi ile)
+        const demoFaturaOrnekleri = [
+            {
+                belgeTuru: 'fatura',
+                firmaAdi: 'TURKCELL İLETİŞİM HİZMETLERİ A.Ş.',
+                firmaTuru: 'Telekomünikasyon',
+                vergiNo: '4860020949',
+                belgeNo: 'FTR-2024-0085421',
+                belgeTarihi: '2024-12-10',
+                ocrGuvenSkoru: 98,
+                cariDurumu: 'mevcut',
+                cariKodu: '320.01.045',
+                fisKalemleri: [
+                    { urun: 'Kurumsal Hat Ücreti', tutar: '₺450.00' },
+                    { urun: 'Data Paketi (50GB)', tutar: '₺180.00' },
+                    { urun: 'Uluslararası Görüşme', tutar: '₺85.00' },
+                    { urun: 'KDV (%20)', tutar: '₺143.00' }
+                ],
+                satirlar: [
+                    { kalem: 'Telekomünikasyon', aciklama: 'Kurumsal Hat Ücreti', hesapKodu: '770.05', netTutar: 375.00, kdvOrani: 20 },
+                    { kalem: 'Telekomünikasyon', aciklama: 'Data Paketi 50GB', hesapKodu: '770.05', netTutar: 150.00, kdvOrani: 20 },
+                    { kalem: 'Telekomünikasyon', aciklama: 'Uluslararası Görüşme', hesapKodu: '770.05', netTutar: 70.83, kdvOrani: 20 }
+                ]
+            },
+            {
+                belgeTuru: 'fatura',
+                firmaAdi: 'SHELL TÜRKİYE A.Ş.',
+                firmaTuru: 'Akaryakıt',
+                vergiNo: '7890123456',
+                belgeNo: 'FTR-2024-9845632',
+                belgeTarihi: '2024-12-12',
+                ocrGuvenSkoru: 97,
+                cariDurumu: 'mevcut',
+                cariKodu: '320.01.089',
+                fisKalemleri: [
+                    { urun: 'Motorin (45 Lt)', tutar: '₺1,845.00' },
+                    { urun: 'Motor Yağı (4 Lt)', tutar: '₺650.00' },
+                    { urun: 'KDV (%20)', tutar: '₺499.00' }
+                ],
+                satirlar: [
+                    { kalem: 'Akaryakıt', aciklama: 'Motorin 45 Litre', hesapKodu: '770.07', netTutar: 1537.50, kdvOrani: 20 },
+                    { kalem: 'Bakım', aciklama: 'Motor Yağı 4 Litre', hesapKodu: '770.07', netTutar: 541.67, kdvOrani: 20 }
+                ]
+            },
+            {
+                belgeTuru: 'fatura',
+                firmaAdi: 'YENİ TEDARİKÇİ LTD. ŞTİ.',
+                firmaTuru: 'Ofis Malzemeleri',
+                vergiNo: '1234509876',
+                belgeNo: 'FTR-2024-0001234',
+                belgeTarihi: '2024-12-14',
+                ocrGuvenSkoru: 95,
+                cariDurumu: 'gerekli', // Cari kaydı yok
+                cariKodu: null,
+                fisKalemleri: [
+                    { urun: 'Ofis Koltuğu (2 adet)', tutar: '₺4,500.00' },
+                    { urun: 'Masa Lambası (3 adet)', tutar: '₺750.00' },
+                    { urun: 'KDV (%20)', tutar: '₺1,050.00' }
+                ],
+                satirlar: [
+                    { kalem: 'Demirbaş', aciklama: 'Ofis Koltuğu (2 adet)', hesapKodu: '255.01', netTutar: 3750.00, kdvOrani: 20 },
+                    { kalem: 'Demirbaş', aciklama: 'Masa Lambası (3 adet)', hesapKodu: '255.01', netTutar: 625.00, kdvOrani: 20 }
+                ]
+            }
+        ];
 
         // ============================================
         // BELGE KARTI RENDER FONKSİYONLARI
         // ============================================
 
-        // Demo belge ekle
+        // Belge türü seçimi değiştiğinde
+        function belgeTuruDegisti() {
+            const fisLabel = document.getElementById('belgeTuruFisLabel');
+            const faturaLabel = document.getElementById('belgeTuruFaturaLabel');
+            const seciliTur = document.querySelector('input[name="yeniBelgeTuru"]:checked').value;
+
+            if (seciliTur === 'fis') {
+                fisLabel.style.borderColor = 'var(--primary-orange)';
+                fisLabel.style.background = '#fff3e0';
+                faturaLabel.style.borderColor = '#e0e0e0';
+                faturaLabel.style.background = 'white';
+            } else {
+                faturaLabel.style.borderColor = 'var(--primary-orange)';
+                faturaLabel.style.background = '#fff3e0';
+                fisLabel.style.borderColor = '#e0e0e0';
+                fisLabel.style.background = 'white';
+            }
+        }
+
+        // Demo fiş ekle
+        function demoFisEkle() {
+            const ornek = demoBelgeOrnekleri[demoFisIndex];
+            demoFisIndex = (demoFisIndex + 1) % demoBelgeOrnekleri.length;
+            belgeEkle(ornek);
+        }
+
+        // Demo fatura ekle
+        function demoFaturaEkle() {
+            const ornek = demoFaturaOrnekleri[demoFaturaIndex];
+            demoFaturaIndex = (demoFaturaIndex + 1) % demoFaturaOrnekleri.length;
+            belgeEkle(ornek);
+        }
+
+        // Belge ekle (ortak fonksiyon)
+        function belgeEkle(ornek) {
+            belgeIdSayaci++;
+            const yeniBelge = {
+                id: belgeIdSayaci,
+                ...ornek,
+                satirlar: ornek.satirlar.map(satir => {
+                    satirIdSayaci++;
+                    return {
+                        id: satirIdSayaci,
+                        belgeId: belgeIdSayaci,
+                        aktif: true,
+                        ...satir
+                    };
+                })
+            };
+
+            belgeler.push(yeniBelge);
+            renderBelgeler();
+            guncelleToplamOzet();
+            guncelleBelgeBilgileri();
+            guncelleMasrafDetaylari();
+
+            const cariMesaj = ornek.belgeTuru === 'fatura'
+                ? (ornek.cariDurumu === 'mevcut' ? ' (Cari Mevcut)' : ' (⚠️ Cari Gerekli)')
+                : '';
+            showAlert('success', `📄 ${ornek.firmaAdi} ${ornek.belgeTuru === 'fis' ? 'fişi' : 'faturası'} eklendi!${cariMesaj}`);
+        }
+
+        // Eski demo fonksiyonu (geriye uyumluluk)
         function demoBelgeEkle() {
             const ornek = demoBelgeOrnekleri[demoOrnekIndex];
             demoOrnekIndex = (demoOrnekIndex + 1) % demoBelgeOrnekleri.length;
@@ -829,6 +880,8 @@
             belgeler.push(yeniBelge);
             renderBelgeler();
             guncelleToplamOzet();
+            guncelleBelgeBilgileri();
+            guncelleMasrafDetaylari();
 
             showAlert('success', `📄 ${ornek.firmaAdi} belgesi eklendi! ${ornek.satirlar.length} gider satırı okundu.`);
         }
@@ -858,22 +911,40 @@
                     return { net: acc.net + s.netTutar, kdv: acc.kdv + kdv, brut: acc.brut + s.netTutar + kdv };
                 }, { net: 0, kdv: 0, brut: 0 });
 
+                // Cari durumu HTML'i (sadece fatura için)
+                const cariDurumuHtml = belge.belgeTuru === 'fatura' ? `
+                    <div style="margin-top: 8px; padding: 8px 12px; background: ${belge.cariDurumu === 'mevcut' ? 'rgba(76, 175, 80, 0.2)' : 'rgba(255, 152, 0, 0.3)'}; border-radius: 6px;">
+                        ${belge.cariDurumu === 'mevcut'
+                            ? `<span style="font-size: 12px;">✅ Cari Mevcut: <strong>${belge.cariKodu}</strong></span>`
+                            : `<span style="font-size: 12px;">⚠️ Cari Gerekli - Tedarikçi SAP'da tanımlı değil</span>`
+                        }
+                    </div>
+                ` : '';
+
+                // Belge türü etiketi
+                const belgeTuruEtiket = belge.belgeTuru === 'fatura'
+                    ? '<span style="background: #2196F3; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 8px;">FATURA</span>'
+                    : '<span style="background: #4CAF50; padding: 2px 8px; border-radius: 4px; font-size: 10px; margin-left: 8px;">FİŞ</span>';
+
                 belgeKarti.innerHTML = `
                     <!-- Belge Başlığı -->
-                    <div style="background: linear-gradient(135deg, var(--primary-orange) 0%, #e65100 100%); color: white; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-size: 11px; opacity: 0.9; margin-bottom: 4px;">BELGE ${index + 1}</div>
-                            <div style="font-size: 18px; font-weight: 700;">${belge.firmaAdi}</div>
-                            <div style="font-size: 12px; opacity: 0.9;">${belge.belgeNo} • ${formatTarih(belge.belgeTarihi)}</div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 8px;">
-                                🤖 OCR %${belge.ocrGuvenSkoru}
+                    <div style="background: linear-gradient(135deg, ${belge.belgeTuru === 'fatura' ? '#1976D2' : 'var(--primary-orange)'} 0%, ${belge.belgeTuru === 'fatura' ? '#0d47a1' : '#e65100'} 100%); color: white; padding: 16px 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <div style="font-size: 11px; opacity: 0.9; margin-bottom: 4px;">BELGE ${index + 1} ${belgeTuruEtiket}</div>
+                                <div style="font-size: 18px; font-weight: 700;">${belge.firmaAdi}</div>
+                                <div style="font-size: 12px; opacity: 0.9;">${belge.belgeNo} • ${formatTarih(belge.belgeTarihi)} • VKN: ${belge.vergiNo}</div>
                             </div>
-                            <button onclick="belgeSil(${belge.id})" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;">
-                                🗑️ Belgeyi Kaldır
-                            </button>
+                            <div style="text-align: right;">
+                                <div style="background: rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 20px; font-size: 12px; margin-bottom: 8px;">
+                                    🤖 OCR %${belge.ocrGuvenSkoru}
+                                </div>
+                                <button onclick="belgeSil(${belge.id})" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px;">
+                                    🗑️ Belgeyi Kaldır
+                                </button>
+                            </div>
                         </div>
+                        ${cariDurumuHtml}
                     </div>
 
                     <!-- Belge İçeriği: Sol tarafta fiş görseli, sağda gider satırları -->
@@ -1003,6 +1074,7 @@
                     satir.aktif = false;
                     renderBelgeler();
                     guncelleToplamOzet();
+                    guncelleBelgeBilgileri();
                     showAlert('info', `"${satir.aciklama}" satırı çıkarıldı.`);
                 }
             }
@@ -1017,6 +1089,7 @@
                     satir.aktif = true;
                     renderBelgeler();
                     guncelleToplamOzet();
+                    guncelleBelgeBilgileri();
                     showAlert('success', `"${satir.aciklama}" satırı geri alındı.`);
                 }
             }
@@ -1029,6 +1102,8 @@
                 belgeler = belgeler.filter(b => b.id !== belgeId);
                 renderBelgeler();
                 guncelleToplamOzet();
+                guncelleBelgeBilgileri();
+                guncelleMasrafDetaylari();
                 showAlert('info', `"${belge.firmaAdi}" belgesi kaldırıldı.`);
             }
         }
@@ -1087,6 +1162,332 @@
             if (document.getElementById('kdvTutari')) {
                 document.getElementById('kdvTutari').value = toplamKdv.toFixed(2);
             }
+        }
+
+        // Belge Bilgileri bölümünü güncelle (gruplu görünüm)
+        function guncelleBelgeBilgileri() {
+            const section = document.getElementById('belgeBilgileriSection');
+            const listesi = document.getElementById('belgeBilgileriListesi');
+            const badge = document.getElementById('belgeBilgileriBadge');
+
+            if (belgeler.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            badge.textContent = `${belgeler.length} Belge`;
+
+            // Fiş ve Fatura sayılarını hesapla
+            const fisSayisi = belgeler.filter(b => b.belgeTuru === 'fis').length;
+            const faturaSayisi = belgeler.filter(b => b.belgeTuru === 'fatura').length;
+            const cariGerekliSayisi = belgeler.filter(b => b.belgeTuru === 'fatura' && b.cariDurumu === 'gerekli').length;
+
+            let html = `
+                <!-- Özet Bar -->
+                <div style="display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+                    <div style="background: linear-gradient(135deg, #4CAF50, #2E7D32); color: white; padding: 12px 20px; border-radius: 8px; flex: 1; min-width: 150px;">
+                        <div style="font-size: 11px; opacity: 0.9;">🧾 Fiş Sayısı</div>
+                        <div style="font-size: 24px; font-weight: 700;">${fisSayisi}</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #2196F3, #1565C0); color: white; padding: 12px 20px; border-radius: 8px; flex: 1; min-width: 150px;">
+                        <div style="font-size: 11px; opacity: 0.9;">📄 Fatura Sayısı</div>
+                        <div style="font-size: 24px; font-weight: 700;">${faturaSayisi}</div>
+                    </div>
+                    ${cariGerekliSayisi > 0 ? `
+                        <div style="background: linear-gradient(135deg, #FF9800, #E65100); color: white; padding: 12px 20px; border-radius: 8px; flex: 1; min-width: 150px;">
+                            <div style="font-size: 11px; opacity: 0.9;">⚠️ Cari Gerekli</div>
+                            <div style="font-size: 24px; font-weight: 700;">${cariGerekliSayisi}</div>
+                        </div>
+                    ` : ''}
+                </div>
+
+                <!-- Belge Listesi -->
+                <div style="display: grid; gap: 12px;">
+            `;
+
+            belgeler.forEach((belge, index) => {
+                const aktifSatirSayisi = belge.satirlar.filter(s => s.aktif).length;
+                const toplamSatirSayisi = belge.satirlar.length;
+                const belgeToplam = belge.satirlar.filter(s => s.aktif).reduce((acc, s) => acc + s.netTutar + (s.netTutar * s.kdvOrani / 100), 0);
+
+                const belgeTuruRenk = belge.belgeTuru === 'fatura' ? '#2196F3' : '#4CAF50';
+                const belgeTuruIcon = belge.belgeTuru === 'fatura' ? '📄' : '🧾';
+                const belgeTuruAdi = belge.belgeTuru === 'fatura' ? 'FATURA' : 'FİŞ';
+
+                // Cari durumu (sadece fatura için)
+                let cariHtml = '';
+                if (belge.belgeTuru === 'fatura') {
+                    if (belge.cariDurumu === 'mevcut') {
+                        cariHtml = `<span style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 12px; font-size: 11px;">✅ ${belge.cariKodu}</span>`;
+                    } else {
+                        cariHtml = `<span style="background: #FFF3E0; color: #E65100; padding: 4px 10px; border-radius: 12px; font-size: 11px;">⚠️ Cari Gerekli</span>`;
+                    }
+                }
+
+                html += `
+                    <div style="background: white; border: 1px solid #e0e0e0; border-radius: 10px; padding: 16px; border-left: 4px solid ${belgeTuruRenk};">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                            <div style="flex: 2; min-width: 250px;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                    <span style="font-size: 18px;">${belgeTuruIcon}</span>
+                                    <span style="background: ${belgeTuruRenk}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px;">${belgeTuruAdi}</span>
+                                    <span style="font-weight: 700; font-size: 15px;">${belge.firmaAdi}</span>
+                                    ${cariHtml}
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; font-size: 13px; color: #555;">
+                                    <div><span style="color: #999;">Belge No:</span> <strong>${belge.belgeNo}</strong></div>
+                                    <div><span style="color: #999;">Tarih:</span> <strong>${formatTarih(belge.belgeTarihi)}</strong></div>
+                                    <div><span style="color: #999;">VKN:</span> <strong>${belge.vergiNo}</strong></div>
+                                    <div><span style="color: #999;">Satır:</span> <strong>${aktifSatirSayisi}/${toplamSatirSayisi}</strong></div>
+                                </div>
+                            </div>
+                            <div style="text-align: right; min-width: 120px;">
+                                <div style="font-size: 11px; color: #666;">Belge Tutarı</div>
+                                <div style="font-size: 20px; font-weight: 700; color: ${belgeTuruRenk};">₺${belgeToplam.toFixed(2)}</div>
+                                <div style="font-size: 11px; color: #999; margin-top: 4px;">OCR %${belge.ocrGuvenSkoru}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            listesi.innerHTML = html;
+        }
+
+        // ============================================
+        // MASRAF DETAYLARI DİNAMİK OLUŞTURMA
+        // Her belge için ayrı Masraf Detayları bölümü
+        // ============================================
+        function guncelleMasrafDetaylari() {
+            const container = document.getElementById('masrafDetaylariContainer');
+            const onayBilgileriNumara = document.getElementById('onayBilgileriSectionNumber');
+
+            if (belgeler.length === 0) {
+                container.innerHTML = '';
+                // Belge yokken Onay Akışı section numarası 5 olsun
+                if (onayBilgileriNumara) {
+                    onayBilgileriNumara.textContent = '5';
+                }
+                return;
+            }
+
+            let html = '';
+
+            belgeler.forEach((belge, index) => {
+                const belgeTuruRenk = belge.belgeTuru === 'fatura' ? '#2196F3' : '#4CAF50';
+                const belgeTuruIcon = belge.belgeTuru === 'fatura' ? '📄' : '🧾';
+                const belgeTuruAdi = belge.belgeTuru === 'fatura' ? 'FATURA' : 'FİŞ';
+                const sectionNumber = 5 + index;
+
+                // Belge toplam tutarını hesapla
+                const aktifSatirlar = belge.satirlar.filter(s => s.aktif);
+                const belgeToplam = aktifSatirlar.reduce((acc, s) => {
+                    const kdv = s.netTutar * s.kdvOrani / 100;
+                    return acc + s.netTutar + kdv;
+                }, 0);
+
+                html += `
+                <div class="form-section" id="masrafDetay-${belge.id}" style="border-left: 4px solid ${belgeTuruRenk};">
+                    <h2 class="section-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="section-number">${sectionNumber}</span>
+                            Masraf Detayları
+                            <span style="background: ${belgeTuruRenk}; color: white; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;">
+                                ${belgeTuruIcon} ${belge.firmaAdi}
+                            </span>
+                        </div>
+                        <div style="font-size: 14px; color: ${belgeTuruRenk}; font-weight: 600;">
+                            ₺${belgeToplam.toFixed(2)}
+                        </div>
+                    </h2>
+
+                    <!-- Belge Özet Bilgisi -->
+                    <div style="background: linear-gradient(135deg, ${belgeTuruRenk}15, ${belgeTuruRenk}08); border: 1px solid ${belgeTuruRenk}30; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div style="display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px;">
+                                <span><strong>Belge No:</strong> ${belge.belgeNo}</span>
+                                <span><strong>Tarih:</strong> ${formatTarih(belge.belgeTarihi)}</span>
+                                <span><strong>VKN:</strong> ${belge.vergiNo}</span>
+                            </div>
+                            <span style="background: ${belgeTuruRenk}; color: white; padding: 2px 10px; border-radius: 12px; font-size: 11px;">${belgeTuruAdi}</span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Masraf Merkezi</label>
+                            <input type="text" class="form-input masraf-merkezi" data-belge-id="${belge.id}" value="50G1022 - Dijital Ürünler" readonly style="background: #f5f5f5;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Masraf Türü / Hesap Kodu</label>
+                            <select class="form-select hesap-kodu" data-belge-id="${belge.id}" onchange="masrafDetayDegisti(${belge.id})">
+                                <option value="">Seçiniz...</option>
+                                <optgroup label="Genel Yönetim Giderleri - Merkez (770)">
+                                    <option value="770.01">770.01 - Yemek Giderleri</option>
+                                    <option value="770.02">770.02 - Ulaşım Giderleri</option>
+                                    <option value="770.03">770.03 - Konaklama Giderleri</option>
+                                    <option value="770.04">770.04 - Ofis Malzemesi</option>
+                                    <option value="770.05">770.05 - Temsil Ağırlama</option>
+                                    <option value="770.06">770.06 - Haberleşme Giderleri</option>
+                                    <option value="770.07">770.07 - Taşıt Giderleri</option>
+                                </optgroup>
+                                <optgroup label="Pazarlama Satış Dağıtım - Mağazalar (760)">
+                                    <option value="760.01">760.01 - Mağaza Giderleri</option>
+                                    <option value="760.02">760.02 - Tanıtım Giderleri</option>
+                                    <option value="760.03">760.03 - Satış Promosyon</option>
+                                </optgroup>
+                                <optgroup label="Ar-Ge / Tasarım Merkezi (750)">
+                                    <option value="750.01">750.01 - Proje Giderleri</option>
+                                    <option value="750.02">750.02 - Araştırma Giderleri</option>
+                                    <option value="750.03">750.03 - Test ve Geliştirme</option>
+                                </optgroup>
+                                <optgroup label="Teknoloji Teknik Destek (740)">
+                                    <option value="740.01">740.01 - Yazılım Giderleri</option>
+                                    <option value="740.02">740.02 - Donanım Bakım</option>
+                                    <option value="740.03">740.03 - IT Destek Hizmetleri</option>
+                                </optgroup>
+                                <optgroup label="Fabrika Giderleri (730)">
+                                    <option value="730.01">730.01 - Üretim Giderleri</option>
+                                    <option value="730.02">730.02 - Hammadde Giderleri</option>
+                                    <option value="730.03">730.03 - Bakım Onarım</option>
+                                </optgroup>
+                                <optgroup label="Şirketlerarası Yansıtmalar (198)">
+                                    <option value="198.01">198.01 - FLO Mağazacılık Yansıtma</option>
+                                    <option value="198.02">198.02 - FLO Teknoloji Yansıtma</option>
+                                    <option value="198.03">198.03 - Turuncu Yansıtma</option>
+                                </optgroup>
+                                <optgroup label="Kiralama Giderleri (632)">
+                                    <option value="632.04.01">632.04.01 - Mağaza Asgari Kira</option>
+                                    <option value="632.04.02">632.04.02 - Ortak Yönetim Gideri</option>
+                                    <option value="632.04.03">632.04.03 - Ciro Kira Gideri</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Proje Kodu (Opsiyonel)</label>
+                            <select class="form-select proje-kodu" data-belge-id="${belge.id}" onchange="masrafDetayDegisti(${belge.id})">
+                                <option value="">Proje seçiniz (opsiyonel)...</option>
+                                <option value="PRJ001">PRJ001 - E-Ticaret Yenileme</option>
+                                <option value="PRJ002">PRJ002 - Mobil Uygulama v2</option>
+                                <option value="PRJ003">PRJ003 - CRM Entegrasyonu</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Şirket</label>
+                            <select class="form-select sirket" data-belge-id="${belge.id}" onchange="masrafDetayDegisti(${belge.id})">
+                                <option value="flo_magazacilik">FLO Mağazacılık</option>
+                                <option value="turuncu">Turuncu Ayakkabı</option>
+                                <option value="flo_teknoloji">FLO Teknoloji</option>
+                                <option value="flo_ic_dis">FLO İç Dış Ticaret</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label required">Masraf Açıklaması</label>
+                            <textarea class="form-textarea aciklama" data-belge-id="${belge.id}" placeholder="Bu belge için masrafın ne amaçla yapıldığını detaylı açıklayınız..." required oninput="aiHesapOnerisiBelge(this.value, ${belge.id})"></textarea>
+                            <small style="color: var(--text-secondary); font-size: 12px; margin-top: 4px; display: block;">
+                                * Bu açıklama hesap eşleştirmesinde kullanılacaktır. Lütfen detaylı yazınız.
+                            </small>
+                            <!-- AI Hesap Önerisi -->
+                            <div id="aiHesapOneriContainer-${belge.id}" style="display: none; margin-top: 8px; padding: 10px 14px; background: linear-gradient(135deg, #E3F2FD, #BBDEFB); border-radius: 8px; border-left: 4px solid #2196F3;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 18px;">🤖</span>
+                                    <div>
+                                        <div style="font-size: 11px; color: #1565C0; font-weight: 600;">AI Hesap Önerisi</div>
+                                        <div id="aiHesapOneriText-${belge.id}" style="font-size: 13px; color: #0D47A1; font-weight: 500;"></div>
+                                    </div>
+                                    <button type="button" onclick="aiOneriUygulaBelge(${belge.id})" style="margin-left: auto; background: #2196F3; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                                        Uygula
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // Onay Akışı bölüm numarasını güncelle (5 + belge sayısı)
+            if (onayBilgileriNumara) {
+                onayBilgileriNumara.textContent = 5 + belgeler.length;
+            }
+        }
+
+        // Belge bazlı masraf detayı değişikliği
+        function masrafDetayDegisti(belgeId) {
+            const belge = belgeler.find(b => b.id === belgeId);
+            if (!belge) return;
+
+            // Form değerlerini belgeye kaydet
+            const hesapKodu = document.querySelector(`.hesap-kodu[data-belge-id="${belgeId}"]`);
+            const projeKodu = document.querySelector(`.proje-kodu[data-belge-id="${belgeId}"]`);
+            const sirket = document.querySelector(`.sirket[data-belge-id="${belgeId}"]`);
+            const aciklama = document.querySelector(`.aciklama[data-belge-id="${belgeId}"]`);
+
+            belge.masrafDetay = {
+                hesapKodu: hesapKodu ? hesapKodu.value : '',
+                projeKodu: projeKodu ? projeKodu.value : '',
+                sirket: sirket ? sirket.value : '',
+                aciklama: aciklama ? aciklama.value : ''
+            };
+        }
+
+        // Belge bazlı AI hesap önerisi
+        function aiHesapOnerisiBelge(aciklama, belgeId) {
+            const container = document.getElementById(`aiHesapOneriContainer-${belgeId}`);
+            const textEl = document.getElementById(`aiHesapOneriText-${belgeId}`);
+
+            if (!aciklama || aciklama.length < 5) {
+                if (container) container.style.display = 'none';
+                return;
+            }
+
+            // Basit AI simülasyonu
+            const lowerAciklama = aciklama.toLowerCase();
+            let oneri = '';
+
+            if (lowerAciklama.includes('yemek') || lowerAciklama.includes('kahvaltı') || lowerAciklama.includes('öğle') || lowerAciklama.includes('akşam')) {
+                oneri = '770.01 - Yemek Giderleri';
+            } else if (lowerAciklama.includes('taksi') || lowerAciklama.includes('ulaşım') || lowerAciklama.includes('otobüs')) {
+                oneri = '770.02 - Ulaşım Giderleri';
+            } else if (lowerAciklama.includes('otel') || lowerAciklama.includes('konaklama') || lowerAciklama.includes('pansiyon')) {
+                oneri = '770.03 - Konaklama Giderleri';
+            } else if (lowerAciklama.includes('kağıt') || lowerAciklama.includes('kalem') || lowerAciklama.includes('ofis') || lowerAciklama.includes('kırtasiye')) {
+                oneri = '770.04 - Ofis Malzemesi';
+            } else if (lowerAciklama.includes('telefon') || lowerAciklama.includes('internet') || lowerAciklama.includes('hat')) {
+                oneri = '770.06 - Haberleşme Giderleri';
+            } else if (lowerAciklama.includes('benzin') || lowerAciklama.includes('akaryakıt') || lowerAciklama.includes('araç')) {
+                oneri = '770.07 - Taşıt Giderleri';
+            }
+
+            if (oneri && container && textEl) {
+                textEl.textContent = oneri;
+                container.style.display = 'block';
+            }
+        }
+
+        // Belge bazlı AI önerisi uygula
+        function aiOneriUygulaBelge(belgeId) {
+            const textEl = document.getElementById(`aiHesapOneriText-${belgeId}`);
+            const hesapKodu = document.querySelector(`.hesap-kodu[data-belge-id="${belgeId}"]`);
+
+            if (textEl && hesapKodu) {
+                const oneriKodu = textEl.textContent.split(' - ')[0];
+                hesapKodu.value = oneriKodu;
+                masrafDetayDegisti(belgeId);
+            }
+
+            const container = document.getElementById(`aiHesapOneriContainer-${belgeId}`);
+            if (container) container.style.display = 'none';
         }
 
         // Gider kalemi rengini al
@@ -2299,6 +2700,172 @@
 
         document.getElementById('sirket').addEventListener('change', checkSirketEslesmesi);
 
+        // ============================================
+        // AI HESAP ÖNERİSİ SİSTEMİ
+        // ============================================
+
+        // AI Hesap önerisi keyword eşleşmeleri
+        const AI_HESAP_ONERILERI = {
+            // Yemek Giderleri - 770.01
+            'yemek': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'restoran': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'lokanta': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'kahvaltı': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'öğle yemeği': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'akşam yemeği': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'cafe': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'kahve': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+            'starbucks': { kod: '770.01', aciklama: 'Yemek Giderleri' },
+
+            // Ulaşım Giderleri - 770.02
+            'taksi': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'uber': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'bitaksi': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'transfer': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'havalimanı': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'uçak': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'otobüs': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+            'tren': { kod: '770.02', aciklama: 'Ulaşım Giderleri' },
+
+            // Konaklama Giderleri - 770.03
+            'otel': { kod: '770.03', aciklama: 'Konaklama Giderleri' },
+            'konaklama': { kod: '770.03', aciklama: 'Konaklama Giderleri' },
+            'hotel': { kod: '770.03', aciklama: 'Konaklama Giderleri' },
+            'hilton': { kod: '770.03', aciklama: 'Konaklama Giderleri' },
+            'marriott': { kod: '770.03', aciklama: 'Konaklama Giderleri' },
+
+            // Ofis/Kırtasiye - 770.04
+            'kırtasiye': { kod: '770.04', aciklama: 'Kırtasiye ve Ofis Malzemeleri' },
+            'kalem': { kod: '770.04', aciklama: 'Kırtasiye ve Ofis Malzemeleri' },
+            'defter': { kod: '770.04', aciklama: 'Kırtasiye ve Ofis Malzemeleri' },
+            'dosya': { kod: '770.04', aciklama: 'Kırtasiye ve Ofis Malzemeleri' },
+            'toner': { kod: '770.04', aciklama: 'Kırtasiye ve Ofis Malzemeleri' },
+            'kağıt': { kod: '770.04', aciklama: 'Kırtasiye ve Ofis Malzemeleri' },
+
+            // Haberleşme - 770.05
+            'telefon': { kod: '770.05', aciklama: 'Haberleşme Giderleri' },
+            'turkcell': { kod: '770.05', aciklama: 'Haberleşme Giderleri' },
+            'vodafone': { kod: '770.05', aciklama: 'Haberleşme Giderleri' },
+            'internet': { kod: '770.05', aciklama: 'Haberleşme Giderleri' },
+
+            // Akaryakıt - 770.07
+            'benzin': { kod: '770.07', aciklama: 'Akaryakıt Giderleri' },
+            'motorin': { kod: '770.07', aciklama: 'Akaryakıt Giderleri' },
+            'yakıt': { kod: '770.07', aciklama: 'Akaryakıt Giderleri' },
+            'shell': { kod: '770.07', aciklama: 'Akaryakıt Giderleri' },
+            'opet': { kod: '770.07', aciklama: 'Akaryakıt Giderleri' },
+            'petrol': { kod: '770.07', aciklama: 'Akaryakıt Giderleri' }
+        };
+
+        let sonAIOnerisi = null;
+
+        // AI Hesap önerisi fonksiyonu
+        function aiHesapOnerisi(aciklama) {
+            const container = document.getElementById('aiHesapOneriContainer');
+            const textEl = document.getElementById('aiHesapOneriText');
+
+            if (!aciklama || aciklama.length < 3) {
+                container.style.display = 'none';
+                sonAIOnerisi = null;
+                return;
+            }
+
+            const lowercaseAciklama = aciklama.toLowerCase();
+
+            // Keyword eşleşmesi ara
+            for (const [keyword, oneri] of Object.entries(AI_HESAP_ONERILERI)) {
+                if (lowercaseAciklama.includes(keyword)) {
+                    sonAIOnerisi = oneri;
+                    textEl.innerHTML = `<strong>${oneri.kod}</strong> - ${oneri.aciklama}`;
+                    container.style.display = 'block';
+                    return;
+                }
+            }
+
+            // Eşleşme yoksa gizle
+            container.style.display = 'none';
+            sonAIOnerisi = null;
+        }
+
+        // AI önerisini uygula
+        function aiOneriUygula() {
+            if (sonAIOnerisi) {
+                const hesapKoduSelect = document.getElementById('hesapKodu');
+                hesapKoduSelect.value = sonAIOnerisi.kod;
+                hesapKoduSelect.disabled = false; // Eğer disabled ise aç
+
+                showAlert('success', `🤖 AI önerisi uygulandı: ${sonAIOnerisi.kod} - ${sonAIOnerisi.aciklama}`);
+
+                // Öneri kutusunu gizle
+                document.getElementById('aiHesapOneriContainer').style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // CARİ KONTROLÜ VE FORM BLOKLAMA
+        // ============================================
+
+        // Cari gerekli fatura kontrolü
+        function checkCariGerekli() {
+            const cariGerekliSayisi = belgeler.filter(b => b.belgeTuru === 'fatura' && b.cariDurumu === 'gerekli').length;
+            return cariGerekliSayisi;
+        }
+
+        // Cari uyarısını güncelle
+        function guncelleCariUyarisi() {
+            const cariGerekliSayisi = checkCariGerekli();
+            const alertContainer = document.getElementById('alertContainer');
+            const existingCariAlert = document.getElementById('cariGerekliAlert');
+            const submitBtn = document.querySelector('button[onclick="submitMasrafForm()"]');
+
+            if (cariGerekliSayisi > 0) {
+                // Uyarı göster
+                if (!existingCariAlert) {
+                    const alert = document.createElement('div');
+                    alert.id = 'cariGerekliAlert';
+                    alert.className = 'alert alert-error';
+                    alert.style.cssText = 'position: sticky; top: 0; z-index: 100;';
+                    alert.innerHTML = `
+                        <span class="alert-icon">🚫</span>
+                        <div>
+                            <strong>Cari Kaydı Gerekli!</strong><br>
+                            <span>${cariGerekliSayisi} adet faturanın tedarikçisi SAP'da tanımlı değil.</span><br>
+                            <small style="color: #b71c1c;">Masraf göndermeden önce ilgili carilerin açılması gerekmektedir. Lütfen Cari Mutabakat birimi ile iletişime geçiniz.</small>
+                        </div>
+                    `;
+                    alertContainer.prepend(alert);
+                }
+
+                // Submit butonunu devre dışı bırak
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.5';
+                    submitBtn.style.cursor = 'not-allowed';
+                    submitBtn.title = 'Cari kaydı olmayan faturalar mevcut';
+                }
+            } else {
+                // Uyarıyı kaldır
+                if (existingCariAlert) {
+                    existingCariAlert.remove();
+                }
+
+                // Submit butonunu aktif et
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.cursor = 'pointer';
+                    submitBtn.title = '';
+                }
+            }
+        }
+
+        // Orijinal renderBelgeler fonksiyonunu genişlet
+        const originalRenderBelgeler = renderBelgeler;
+        renderBelgeler = function() {
+            originalRenderBelgeler();
+            guncelleCariUyarisi();
+        };
+
         // Form submit validasyonu
         const originalSubmitMasrafForm = window.submitMasrafForm || function() {};
         window.submitMasrafForm = function() {
@@ -2310,13 +2877,16 @@
             const hesapKoduSelect = document.getElementById('hesapKodu');
             const hesapKodu = hesapKoduSelect.value;
 
-            // Zorunlu alan kontrolleri
-            if (!belgeTuru) {
-                showValidationAlert('Lütfen belge türünü seçiniz.', 'error');
+            // CARİ KONTROLÜ - En önemli kontrol
+            const cariGerekliSayisi = checkCariGerekli();
+            if (cariGerekliSayisi > 0) {
+                showValidationAlert(`${cariGerekliSayisi} adet faturanın cari kaydı bulunmamaktadır. Önce carilerin açılması gerekmektedir.`, 'error');
                 return;
             }
-            if (!hesapKodu) {
-                showValidationAlert('Lütfen masraf türü / hesap kodunu seçiniz.', 'error');
+
+            // Zorunlu alan kontrolleri
+            if (belgeler.length === 0) {
+                showValidationAlert('Lütfen en az bir belge ekleyiniz.', 'error');
                 return;
             }
             if (!aciklama.trim()) {
@@ -2345,7 +2915,7 @@
             }
 
             // Tüm kontroller geçti, formu gönder
-            showAlert('success', 'Masraf talebiniz başarıyla onaya gönderildi!');
+            showAlert('success', '✅ Masraf talebiniz başarıyla onaya gönderildi!');
             setTimeout(() => {
                 window.location.href = 'masraf-listesi.html';
             }, 2000);
@@ -2381,6 +2951,418 @@
             }
         }
 
+    </script>
+
+    <!-- Manuel Belge Oluşturma Modal -->
+    <div id="manuelBelgeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto;">
+        <div style="background: white; max-width: 800px; margin: 40px auto; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;">
+            <!-- Modal Header -->
+            <div style="background: linear-gradient(135deg, #9C27B0, #7B1FA2); color: white; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="margin: 0; font-size: 18px;">✏️ Manuel Belge Oluştur</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">OCR okuyamadığında veya manuel giriş tercih edildiğinde</p>
+                </div>
+                <button onclick="manuelBelgeModalKapat()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px;">✕</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+                <!-- Belge Türü Seçimi -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #333;">Belge Türü *</label>
+                    <div style="display: flex; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #f5f5f5; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; flex: 1;" id="manuelFisLabel">
+                            <input type="radio" name="manuelBelgeTuru" value="fis" checked onchange="manuelBelgeTuruDegisti()">
+                            <span style="font-size: 20px;">🧾</span>
+                            <span style="font-weight: 600;">Fiş</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; padding: 12px 20px; background: #f5f5f5; border: 2px solid #e0e0e0; border-radius: 8px; cursor: pointer; flex: 1;" id="manuelFaturaLabel">
+                            <input type="radio" name="manuelBelgeTuru" value="fatura" onchange="manuelBelgeTuruDegisti()">
+                            <span style="font-size: 20px;">📄</span>
+                            <span style="font-weight: 600;">Fatura</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Firma Bilgileri -->
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 14px; color: #666;">📍 Firma Bilgileri</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Firma Adı *</label>
+                            <input type="text" id="manuelFirmaAdi" placeholder="Örn: MIGROS TİCARET A.Ş." style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Vergi No *</label>
+                            <input type="text" id="manuelVergiNo" placeholder="10 haneli VKN" maxlength="11" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Belge Bilgileri -->
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 14px; color: #666;">📄 Belge Bilgileri</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Belge No *</label>
+                            <input type="text" id="manuelBelgeNo" placeholder="Fiş/Fatura numarası" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Belge Tarihi *</label>
+                            <input type="date" id="manuelBelgeTarihi" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cari Bilgileri (Sadece Fatura için) -->
+                <div id="manuelCariAlani" style="display: none; background: #FFF3E0; padding: 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #FFE0B2;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 14px; color: #E65100;">⚠️ Cari Bilgileri (Fatura için zorunlu)</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Cari Durumu</label>
+                            <select id="manuelCariDurumu" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;" onchange="manuelCariDurumuDegisti()">
+                                <option value="mevcut">Cari Mevcut</option>
+                                <option value="gerekli">Cari Gerekli (Yeni Tedarikçi)</option>
+                            </select>
+                        </div>
+                        <div id="manuelCariKoduAlani">
+                            <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Cari Kodu</label>
+                            <input type="text" id="manuelCariKodu" placeholder="Örn: 320.01.045" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gider Satırları -->
+                <div style="background: #E8F5E9; padding: 16px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #C8E6C9;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h4 style="margin: 0; font-size: 14px; color: #2E7D32;">💰 Gider Satırları</h4>
+                        <button type="button" onclick="manuelSatirEkle()" style="background: #4CAF50; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                            + Satır Ekle
+                        </button>
+                    </div>
+
+                    <div id="manuelSatirlarContainer">
+                        <!-- Varsayılan bir satır -->
+                        <div class="manuel-satir" data-satir-index="0" style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #ddd;">
+                            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; align-items: end;">
+                                <div>
+                                    <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">Açıklama *</label>
+                                    <input type="text" class="manuel-satir-aciklama" placeholder="Ürün/Hizmet açıklaması" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">Tutar (TL) *</label>
+                                    <input type="number" class="manuel-satir-tutar" placeholder="0.00" step="0.01" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">KDV %</label>
+                                    <select class="manuel-satir-kdv" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                                        <option value="0">%0</option>
+                                        <option value="1">%1</option>
+                                        <option value="10" selected>%10</option>
+                                        <option value="20">%20</option>
+                                    </select>
+                                </div>
+                                <button type="button" onclick="manuelSatirSil(this)" style="background: #f44336; color: white; border: none; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; font-size: 16px;" title="Satırı Sil">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toplam Gösterimi -->
+                    <div style="background: white; padding: 12px 16px; border-radius: 8px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; color: #333;">Toplam Tutar:</span>
+                        <span id="manuelToplamTutar" style="font-size: 20px; font-weight: 700; color: #4CAF50;">₺0.00</span>
+                    </div>
+                </div>
+
+                <!-- Gider Kategorisi -->
+                <div style="background: #f8f9fa; padding: 16px; border-radius: 8px;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 14px; color: #666;">📂 Gider Kategorisi</h4>
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px;">Gider Kalemi</label>
+                        <select id="manuelGiderKalemi" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                            <option value="Gıda">🍽️ Gıda</option>
+                            <option value="Temizlik">🧹 Temizlik</option>
+                            <option value="Kırtasiye">📝 Kırtasiye</option>
+                            <option value="Ulaşım">🚗 Ulaşım</option>
+                            <option value="Konaklama">🏨 Konaklama</option>
+                            <option value="Telekomünikasyon">📱 Telekomünikasyon</option>
+                            <option value="Akaryakıt">⛽ Akaryakıt</option>
+                            <option value="Diğer">📦 Diğer</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div style="background: #f5f5f5; padding: 16px 24px; display: flex; justify-content: flex-end; gap: 12px; border-top: 1px solid #e0e0e0;">
+                <button type="button" onclick="manuelBelgeModalKapat()" style="background: white; color: #666; border: 1px solid #ddd; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500;">
+                    İptal
+                </button>
+                <button type="button" onclick="manuelBelgeKaydet()" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                    ✓ Belgeyi Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // MANUEL BELGE OLUŞTURMA FONKSİYONLARI
+        // ============================================
+
+        let manuelSatirSayaci = 0;
+
+        // Modal aç
+        function manuelBelgeModalAc() {
+            document.getElementById('manuelBelgeModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+
+            // Varsayılan değerleri ayarla
+            document.getElementById('manuelBelgeTarihi').value = new Date().toISOString().split('T')[0];
+            manuelBelgeTuruDegisti();
+            manuelToplamHesapla();
+        }
+
+        // Modal kapat
+        function manuelBelgeModalKapat() {
+            document.getElementById('manuelBelgeModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            manuelFormuTemizle();
+        }
+
+        // Formu temizle
+        function manuelFormuTemizle() {
+            document.getElementById('manuelFirmaAdi').value = '';
+            document.getElementById('manuelVergiNo').value = '';
+            document.getElementById('manuelBelgeNo').value = '';
+            document.getElementById('manuelBelgeTarihi').value = '';
+            document.getElementById('manuelCariKodu').value = '';
+            document.getElementById('manuelCariDurumu').value = 'mevcut';
+
+            // Satırları sıfırla
+            const container = document.getElementById('manuelSatirlarContainer');
+            container.innerHTML = `
+                <div class="manuel-satir" data-satir-index="0" style="background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #ddd;">
+                    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; align-items: end;">
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">Açıklama *</label>
+                            <input type="text" class="manuel-satir-aciklama" placeholder="Ürün/Hizmet açıklaması" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">Tutar (TL) *</label>
+                            <input type="number" class="manuel-satir-tutar" placeholder="0.00" step="0.01" oninput="manuelToplamHesapla()" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">KDV %</label>
+                            <select class="manuel-satir-kdv" onchange="manuelToplamHesapla()" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                                <option value="0">%0</option>
+                                <option value="1">%1</option>
+                                <option value="10" selected>%10</option>
+                                <option value="20">%20</option>
+                            </select>
+                        </div>
+                        <button type="button" onclick="manuelSatirSil(this)" style="background: #f44336; color: white; border: none; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; font-size: 16px;" title="Satırı Sil">🗑️</button>
+                    </div>
+                </div>
+            `;
+            manuelSatirSayaci = 0;
+        }
+
+        // Belge türü değişti
+        function manuelBelgeTuruDegisti() {
+            const belgeTuru = document.querySelector('input[name="manuelBelgeTuru"]:checked').value;
+            const cariAlani = document.getElementById('manuelCariAlani');
+
+            if (belgeTuru === 'fatura') {
+                cariAlani.style.display = 'block';
+                document.getElementById('manuelFisLabel').style.borderColor = '#e0e0e0';
+                document.getElementById('manuelFisLabel').style.background = '#f5f5f5';
+                document.getElementById('manuelFaturaLabel').style.borderColor = '#2196F3';
+                document.getElementById('manuelFaturaLabel').style.background = '#E3F2FD';
+            } else {
+                cariAlani.style.display = 'none';
+                document.getElementById('manuelFaturaLabel').style.borderColor = '#e0e0e0';
+                document.getElementById('manuelFaturaLabel').style.background = '#f5f5f5';
+                document.getElementById('manuelFisLabel').style.borderColor = '#4CAF50';
+                document.getElementById('manuelFisLabel').style.background = '#E8F5E9';
+            }
+        }
+
+        // Cari durumu değişti
+        function manuelCariDurumuDegisti() {
+            const cariDurumu = document.getElementById('manuelCariDurumu').value;
+            const cariKoduAlani = document.getElementById('manuelCariKoduAlani');
+
+            if (cariDurumu === 'mevcut') {
+                cariKoduAlani.style.display = 'block';
+            } else {
+                cariKoduAlani.style.display = 'none';
+            }
+        }
+
+        // Satır ekle
+        function manuelSatirEkle() {
+            manuelSatirSayaci++;
+            const container = document.getElementById('manuelSatirlarContainer');
+            const yeniSatir = document.createElement('div');
+            yeniSatir.className = 'manuel-satir';
+            yeniSatir.dataset.satirIndex = manuelSatirSayaci;
+            yeniSatir.style.cssText = 'background: white; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #ddd;';
+            yeniSatir.innerHTML = `
+                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; align-items: end;">
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">Açıklama *</label>
+                        <input type="text" class="manuel-satir-aciklama" placeholder="Ürün/Hizmet açıklaması" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">Tutar (TL) *</label>
+                        <input type="number" class="manuel-satir-tutar" placeholder="0.00" step="0.01" oninput="manuelToplamHesapla()" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 4px; font-size: 12px;">KDV %</label>
+                        <select class="manuel-satir-kdv" onchange="manuelToplamHesapla()" style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; box-sizing: border-box;">
+                            <option value="0">%0</option>
+                            <option value="1">%1</option>
+                            <option value="10" selected>%10</option>
+                            <option value="20">%20</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="manuelSatirSil(this)" style="background: #f44336; color: white; border: none; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; font-size: 16px;" title="Satırı Sil">🗑️</button>
+                </div>
+            `;
+            container.appendChild(yeniSatir);
+        }
+
+        // Satır sil
+        function manuelSatirSil(btn) {
+            const satirlar = document.querySelectorAll('.manuel-satir');
+            if (satirlar.length > 1) {
+                btn.closest('.manuel-satir').remove();
+                manuelToplamHesapla();
+            } else {
+                alert('En az bir satır olmalıdır.');
+            }
+        }
+
+        // Toplam hesapla
+        function manuelToplamHesapla() {
+            let toplam = 0;
+            const satirlar = document.querySelectorAll('.manuel-satir');
+
+            satirlar.forEach(satir => {
+                const tutar = parseFloat(satir.querySelector('.manuel-satir-tutar').value) || 0;
+                const kdvOrani = parseInt(satir.querySelector('.manuel-satir-kdv').value) || 0;
+                const kdvTutar = tutar * kdvOrani / 100;
+                toplam += tutar + kdvTutar;
+            });
+
+            document.getElementById('manuelToplamTutar').textContent = '₺' + toplam.toFixed(2);
+        }
+
+        // Belgeyi kaydet
+        function manuelBelgeKaydet() {
+            // Validasyon
+            const firmaAdi = document.getElementById('manuelFirmaAdi').value.trim();
+            const vergiNo = document.getElementById('manuelVergiNo').value.trim();
+            const belgeNo = document.getElementById('manuelBelgeNo').value.trim();
+            const belgeTarihi = document.getElementById('manuelBelgeTarihi').value;
+            const belgeTuru = document.querySelector('input[name="manuelBelgeTuru"]:checked').value;
+            const giderKalemi = document.getElementById('manuelGiderKalemi').value;
+
+            if (!firmaAdi) {
+                alert('Firma adı zorunludur.');
+                return;
+            }
+            if (!vergiNo) {
+                alert('Vergi numarası zorunludur.');
+                return;
+            }
+            if (!belgeNo) {
+                alert('Belge numarası zorunludur.');
+                return;
+            }
+            if (!belgeTarihi) {
+                alert('Belge tarihi zorunludur.');
+                return;
+            }
+
+            // Satırları topla
+            const satirlarHTML = document.querySelectorAll('.manuel-satir');
+            const satirlar = [];
+            let hasError = false;
+
+            satirlarHTML.forEach((satir, index) => {
+                const aciklama = satir.querySelector('.manuel-satir-aciklama').value.trim();
+                const tutar = parseFloat(satir.querySelector('.manuel-satir-tutar').value) || 0;
+                const kdvOrani = parseInt(satir.querySelector('.manuel-satir-kdv').value) || 0;
+
+                if (!aciklama || tutar <= 0) {
+                    hasError = true;
+                    return;
+                }
+
+                satirlar.push({
+                    kalem: giderKalemi,
+                    aciklama: aciklama,
+                    hesapKodu: '770.01',
+                    netTutar: tutar,
+                    kdvOrani: kdvOrani
+                });
+            });
+
+            if (hasError || satirlar.length === 0) {
+                alert('Tüm satırlarda açıklama ve tutar girilmelidir.');
+                return;
+            }
+
+            // Fiş kalemleri oluştur
+            const fisKalemleri = satirlar.map(s => ({
+                urun: s.aciklama,
+                tutar: '₺' + (s.netTutar + (s.netTutar * s.kdvOrani / 100)).toFixed(2)
+            }));
+
+            // Belge objesi oluştur
+            const yeniBelge = {
+                belgeTuru: belgeTuru,
+                firmaAdi: firmaAdi,
+                firmaTuru: 'Manuel Giriş',
+                vergiNo: vergiNo,
+                belgeNo: belgeNo,
+                belgeTarihi: belgeTarihi,
+                ocrGuvenSkoru: 100,
+                fisKalemleri: fisKalemleri,
+                satirlar: satirlar
+            };
+
+            // Fatura ise cari bilgileri ekle
+            if (belgeTuru === 'fatura') {
+                yeniBelge.cariDurumu = document.getElementById('manuelCariDurumu').value;
+                if (yeniBelge.cariDurumu === 'mevcut') {
+                    yeniBelge.cariKodu = document.getElementById('manuelCariKodu').value.trim() || 'YENİ';
+                }
+            }
+
+            // Belgeyi ekle
+            belgeEkle(yeniBelge);
+
+            // Modal'ı kapat
+            manuelBelgeModalKapat();
+
+            // Başarı mesajı
+            showAlert('success', `✏️ "${firmaAdi}" belgesi manuel olarak eklendi!`);
+        }
+
+        // İlk yüklemede oninput eventlerini ekle
+        document.addEventListener('DOMContentLoaded', function() {
+            // İlk satırdaki inputlara event listener ekle
+            const ilkSatir = document.querySelector('.manuel-satir');
+            if (ilkSatir) {
+                const tutarInput = ilkSatir.querySelector('.manuel-satir-tutar');
+                const kdvSelect = ilkSatir.querySelector('.manuel-satir-kdv');
+                if (tutarInput) tutarInput.addEventListener('input', manuelToplamHesapla);
+                if (kdvSelect) kdvSelect.addEventListener('change', manuelToplamHesapla);
+            }
+        });
     </script>
 </body>
 </html>

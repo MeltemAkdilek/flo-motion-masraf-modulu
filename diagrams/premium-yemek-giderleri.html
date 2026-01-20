@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Yemek Giderleri Hesap Kodu Matrisi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-light: #f8f9fa;
+            --flo-gray: #6c757d;
+            --flo-success: #198754;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 50px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+        .decision-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 40px 0;
+        }
+        .decision-step {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin: 15px 0;
+        }
+        .decision-box {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 16px;
+            text-align: center;
+            min-width: 250px;
+        }
+        .decision-box.question {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+        }
+        .decision-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .decision-text {
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .decision-sub {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        .arrow-down {
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--flo-primary) 0%, var(--flo-accent) 100%);
+            position: relative;
+        }
+        .arrow-down::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: -6px;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid var(--flo-accent);
+        }
+        .branch-section {
+            display: flex;
+            gap: 60px;
+            margin-top: 20px;
+        }
+        .branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .branch-label {
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .branch-label.istanbul-ici {
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--flo-success);
+            border: 2px solid var(--flo-success);
+        }
+        .branch-label.istanbul-disi {
+            background: rgba(201, 162, 39, 0.1);
+            color: var(--flo-gold);
+            border: 2px solid var(--flo-gold);
+        }
+        .matrix-section {
+            margin-top: 50px;
+        }
+        .matrix-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .matrix-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .matrix-title h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+        .matrix-title span {
+            font-size: 14px;
+            color: var(--flo-gray);
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        thead {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+        }
+        th {
+            color: white;
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 16px 20px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--flo-primary);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-50g {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+            color: white;
+        }
+        .badge-merkez {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .badge-magaza {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            color: white;
+        }
+        .badge-fabrika {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        .badge-proje {
+            background: linear-gradient(135deg, #0dcaf0 0%, #0d6efd 100%);
+            color: white;
+        }
+        .code-cell {
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            background: #f8f9fa;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            display: inline-block;
+        }
+        .selection-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .selection-auto {
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--flo-success);
+        }
+        .selection-manual {
+            background: rgba(233, 69, 96, 0.1);
+            color: var(--flo-accent);
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .note-box {
+            background: linear-gradient(135deg, #fef9e7 0%, #fdf2d5 100%);
+            border-left: 4px solid var(--flo-gold);
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin-top: 30px;
+        }
+        .note-title {
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .note-text {
+            font-size: 14px;
+            color: var(--flo-gray);
+            line-height: 1.6;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Hesap Kodu Karar Matrisi</h1>
+            <p class="subtitle">Masraf türü ve lokasyona göre otomatik hesap kodu belirleme</p>
+        </div>
+
+        <!-- Decision Flow -->
+        <div class="decision-flow">
+            <div class="decision-box">
+                <div class="decision-icon">🍽️</div>
+                <div class="decision-text">YEMEK HARCAMASI</div>
+                <div class="decision-sub">Tespit Edildi</div>
+            </div>
+            <div class="arrow-down"></div>
+            <div class="decision-box question">
+                <div class="decision-icon">📍</div>
+                <div class="decision-text">LOKASYON KONTROLÜ</div>
+                <div class="decision-sub">İl/İlçe Bilgisi</div>
+            </div>
+            <div class="arrow-down"></div>
+            <div class="branch-section">
+                <div class="branch">
+                    <span class="branch-label istanbul-ici">İSTANBUL İÇİ</span>
+                </div>
+                <div class="branch">
+                    <span class="branch-label istanbul-disi">İSTANBUL DIŞI</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Istanbul İçi Matrix -->
+        <div class="matrix-section">
+            <div class="matrix-title">
+                <div class="matrix-icon">📊</div>
+                <div>
+                    <h2>İstanbul İçi - Yemek Giderleri</h2>
+                    <span>Masraf merkezi bazlı hesap kodu ataması</span>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Masraf Merkezi</th>
+                        <th>Seçim Tipi</th>
+                        <th>Hesap Kodu</th>
+                        <th>Hesap Adı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-50g">50G</span> Merkez Genel</td>
+                        <td><span class="selection-tag selection-manual">👤 Kullanıcı Seçer</span></td>
+                        <td>
+                            <span class="code-cell">7704001203</span>
+                            <span class="code-cell">7604001301</span>
+                            <span class="code-cell">7704002210</span>
+                        </td>
+                        <td>
+                            ① Şehir İçi Görev - Yemek<br>
+                            ② Temsil Ağırlama<br>
+                            ③ Motivasyon Gideri
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-merkez">Merkez Diğer</span></td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7604001203</span></td>
+                        <td>Şehir İçi Görev Gid. - Yemek</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-magaza">Mağaza</span></td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7604001203</span></td>
+                        <td>Şehir İçi Görev Gid. - Yemek</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-fabrika">14U</span> Fabrika</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7304001203</span></td>
+                        <td>Şehir İçi Görev Gid. - Yemek</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-proje">50G1012</span> Projede</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7504001203</span></td>
+                        <td>Şehir İçi Görev Gid. - Yemek</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-proje">50G1012</span> Projede Değil</td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7704001203</span></td>
+                        <td>Şehir İçi Görev Gid. - Yemek</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-merkez">50G1022</span></td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7404001203</span></td>
+                        <td>Şehir İçi Görev Gid. - Yemek</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Istanbul Dışı Matrix -->
+        <div class="matrix-section">
+            <div class="matrix-title">
+                <div class="matrix-icon" style="background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);">📊</div>
+                <div>
+                    <h2>İstanbul Dışı - Yemek Giderleri</h2>
+                    <span>Yurtiçi görev harcamaları</span>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Masraf Merkezi</th>
+                        <th>Seçim Tipi</th>
+                        <th>Hesap Kodu</th>
+                        <th>Hesap Adı</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-50g">50G</span> Merkez Genel</td>
+                        <td><span class="selection-tag selection-manual">👤 Kullanıcı Seçer</span></td>
+                        <td>
+                            <span class="code-cell">7704001208</span>
+                            <span class="code-cell">7604001301</span>
+                            <span class="code-cell">7704002210</span>
+                        </td>
+                        <td>
+                            ① Yurtiçi Görev - Yemek<br>
+                            ② Temsil Ağırlama<br>
+                            ③ Motivasyon Gideri
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-merkez">Merkez Diğer</span></td>
+                        <td><span class="selection-tag selection-auto">⚡ Otomatik</span></td>
+                        <td><span class="code-cell">7604001208</span></td>
+                        <td>Yurtiçi Görev Gid. - Yemek</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note-box">
+            <div class="note-title">💡 Önemli Bilgi</div>
+            <div class="note-text">
+                <strong>50G (Merkez Genel)</strong> masraf merkezi için kullanıcıya 3 farklı hesap kodu seçeneği sunulur.
+                Kullanıcı harcamanın niteliğine göre uygun kodu seçer. Diğer tüm masraf merkezleri için hesap kodu
+                <strong>otomatik olarak</strong> sistem tarafından atanır.
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.3
+            </p>
+        </div>
+    </div>
+</body>
+</html>

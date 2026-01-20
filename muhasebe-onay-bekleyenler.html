@@ -127,10 +127,18 @@
         <aside class="sidebar">
             <button class="sidebar-close" onclick="closeMobileMenu()">✕</button>
             <div class="user-profile">
-                <div class="user-avatar" style="background: linear-gradient(135deg, #107C41, #1DB954);">FA</div>
-                <div class="user-name">Fatma Aktaş</div>
-                <div class="user-title">Muhasebe Uzmanı</div>
+                <div class="user-avatar" id="userAvatar" style="background: linear-gradient(135deg, #107C41, #1DB954);">FA</div>
+                <div class="user-name" id="userName">Fatma Aktaş</div>
+                <div class="user-title" id="userTitle">Muhasebe Uzmanı</div>
                 <div class="user-role">Muhasebe Departmanı</div>
+                <!-- Rol Değiştirme (Demo) -->
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                    <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">Demo: Rol Değiştir</label>
+                    <select class="form-select" id="rolSecimi" onchange="muhasebeRoluDegistir()" style="font-size: 12px; padding: 8px;">
+                        <option value="uzman">Muhasebe Uzmanı</option>
+                        <option value="yonetici">Perakende Muhasebe Yöneticisi</option>
+                    </select>
+                </div>
             </div>
 
             <ul class="nav-menu">
@@ -169,6 +177,20 @@
                     <a href="muhasebe-hesap-eslestirme.html" class="nav-link">
                         <span class="nav-icon">⚙️</span>
                         Hesap Eşleştirme
+                    </a>
+                </li>
+                <!-- Yönetici Özel Menüleri -->
+                <li class="nav-item yonetici-menu" style="display: none;">
+                    <a href="muhasebe-personel-atama.html" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        Personel-Mağaza Atama
+                    </a>
+                </li>
+                <li class="nav-item yonetici-menu" style="display: none;">
+                    <a href="muhasebe-cari-kontrol.html" class="nav-link">
+                        <span class="nav-icon">📋</span>
+                        Cari Kontrol Akışı
+                        <span style="background: var(--warning-yellow); color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">5</span>
                     </a>
                 </li>
             </ul>
@@ -898,7 +920,44 @@
         // Initialize pagination on page load
         document.addEventListener('DOMContentLoaded', function() {
             filterTable();
+
+            // Rol durumunu yükle
+            const savedRol = localStorage.getItem('muhasebeRol');
+            if (savedRol) {
+                document.getElementById('rolSecimi').value = savedRol;
+                muhasebeRoluDegistir(true);
+            }
         });
+
+        // =====================
+        // MUHASEBE ROL YÖNETİMİ
+        // =====================
+
+        function muhasebeRoluDegistir(sessiz = false) {
+            const rol = document.getElementById('rolSecimi').value;
+            localStorage.setItem('muhasebeRol', rol);
+
+            const userName = document.getElementById('userName');
+            const userTitle = document.getElementById('userTitle');
+            const userAvatar = document.getElementById('userAvatar');
+            const yoneticiMenuler = document.querySelectorAll('.yonetici-menu');
+
+            if (rol === 'yonetici') {
+                userName.textContent = 'Mehmet Özkan';
+                userTitle.textContent = 'Perakende Muhasebe Yöneticisi';
+                userAvatar.textContent = 'MÖ';
+                userAvatar.style.background = 'linear-gradient(135deg, #FF6B6B, #FF8E53)';
+                yoneticiMenuler.forEach(menu => menu.style.display = 'block');
+                if (!sessiz) showAlert('info', '🔑 Perakende Muhasebe Yöneticisi rolüne geçildi.');
+            } else {
+                userName.textContent = 'Fatma Aktaş';
+                userTitle.textContent = 'Muhasebe Uzmanı';
+                userAvatar.textContent = 'FA';
+                userAvatar.style.background = 'linear-gradient(135deg, #107C41, #1DB954)';
+                yoneticiMenuler.forEach(menu => menu.style.display = 'none');
+                if (!sessiz) showAlert('info', '👤 Muhasebe Uzmanı rolüne geçildi.');
+            }
+        }
     </script>
 </body>
 </html>

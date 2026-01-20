@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Kontrol Akışı - Muhasebe Paneli</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .muhasebe-header {
+            background: linear-gradient(90deg, #107C41 0%, #1DB954 100%);
+        }
+        .btn-sap {
+            background: #107C41;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-sap:hover {
+            background: #0D5F31;
+        }
+        .cari-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #FF9800;
+        }
+        .cari-card.completed {
+            border-left-color: #4CAF50;
+            opacity: 0.8;
+        }
+        .cari-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .cari-firma {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .cari-vkn {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .cari-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-pending {
+            background: #FFF3E0;
+            color: #E65100;
+        }
+        .status-inprogress {
+            background: #E3F2FD;
+            color: #1565C0;
+        }
+        .status-completed {
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+        .cari-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        .cari-detail-item {
+            font-size: 13px;
+        }
+        .cari-detail-label {
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+        .cari-detail-value {
+            font-weight: 500;
+        }
+        .cari-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-create {
+            background: #107C41;
+            color: white;
+        }
+        .btn-reject {
+            background: #f44336;
+            color: white;
+        }
+        .btn-view {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            color: #333;
+        }
+        .related-expenses {
+            background: #FFFDE7;
+            border: 1px solid #FFF59D;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        .expense-mini {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        .expense-mini:last-child {
+            border-bottom: none;
+        }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #FF9800;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #FF9800;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 24px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0;
+        }
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .tab.active {
+            border-bottom-color: #FF9800;
+            color: #FF9800;
+        }
+        .tab:hover {
+            color: #FF9800;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header muhasebe-header">
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        <div class="logo">FLO<span style="font-weight: 300;">Connect</span> <span style="font-size: 14px; opacity: 0.8;">Muhasebe</span></div>
+        <div class="header-actions">
+            <div class="notification-wrapper">
+                <button class="notification-btn" onclick="toggleNotifications()">
+                    🔔 Bildirimler
+                    <span class="notification-badge">5</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" onclick="closeMobileMenu()"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <button class="sidebar-close" onclick="closeMobileMenu()">✕</button>
+            <div class="user-profile">
+                <div class="user-avatar" id="userAvatar" style="background: linear-gradient(135deg, #FF6B6B, #FF8E53);">MÖ</div>
+                <div class="user-name" id="userName">Mehmet Özkan</div>
+                <div class="user-title" id="userTitle">Perakende Muhasebe Yöneticisi</div>
+                <div class="user-role">Muhasebe Departmanı</div>
+                <!-- Rol Değiştirme (Demo) -->
+                <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border-color);">
+                    <label style="font-size: 11px; color: var(--text-secondary); display: block; margin-bottom: 6px;">Demo: Rol Değiştir</label>
+                    <select class="form-select" id="rolSecimi" onchange="muhasebeRoluDegistir()" style="font-size: 12px; padding: 8px;">
+                        <option value="uzman">Muhasebe Uzmanı</option>
+                        <option value="yonetici" selected>Perakende Muhasebe Yöneticisi</option>
+                    </select>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="muhasebe-panel.html" class="nav-link">
+                        <span class="nav-icon">🏠</span>
+                        Panel
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-onay-bekleyenler.html" class="nav-link">
+                        <span class="nav-icon">⏳</span>
+                        Onay Bekleyenler
+                        <span style="background: var(--warning-red); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">12</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-onaylananlar.html" class="nav-link">
+                        <span class="nav-icon">✅</span>
+                        Onaylananlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-sap-aktarim.html" class="nav-link">
+                        <span class="nav-icon">📤</span>
+                        SAP Aktarım (EBA2SAP)
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-raporlar.html" class="nav-link">
+                        <span class="nav-icon">📊</span>
+                        Raporlar
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="muhasebe-hesap-eslestirme.html" class="nav-link">
+                        <span class="nav-icon">⚙️</span>
+                        Hesap Eşleştirme
+                    </a>
+                </li>
+                <!-- Yönetici Özel Menüleri -->
+                <li class="nav-item yonetici-menu">
+                    <a href="muhasebe-personel-atama.html" class="nav-link">
+                        <span class="nav-icon">👥</span>
+                        Personel-Mağaza Atama
+                    </a>
+                </li>
+                <li class="nav-item yonetici-menu">
+                    <a href="muhasebe-cari-kontrol.html" class="nav-link active">
+                        <span class="nav-icon">📋</span>
+                        Cari Kontrol Akışı
+                        <span style="background: var(--warning-yellow); color: #333; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: auto;">5</span>
+                    </a>
+                </li>
+            </ul>
+
+            <button class="logout-btn" onclick="window.location.href='index.html'">
+                🚪 Çıkış Yap
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Alert Container -->
+            <div id="alertContainer"></div>
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="muhasebe-panel.html">Panel</a>
+                <span>›</span>
+                <span>Cari Kontrol Akışı</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h1 class="page-title" style="margin: 0;">Cari Hesap Kontrol Akışı</h1>
+            </div>
+
+            <!-- Info Box -->
+            <div style="background: #FFF3E0; border: 1px solid #FFE0B2; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">⚠️</span>
+                    <div>
+                        <strong style="color: #E65100;">Cari Hesap Gerekli Faturalar</strong>
+                        <p style="margin: 4px 0 0; font-size: 13px; color: #555;">
+                            Aşağıdaki faturalar SAP'de tanımlı olmayan tedarikçilere aittir.
+                            İlgili masrafların işlenebilmesi için önce cari hesap tanımlaması yapılmalıdır.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-value" id="pendingCount">5</div>
+                    <div class="stat-label">Cari Bekleyen</div>
+                </div>
+                <div class="stat-box" style="border-left-color: #2196F3;">
+                    <div class="stat-value" style="color: #2196F3;" id="inProgressCount">2</div>
+                    <div class="stat-label">İşlemde</div>
+                </div>
+                <div class="stat-box" style="border-left-color: #4CAF50;">
+                    <div class="stat-value" style="color: #4CAF50;" id="completedCount">8</div>
+                    <div class="stat-label">Tamamlanan</div>
+                </div>
+                <div class="stat-box" style="border-left-color: #f44336;">
+                    <div class="stat-value" style="color: #f44336;" id="totalAmount">₺24,580</div>
+                    <div class="stat-label">Bekleyen Tutar</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('pending')" data-tab="pending">Bekleyenler (5)</div>
+                <div class="tab" onclick="switchTab('inprogress')" data-tab="inprogress">İşlemde (2)</div>
+                <div class="tab" onclick="switchTab('completed')" data-tab="completed">Tamamlanan</div>
+            </div>
+
+            <!-- Cari List -->
+            <div id="cariList">
+                <!-- JavaScript ile doldurulacak -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Cari Oluşturma Modal -->
+    <div class="modal-overlay" id="cariModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>SAP Cari Hesap Oluştur</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: #E8F5E9; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+                    <div style="font-size: 13px; color: #2E7D32;">
+                        <strong>Faturadan Okunan Bilgiler</strong> - Aşağıdaki bilgiler OCR ile faturadan otomatik alınmıştır.
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Firma Adı *</label>
+                        <input type="text" class="form-input" id="modalFirmaAdi" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Vergi Kimlik No *</label>
+                        <input type="text" class="form-input" id="modalVKN" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Vergi Dairesi</label>
+                        <input type="text" class="form-input" id="modalVergiDairesi" placeholder="Giriniz...">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon</label>
+                        <input type="text" class="form-input" id="modalTelefon" placeholder="Giriniz...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Adres</label>
+                    <textarea class="form-input" id="modalAdres" rows="2" placeholder="Giriniz..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cari Hesap Grubu *</label>
+                        <select class="form-select" id="modalCariGrup">
+                            <option value="">Seçiniz...</option>
+                            <option value="320">320 - Satıcılar</option>
+                            <option value="321">321 - Borç Senetleri</option>
+                            <option value="329">329 - Diğer Ticari Borçlar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ödeme Koşulu</label>
+                        <select class="form-select" id="modalOdemeKosulu">
+                            <option value="Z001">Z001 - Peşin</option>
+                            <option value="Z030" selected>Z030 - 30 Gün Vadeli</option>
+                            <option value="Z060">Z060 - 60 Gün Vadeli</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="background: #FFF8E1; border-radius: 8px; padding: 12px; margin: 20px 0;">
+                    <div style="font-size: 12px; color: #F57C00;">
+                        <strong>⚠️ Dikkat:</strong> Cari hesap SAP'de oluşturulduktan sonra ilgili masraf kayıtları otomatik olarak işlenebilir hale gelecektir.
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn-sap" onclick="createCari()" style="flex: 1;">SAP'de Cari Oluştur</button>
+                    <button class="btn-action btn-view" onclick="closeModal()" style="flex: 1;">İptal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/notifications.js"></script>
+    <script>
+        // Cari bekleyen veriler
+        let cariTalepler = [
+            {
+                id: 1,
+                firmaAdi: 'TURKCELL İLETİŞİM HİZMETLERİ A.Ş.',
+                vkn: '4860020949',
+                durum: 'pending',
+                masraflar: [
+                    { no: 'MSR-2024-0892', tarih: '2024-12-10', tutar: 3250.00, magaza: 'IST-001' },
+                    { no: 'MSR-2024-0895', tarih: '2024-12-12', tutar: 2180.00, magaza: 'ANK-002' }
+                ],
+                olusturmaTarihi: '2024-12-10'
+            },
+            {
+                id: 2,
+                firmaAdi: 'VODAFONE TELEKOMÜNİKASYON A.Ş.',
+                vkn: '2910028876',
+                durum: 'pending',
+                masraflar: [
+                    { no: 'MSR-2024-0901', tarih: '2024-12-14', tutar: 4800.00, magaza: 'IZM-001' }
+                ],
+                olusturmaTarihi: '2024-12-14'
+            },
+            {
+                id: 3,
+                firmaAdi: 'ABC OFIS MALZEMELERİ LTD. ŞTİ.',
+                vkn: '1234567890',
+                durum: 'pending',
+                masraflar: [
+                    { no: 'MSR-2024-0910', tarih: '2024-12-15', tutar: 1250.00, magaza: 'IST-003' },
+                    { no: 'MSR-2024-0912', tarih: '2024-12-16', tutar: 890.00, magaza: 'IST-004' },
+                    { no: 'MSR-2024-0918', tarih: '2024-12-18', tutar: 2100.00, magaza: 'ANK-001' }
+                ],
+                olusturmaTarihi: '2024-12-15'
+            },
+            {
+                id: 4,
+                firmaAdi: 'XYZ TEMİZLİK HİZMETLERİ',
+                vkn: '9876543210',
+                durum: 'inprogress',
+                masraflar: [
+                    { no: 'MSR-2024-0880', tarih: '2024-12-08', tutar: 5600.00, magaza: 'BRS-001' }
+                ],
+                olusturmaTarihi: '2024-12-08',
+                islemNotu: 'SAP ekibine iletildi, cari oluşturma bekliyor.'
+            },
+            {
+                id: 5,
+                firmaAdi: 'MEGA ELEKTRİK SAN. TİC. A.Ş.',
+                vkn: '5678901234',
+                durum: 'inprogress',
+                masraflar: [
+                    { no: 'MSR-2024-0875', tarih: '2024-12-06', tutar: 4510.00, magaza: 'ANT-001' }
+                ],
+                olusturmaTarihi: '2024-12-06',
+                islemNotu: 'Firma bilgileri doğrulanıyor.'
+            },
+            {
+                id: 6,
+                firmaAdi: 'DELTA KARGO TAŞIMACILIK',
+                vkn: '3456789012',
+                durum: 'completed',
+                masraflar: [
+                    { no: 'MSR-2024-0820', tarih: '2024-12-01', tutar: 1800.00, magaza: 'IST-002' }
+                ],
+                olusturmaTarihi: '2024-12-01',
+                tamamlanmaTarihi: '2024-12-03',
+                cariKodu: '320.01.089'
+            },
+            {
+                id: 7,
+                firmaAdi: 'GÜNEŞ ENERJİ SİSTEMLERİ',
+                vkn: '7890123456',
+                durum: 'completed',
+                masraflar: [
+                    { no: 'MSR-2024-0785', tarih: '2024-11-28', tutar: 12500.00, magaza: 'ANK-001' }
+                ],
+                olusturmaTarihi: '2024-11-28',
+                tamamlanmaTarihi: '2024-12-02',
+                cariKodu: '320.01.088'
+            }
+        ];
+
+        let currentTab = 'pending';
+        let currentCariId = null;
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', function() {
+            // Rol kontrolü - bu sayfa sadece yöneticiler için
+            const savedRol = localStorage.getItem('muhasebeRol');
+            if (savedRol !== 'yonetici') {
+                localStorage.setItem('muhasebeRol', 'yonetici');
+            }
+            document.getElementById('rolSecimi').value = 'yonetici';
+
+            renderCariList();
+            updateStats();
+        });
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+            renderCariList();
+        }
+
+        function renderCariList() {
+            const container = document.getElementById('cariList');
+            const filtered = cariTalepler.filter(c => c.durum === currentTab);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #666;">
+                        <span style="font-size: 48px; display: block; margin-bottom: 16px;">📋</span>
+                        <p>Bu kategoride kayıt bulunmuyor.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(cari => {
+                const toplamTutar = cari.masraflar.reduce((acc, m) => acc + m.tutar, 0);
+
+                let statusBadge = '';
+                let actionButtons = '';
+
+                if (cari.durum === 'pending') {
+                    statusBadge = '<span class="cari-status status-pending">⏳ Cari Bekleniyor</span>';
+                    actionButtons = `
+                        <button class="btn-action btn-create" onclick="openCariModal(${cari.id})">🏢 Cari Oluştur</button>
+                        <button class="btn-action btn-view" onclick="viewExpenses(${cari.id})">📄 Masrafları Gör</button>
+                        <button class="btn-action btn-reject" onclick="rejectCari(${cari.id})">❌ Reddet</button>
+                    `;
+                } else if (cari.durum === 'inprogress') {
+                    statusBadge = '<span class="cari-status status-inprogress">🔄 İşlemde</span>';
+                    actionButtons = `
+                        <button class="btn-action btn-create" onclick="completeCari(${cari.id})">✅ Tamamla</button>
+                        <button class="btn-action btn-view" onclick="viewExpenses(${cari.id})">📄 Masrafları Gör</button>
+                    `;
+                } else {
+                    statusBadge = '<span class="cari-status status-completed">✅ Tamamlandı</span>';
+                    actionButtons = `
+                        <button class="btn-action btn-view" onclick="viewExpenses(${cari.id})">📄 Masrafları Gör</button>
+                    `;
+                }
+
+                return `
+                    <div class="cari-card ${cari.durum === 'completed' ? 'completed' : ''}">
+                        <div class="cari-header">
+                            <div>
+                                <div class="cari-firma">${cari.firmaAdi}</div>
+                                <div class="cari-vkn">VKN: ${cari.vkn}</div>
+                            </div>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="cari-details">
+                            <div class="cari-detail-item">
+                                <div class="cari-detail-label">Bekleyen Masraf Sayısı</div>
+                                <div class="cari-detail-value">${cari.masraflar.length} Masraf</div>
+                            </div>
+                            <div class="cari-detail-item">
+                                <div class="cari-detail-label">Toplam Tutar</div>
+                                <div class="cari-detail-value" style="color: #E65100;">₺${toplamTutar.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</div>
+                            </div>
+                            <div class="cari-detail-item">
+                                <div class="cari-detail-label">İlk Talep Tarihi</div>
+                                <div class="cari-detail-value">${formatDate(cari.olusturmaTarihi)}</div>
+                            </div>
+                            ${cari.cariKodu ? `
+                                <div class="cari-detail-item">
+                                    <div class="cari-detail-label">Cari Kodu</div>
+                                    <div class="cari-detail-value" style="color: #2E7D32;">${cari.cariKodu}</div>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        ${cari.islemNotu ? `
+                            <div style="background: #E3F2FD; padding: 10px 12px; border-radius: 6px; margin-bottom: 12px; font-size: 13px;">
+                                <strong>İşlem Notu:</strong> ${cari.islemNotu}
+                            </div>
+                        ` : ''}
+
+                        <div class="related-expenses">
+                            <div style="font-size: 12px; color: #F57C00; margin-bottom: 8px; font-weight: 600;">İlgili Masraflar:</div>
+                            ${cari.masraflar.map(m => `
+                                <div class="expense-mini">
+                                    <span>${m.no} - ${m.magaza}</span>
+                                    <span style="font-weight: 600;">₺${m.tutar.toLocaleString('tr-TR', {minimumFractionDigits: 2})}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="cari-actions" style="margin-top: 16px;">
+                            ${actionButtons}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const pending = cariTalepler.filter(c => c.durum === 'pending');
+            const inprogress = cariTalepler.filter(c => c.durum === 'inprogress');
+            const completed = cariTalepler.filter(c => c.durum === 'completed');
+
+            const pendingAmount = pending.reduce((acc, c) => acc + c.masraflar.reduce((a, m) => a + m.tutar, 0), 0);
+
+            document.getElementById('pendingCount').textContent = pending.length;
+            document.getElementById('inProgressCount').textContent = inprogress.length;
+            document.getElementById('completedCount').textContent = completed.length;
+            document.getElementById('totalAmount').textContent = '₺' + pendingAmount.toLocaleString('tr-TR', {minimumFractionDigits: 0});
+
+            // Tab sayılarını güncelle
+            document.querySelector('[data-tab="pending"]').textContent = `Bekleyenler (${pending.length})`;
+            document.querySelector('[data-tab="inprogress"]').textContent = `İşlemde (${inprogress.length})`;
+            document.querySelector('[data-tab="completed"]').textContent = `Tamamlanan (${completed.length})`;
+        }
+
+        function openCariModal(cariId) {
+            currentCariId = cariId;
+            const cari = cariTalepler.find(c => c.id === cariId);
+
+            document.getElementById('modalFirmaAdi').value = cari.firmaAdi;
+            document.getElementById('modalVKN').value = cari.vkn;
+            document.getElementById('modalVergiDairesi').value = '';
+            document.getElementById('modalTelefon').value = '';
+            document.getElementById('modalAdres').value = '';
+            document.getElementById('modalCariGrup').value = '320';
+
+            document.getElementById('cariModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('cariModal').style.display = 'none';
+            currentCariId = null;
+        }
+
+        function createCari() {
+            const cari = cariTalepler.find(c => c.id === currentCariId);
+            const cariGrup = document.getElementById('modalCariGrup').value;
+
+            if (!cariGrup) {
+                showAlert('error', 'Lütfen cari hesap grubunu seçiniz.');
+                return;
+            }
+
+            // Simüle: Cari oluşturuluyor
+            cari.durum = 'inprogress';
+            cari.islemNotu = 'SAP cari oluşturma isteği gönderildi.';
+
+            closeModal();
+            renderCariList();
+            updateStats();
+            showAlert('success', `${cari.firmaAdi} için SAP cari oluşturma isteği gönderildi.`);
+        }
+
+        function completeCari(cariId) {
+            const cari = cariTalepler.find(c => c.id === cariId);
+
+            // Simüle: Rastgele cari kodu oluştur
+            const randomNum = Math.floor(Math.random() * 900) + 100;
+            cari.cariKodu = `320.01.${randomNum}`;
+            cari.durum = 'completed';
+            cari.tamamlanmaTarihi = new Date().toISOString().split('T')[0];
+            delete cari.islemNotu;
+
+            renderCariList();
+            updateStats();
+            showAlert('success', `${cari.firmaAdi} için cari hesap oluşturuldu: ${cari.cariKodu}`);
+        }
+
+        function rejectCari(cariId) {
+            if (!confirm('Bu cari talebini reddetmek istediğinize emin misiniz? İlgili masraflar da reddedilecektir.')) {
+                return;
+            }
+
+            cariTalepler = cariTalepler.filter(c => c.id !== cariId);
+            renderCariList();
+            updateStats();
+            showAlert('info', 'Cari talebi reddedildi.');
+        }
+
+        function viewExpenses(cariId) {
+            const cari = cariTalepler.find(c => c.id === cariId);
+            showAlert('info', `${cari.firmaAdi} ile ilgili ${cari.masraflar.length} masraf kaydı bulunmaktadır.`);
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('tr-TR');
+        }
+
+        // =====================
+        // MUHASEBE ROL YÖNETİMİ
+        // =====================
+
+        function muhasebeRoluDegistir() {
+            const rol = document.getElementById('rolSecimi').value;
+            localStorage.setItem('muhasebeRol', rol);
+
+            if (rol === 'uzman') {
+                window.location.href = 'muhasebe-panel.html';
+            }
+        }
+
+        // Alert göster
+        function showAlert(type, message) {
+            const container = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <span class="alert-icon">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}</span>
+                <span>${message}</span>
+            `;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            document.querySelector('.sidebar').classList.toggle('mobile-open');
+            document.querySelector('.mobile-overlay').classList.toggle('active');
+        }
+
+        function closeMobileMenu() {
+            document.querySelector('.sidebar').classList.remove('mobile-open');
+            document.querySelector('.mobile-overlay').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

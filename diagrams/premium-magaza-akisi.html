@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Mağaza Masraf Akışı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-success: #198754;
+            --flo-warning: #ffc107;
+            --flo-info: #0dcaf0;
+            --flo-gray: #6c757d;
+            --flo-light: #f8f9fa;
+            --flo-store: #FF671D;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+
+        /* Store Badge */
+        .store-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--flo-store) 0%, #ff8c42 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        /* Phase Sections */
+        .phase {
+            background: linear-gradient(135deg, #fafbfc 0%, #f5f6f8 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .phase.special {
+            background: linear-gradient(135deg, rgba(255, 103, 29, 0.05) 0%, rgba(255, 140, 66, 0.05) 100%);
+            border: 2px solid var(--flo-store);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-store) 0%, #ff8c42 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+
+        .phase-subtitle {
+            font-size: 14px;
+            color: var(--flo-gray);
+            margin-top: 4px;
+        }
+
+        /* Flow Diagram */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .node {
+            padding: 18px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .node.start {
+            background: linear-gradient(135deg, var(--flo-store) 0%, #ff8c42 100%);
+            color: white;
+            border-radius: 50px;
+        }
+
+        .node.process {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .node.approval {
+            background: linear-gradient(135deg, var(--flo-success) 0%, #20c997 100%);
+            color: white;
+        }
+
+        .node.reject {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+            color: white;
+        }
+
+        .node.waiting {
+            background: linear-gradient(135deg, var(--flo-info) 0%, #6cb2eb 100%);
+            color: white;
+        }
+
+        .node.atf {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            color: white;
+        }
+
+        .node.kargo {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+        }
+
+        .node.end {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 50px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: var(--flo-gray);
+        }
+
+        .arrow.down {
+            transform: rotate(90deg);
+        }
+
+        /* ATF Info Box */
+        .atf-info {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .atf-info h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .atf-info p {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .atf-fields {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .atf-field {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .atf-field-label {
+            font-size: 11px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .atf-field-value {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* Kargo Process */
+        .kargo-section {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .kargo-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kargo-steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .kargo-step {
+            background: rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .kargo-arrow {
+            font-size: 20px;
+            opacity: 0.7;
+        }
+
+        /* Difference Table */
+        .difference-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+
+        .difference-table thead {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+        }
+
+        .difference-table th {
+            color: white;
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .difference-table td {
+            padding: 16px 15px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--flo-primary);
+        }
+
+        .difference-table tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        .difference-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.merkez {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+        }
+
+        .badge.magaza {
+            background: rgba(255, 103, 29, 0.15);
+            color: var(--flo-store);
+        }
+
+        .badge.yes {
+            background: rgba(25, 135, 84, 0.15);
+            color: var(--flo-success);
+        }
+
+        .badge.no {
+            background: rgba(108, 117, 125, 0.15);
+            color: var(--flo-gray);
+        }
+
+        /* Role Comparison */
+        .role-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .role-card.store {
+            border-top: 4px solid var(--flo-store);
+        }
+
+        .role-card.region {
+            border-top: 4px solid var(--flo-gold);
+        }
+
+        .role-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .role-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .role-card li {
+            font-size: 13px;
+            color: var(--flo-gray);
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .role-card li:last-child {
+            border-bottom: none;
+        }
+
+        .role-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--flo-success);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border: 2px solid var(--flo-warning);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .warning-box .icon {
+            font-size: 24px;
+        }
+
+        .warning-box .content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 5px;
+        }
+
+        .warning-box .content p {
+            font-size: 13px;
+            color: var(--flo-gray);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Mağaza Masraf Akışı</h1>
+            <p class="subtitle">Mağaza çalışanlarına özel masraf onay süreci ve ATF işlemleri</p>
+            <div class="store-badge">🏪 Mağaza Özel Akış</div>
+        </div>
+
+        <!-- Difference Table -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">📊</div>
+                <div>
+                    <div class="phase-title">Merkez vs Mağaza Farkları</div>
+                    <div class="phase-subtitle">Mağaza masraf sürecindeki temel farklılıklar</div>
+                </div>
+            </div>
+
+            <table class="difference-table">
+                <thead>
+                    <tr>
+                        <th>Özellik</th>
+                        <th>Merkez Personeli</th>
+                        <th>Mağaza Personeli</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Onay Yetkilisi</strong></td>
+                        <td><span class="badge merkez">Departman Müdürü</span></td>
+                        <td><span class="badge magaza">Bölge Müdürü</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fiziksel Belge</strong></td>
+                        <td><span class="badge no">Gerekli Değil</span></td>
+                        <td><span class="badge yes">Kargo ile Gönderim</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>ATF Numarası</strong></td>
+                        <td><span class="badge no">Yok</span></td>
+                        <td><span class="badge yes">Zorunlu</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Masraf Merkezi</strong></td>
+                        <td><span class="badge merkez">50G, 14U, vb.</span></td>
+                        <td><span class="badge magaza">Mağaza Kodu</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Süreç Süresi</strong></td>
+                        <td><span class="badge merkez">Dijital (Hızlı)</span></td>
+                        <td><span class="badge magaza">Fiziksel + Dijital</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phase 1: Mağaza Masraf Girişi -->
+        <div class="phase special">
+            <div class="phase-header">
+                <div class="phase-number">1</div>
+                <div>
+                    <div class="phase-title">Mağaza Çalışanı Masraf Girişi</div>
+                    <div class="phase-subtitle">Mağaza personeli tarafından masraf kaydı oluşturulması</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node start">🏪 Mağaza Çalışanı</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">📝 Masraf Girişi</div>
+                    <span class="arrow">→</span>
+                    <div class="node waiting">📤 Onaya Gönder</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">⚠️</div>
+                <div class="content">
+                    <h4>Mağaza Masraf Merkezi Otomatik Atanır</h4>
+                    <p>Mağaza personelinin masraf merkezi SAP'den otomatik olarak mağaza kodu olarak atanır. Merkez personelinden farklı olarak 50G, 14U gibi kodlar kullanılmaz.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Bölge Müdürü Onayı -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">2</div>
+                <div>
+                    <div class="phase-title">Bölge Müdürü Onayı</div>
+                    <div class="phase-subtitle">Mağazaya ait masraflar bölge müdürü tarafından onaylanır</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node waiting">⏳ Onay Bekliyor</div>
+                    <span class="arrow">→</span>
+                    <div class="node atf">👔 Bölge Müdürü İnceleme</div>
+                </div>
+                <div class="flow-row">
+                    <div class="node approval">✅ ONAY</div>
+                    <span style="margin: 0 30px; font-size: 14px; color: var(--flo-gray);">veya</span>
+                    <div class="node reject">❌ RED → Çalışana İade</div>
+                </div>
+            </div>
+
+            <div class="role-comparison">
+                <div class="role-card store">
+                    <h4>🏪 Mağaza Çalışanı</h4>
+                    <ul>
+                        <li>Masraf belgesi yükleme</li>
+                        <li>Masraf açıklaması girme</li>
+                        <li>Fiziksel belgeyi saklama</li>
+                        <li>Red durumunda düzeltme</li>
+                    </ul>
+                </div>
+                <div class="role-card region">
+                    <h4>👔 Bölge Müdürü</h4>
+                    <ul>
+                        <li>Mağaza masraflarını onaylama</li>
+                        <li>Bütçe kontrolü yapma</li>
+                        <li>Uygunluk değerlendirmesi</li>
+                        <li>Red nedeni belirtme</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Fiziksel Belge Kargo -->
+        <div class="phase special">
+            <div class="phase-header">
+                <div class="phase-number">3</div>
+                <div>
+                    <div class="phase-title">Fiziksel Belge Kargo Süreci</div>
+                    <div class="phase-subtitle">Onaylanan masrafların fiziksel belgelerinin merkeze gönderimi</div>
+                </div>
+            </div>
+
+            <div class="kargo-section">
+                <h3>📦 Kargo Gönderim Adımları</h3>
+                <div class="kargo-steps">
+                    <div class="kargo-step">📋 Fiziksel Belgeleri Topla</div>
+                    <span class="kargo-arrow">→</span>
+                    <div class="kargo-step">📦 Kargo Paketi Hazırla</div>
+                    <span class="kargo-arrow">→</span>
+                    <div class="kargo-step">🚚 Merkeze Kargo Gönder</div>
+                    <span class="kargo-arrow">→</span>
+                    <div class="kargo-step">📝 ATF No Al</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">📋</div>
+                <div class="content">
+                    <h4>Fiziksel Belge Zorunluluğu</h4>
+                    <p>Mağaza masraflarında dijital kayıt yeterli değildir. Orijinal fiş ve faturalar kargo ile merkeze gönderilmeli ve ATF numarası sisteme girilmelidir. Fiziksel belge gelmeden muhasebe onayı verilemez.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: ATF Numarası Girişi -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">4</div>
+                <div>
+                    <div class="phase-title">ATF Numarası Girişi</div>
+                    <div class="phase-subtitle">Arşiv Transfer Formu numarasının sisteme kaydedilmesi</div>
+                </div>
+            </div>
+
+            <div class="atf-info">
+                <h3>📋 ATF (Arşiv Transfer Formu) Nedir?</h3>
+                <p>ATF, mağazalardan merkeze gönderilen fiziksel belgelerin takibi için kullanılan benzersiz bir referans numarasıdır. Kargo ile gönderilen her paket için bir ATF numarası oluşturulur.</p>
+                <div class="atf-fields">
+                    <div class="atf-field">
+                        <div class="atf-field-label">Format</div>
+                        <div class="atf-field-value">ATF-2024-XXXXX</div>
+                    </div>
+                    <div class="atf-field">
+                        <div class="atf-field-label">Oluşturan</div>
+                        <div class="atf-field-value">Mağaza Çalışanı</div>
+                    </div>
+                    <div class="atf-field">
+                        <div class="atf-field-label">Doğrulayan</div>
+                        <div class="atf-field-value">Muhasebe Ekibi</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node atf">📝 ATF Numarası Gir</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">🔍 ATF Doğrulama</div>
+                </div>
+                <div class="flow-row">
+                    <div class="node waiting">⏳ Doğrulanmadı: ATF Bekleniyor</div>
+                    <span style="margin: 0 20px; font-size: 12px; color: var(--flo-gray);">Kargo geldiğinde otomatik devam</span>
+                    <div class="node approval">✅ Doğrulandı: Devam</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 5: Muhasebe Onayı -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">5</div>
+                <div>
+                    <div class="phase-title">Muhasebe Onayı ve SAP Aktarımı</div>
+                    <div class="phase-subtitle">Fiziksel belge doğrulaması ve son onay aşaması</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node atf">📦 ATF Doğrulandı</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">📊 Muhasebe İnceleme</div>
+                    <span class="arrow">→</span>
+                    <div class="node approval">✅ Onay</div>
+                </div>
+                <div class="flow-row">
+                    <div class="node process">📋 SAP Kuyruğu</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">🔄 SAP Aktarımı</div>
+                    <span class="arrow">→</span>
+                    <div class="node end">🎉 TAMAMLANDI</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">✅</div>
+                <div class="content">
+                    <h4>Muhasebe Fiziksel Belge Kontrolü</h4>
+                    <p>Muhasebe ekibi, ATF ile gelen fiziksel belgeleri dijital kayıtlarla karşılaştırır. Uyumsuzluk durumunda masraf reddedilir veya düzeltme talep edilir.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.1
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Tevkifatlı Fatura Akışı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-success: #198754;
+            --flo-warning: #ffc107;
+            --flo-info: #0dcaf0;
+            --flo-gray: #6c757d;
+            --flo-light: #f8f9fa;
+            --flo-tevkifat: #6f42c1;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+
+        /* Tevkifat Badge */
+        .tevkifat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--flo-tevkifat) 0%, #8e5cc8 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        /* Phase Sections */
+        .phase {
+            background: linear-gradient(135deg, #fafbfc 0%, #f5f6f8 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .phase.special {
+            background: linear-gradient(135deg, rgba(111, 66, 193, 0.05) 0%, rgba(142, 92, 200, 0.05) 100%);
+            border: 2px solid var(--flo-tevkifat);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-tevkifat) 0%, #8e5cc8 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+
+        .phase-subtitle {
+            font-size: 14px;
+            color: var(--flo-gray);
+            margin-top: 4px;
+        }
+
+        /* Flow Diagram */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .node {
+            padding: 18px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .node.start {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            color: white;
+            border-radius: 50px;
+        }
+
+        .node.process {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .node.tevkifat {
+            background: linear-gradient(135deg, var(--flo-tevkifat) 0%, #8e5cc8 100%);
+            color: white;
+        }
+
+        .node.decision {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            color: white;
+        }
+
+        .node.approval {
+            background: linear-gradient(135deg, var(--flo-success) 0%, #20c997 100%);
+            color: white;
+        }
+
+        .node.end {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 50px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: var(--flo-gray);
+        }
+
+        /* Detection Criteria Box */
+        .detection-box {
+            background: linear-gradient(135deg, var(--flo-tevkifat) 0%, #8e5cc8 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .detection-box h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .detection-criteria {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .criteria-item {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .criteria-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .criteria-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .criteria-desc {
+            font-size: 12px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Two Records Section */
+        .two-records {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .record-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 4px solid;
+        }
+
+        .record-card.masraf {
+            border-top-color: #667eea;
+        }
+
+        .record-card.fatura {
+            border-top-color: var(--flo-tevkifat);
+        }
+
+        .record-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .record-card .badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .record-card.masraf .badge {
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+        }
+
+        .record-card.fatura .badge {
+            background: rgba(111, 66, 193, 0.15);
+            color: var(--flo-tevkifat);
+        }
+
+        .record-fields {
+            margin-top: 20px;
+        }
+
+        .record-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .record-field:last-child {
+            border-bottom: none;
+        }
+
+        .record-field .label {
+            color: var(--flo-gray);
+        }
+
+        .record-field .value {
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+
+        /* SAP Document Types */
+        .sap-docs {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .sap-doc {
+            text-align: center;
+            padding: 25px 40px;
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .sap-doc-type {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .sap-doc-name {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .sap-doc-desc {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .plus-sign {
+            font-size: 40px;
+            color: var(--flo-gray);
+            display: flex;
+            align-items: center;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border: 2px solid var(--flo-warning);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .warning-box .icon {
+            font-size: 24px;
+        }
+
+        .warning-box .content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 5px;
+        }
+
+        .warning-box .content p {
+            font-size: 13px;
+            color: var(--flo-gray);
+            line-height: 1.5;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(13, 202, 240, 0.1) 0%, rgba(13, 202, 240, 0.05) 100%);
+            border: 2px solid var(--flo-info);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            font-size: 13px;
+            color: var(--flo-gray);
+            line-height: 1.6;
+        }
+
+        /* Ratio Table */
+        .ratio-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin: 20px 0;
+        }
+
+        .ratio-table thead {
+            background: linear-gradient(135deg, var(--flo-tevkifat) 0%, #8e5cc8 100%);
+        }
+
+        .ratio-table th {
+            color: white;
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .ratio-table td {
+            padding: 14px 16px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+            color: var(--flo-primary);
+        }
+
+        .ratio-table tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        .ratio-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ratio-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(111, 66, 193, 0.15);
+            color: var(--flo-tevkifat);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Tevkifatlı Fatura Akışı</h1>
+            <p class="subtitle">KDV Tevkifatı uygulanan faturalar için özel işlem süreci</p>
+            <div class="tevkifat-badge">📋 Tevkifatlı Fatura İşleme</div>
+        </div>
+
+        <!-- Phase 1: Tevkifat Algılama -->
+        <div class="phase special">
+            <div class="phase-header">
+                <div class="phase-number">1</div>
+                <div>
+                    <div class="phase-title">Tevkifatlı Fatura Algılama</div>
+                    <div class="phase-subtitle">OCR tarafından tevkifat içeren faturanın otomatik tespiti</div>
+                </div>
+            </div>
+
+            <div class="detection-box">
+                <h3>🔍 Tevkifat Algılama Kriterleri</h3>
+                <div class="detection-criteria">
+                    <div class="criteria-item">
+                        <div class="criteria-icon">📝</div>
+                        <div class="criteria-title">"KDV Tevkifatlıdır" İbaresi</div>
+                        <div class="criteria-desc">Fatura üzerinde bu ibare tespit edildiğinde</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-icon">📊</div>
+                        <div class="criteria-title">Bölünmüş KDV Satırı</div>
+                        <div class="criteria-desc">Oranlı KDV hesaplaması görüldüğünde (örn: 2/10, 5/10)</div>
+                    </div>
+                    <div class="criteria-item">
+                        <div class="criteria-icon">🏷️</div>
+                        <div class="criteria-title">Hizmet Açıklaması</div>
+                        <div class="criteria-desc">Tevkifat listesiyle eşleşen hizmet tanımı</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node start">📄 Fatura Yüklendi</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">🔍 OCR Tarama</div>
+                    <span class="arrow">→</span>
+                    <div class="node tevkifat">✓ Tevkifat Algılandı</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: İki Kayıt Oluşturma -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">2</div>
+                <div>
+                    <div class="phase-title">İki Ayrı Kayıt Oluşturma</div>
+                    <div class="phase-subtitle">Tevkifatlı fatura için masraf ve fatura kaydı ayrı ayrı oluşturulur</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">⚠️</div>
+                <div class="content">
+                    <h4>Kritik Kural: Tevkifatlı Fatura = 2 Kayıt</h4>
+                    <p>Belgenin tevkifatlı fatura olduğu algılandığında, sistem otomatik olarak <strong>masraf kaydı</strong> ve <strong>fatura kaydı</strong> olmak üzere iki ayrı kayıt oluşturur. Her iki kayıt da SAP'e ayrı ayrı aktarılır.</p>
+                </div>
+            </div>
+
+            <div class="two-records">
+                <div class="record-card masraf">
+                    <h4>📋 Kayıt 1: Masraf Kaydı <span class="badge">YF</span></h4>
+                    <div class="record-fields">
+                        <div class="record-field">
+                            <span class="label">Belge Türü</span>
+                            <span class="value">YF (Yansıtma Fişi)</span>
+                        </div>
+                        <div class="record-field">
+                            <span class="label">İçerik</span>
+                            <span class="value">Masraf detayları</span>
+                        </div>
+                        <div class="record-field">
+                            <span class="label">Hesap Kodu</span>
+                            <span class="value">Gider hesabı</span>
+                        </div>
+                        <div class="record-field">
+                            <span class="label">Masraf Merkezi</span>
+                            <span class="value">Çalışan MM</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="record-card fatura">
+                    <h4>📄 Kayıt 2: Fatura Kaydı <span class="badge">KR</span></h4>
+                    <div class="record-fields">
+                        <div class="record-field">
+                            <span class="label">Belge Türü</span>
+                            <span class="value">KR (Kredili Belge)</span>
+                        </div>
+                        <div class="record-field">
+                            <span class="label">İçerik</span>
+                            <span class="value">Tevkifat detayları</span>
+                        </div>
+                        <div class="record-field">
+                            <span class="label">Tevkifat Tutarı</span>
+                            <span class="value">Hesaplanan tutar</span>
+                        </div>
+                        <div class="record-field">
+                            <span class="label">Cari Hesap</span>
+                            <span class="value">Tedarikçi cari</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sap-docs">
+                <div class="sap-doc">
+                    <div class="sap-doc-type">YF</div>
+                    <div class="sap-doc-name">Yansıtma Fişi</div>
+                    <div class="sap-doc-desc">Masraf kaydı</div>
+                </div>
+                <div class="plus-sign">+</div>
+                <div class="sap-doc">
+                    <div class="sap-doc-type">KR</div>
+                    <div class="sap-doc-name">Kredili Belge</div>
+                    <div class="sap-doc-desc">Fatura kaydı</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 3: Tevkifat Oranları -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">3</div>
+                <div>
+                    <div class="phase-title">Tevkifat Oranları</div>
+                    <div class="phase-subtitle">Hizmet türüne göre uygulanan tevkifat oranları</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>ℹ️ Müşteriden Beklenen Bilgi</h4>
+                <p>Tevkifat oranları ve hangi hizmet türlerinin hangi orana tabi olduğu bilgisi FLO tarafından sağlanacaktır. Aşağıdaki tablo örnek olarak verilmiştir.</p>
+            </div>
+
+            <table class="ratio-table">
+                <thead>
+                    <tr>
+                        <th>Tevkifat Oranı</th>
+                        <th>Açıklama</th>
+                        <th>Örnek Hizmetler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="ratio-badge">2/10</span></td>
+                        <td>%20 Tevkifat</td>
+                        <td>Etüt, plan-proje hizmetleri</td>
+                    </tr>
+                    <tr>
+                        <td><span class="ratio-badge">4/10</span></td>
+                        <td>%40 Tevkifat</td>
+                        <td>Makine-teçhizat bakım</td>
+                    </tr>
+                    <tr>
+                        <td><span class="ratio-badge">5/10</span></td>
+                        <td>%50 Tevkifat</td>
+                        <td>Yapım işleri, temizlik hizmetleri</td>
+                    </tr>
+                    <tr>
+                        <td><span class="ratio-badge">7/10</span></td>
+                        <td>%70 Tevkifat</td>
+                        <td>İşgücü temin hizmetleri</td>
+                    </tr>
+                    <tr>
+                        <td><span class="ratio-badge">9/10</span></td>
+                        <td>%90 Tevkifat</td>
+                        <td>Hurda metal teslimleri</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phase 4: Onay ve SAP Aktarımı -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">4</div>
+                <div>
+                    <div class="phase-title">Onay ve SAP Aktarımı</div>
+                    <div class="phase-subtitle">Her iki kayıt için normal onay akışı ve SAP'e aktarım</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node tevkifat">📋 2 Kayıt Oluşturuldu</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">👔 Yönetici Onayı</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">📊 Muhasebe Kontrolü</div>
+                </div>
+                <div class="flow-row">
+                    <div class="node approval">✅ Onaylandı</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">🔄 SAP'e 2 Kayıt Gönder</div>
+                    <span class="arrow">→</span>
+                    <div class="node end">🎉 TAMAMLANDI</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">📋</div>
+                <div class="content">
+                    <h4>SAP Aktarımı: İki Ayrı Belge</h4>
+                    <p>SAP'e aktarım sırasında YF (masraf) ve KR (fatura) belgeleri ayrı ayrı gönderilir. Her iki belgenin de unique talep numarası ile eşleştirildiğinden emin olunur.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.1
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Binek Araç KKEG Hesaplama</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-success: #198754;
+            --flo-gray: #6c757d;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 50px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+        .ratio-display {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px 0;
+        }
+        .ratio-card {
+            text-align: center;
+            padding: 40px 60px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .ratio-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+        }
+        .ratio-card.gider {
+            background: linear-gradient(135deg, var(--flo-success) 0%, #20c997 100%);
+            color: white;
+        }
+        .ratio-card.kkeg {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+            color: white;
+        }
+        .ratio-value {
+            font-size: 72px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .ratio-label {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .ratio-desc {
+            font-size: 14px;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+        .formula-section {
+            background: linear-gradient(135deg, #fafbfc 0%, #f5f6f8 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+        }
+        .formula-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .formula-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .formula-item {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eaecef;
+        }
+        .formula-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        .formula-name {
+            font-size: 14px;
+            color: var(--flo-gray);
+            margin-bottom: 10px;
+        }
+        .formula-calc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: var(--flo-primary);
+            font-weight: 600;
+        }
+        .table-section {
+            margin-top: 50px;
+        }
+        .table-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .table-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .table-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        thead {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+        }
+        th {
+            color: white;
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 16px 15px;
+            font-size: 14px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+            color: var(--flo-primary);
+        }
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        tbody tr:hover {
+            background: #f5f7fa;
+        }
+        .code-badge {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f8f9fa;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .code-badge.gider {
+            background: rgba(25, 135, 84, 0.1);
+            color: var(--flo-success);
+        }
+        .code-badge.kkeg-g {
+            background: rgba(233, 69, 96, 0.1);
+            color: var(--flo-accent);
+        }
+        .code-badge.kkeg-k {
+            background: rgba(201, 162, 39, 0.1);
+            color: var(--flo-gold);
+        }
+        .mm-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            color: white;
+        }
+        .example-section {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 50px;
+            color: white;
+        }
+        .example-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .example-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .example-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .example-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .example-sub {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Binek Araç KKEG Hesaplama</h1>
+            <p class="subtitle">Kanunen Kabul Edilmeyen Gider ayrımı ve hesap kodu eşleştirmesi</p>
+        </div>
+
+        <div class="ratio-display">
+            <div class="ratio-card gider">
+                <div class="ratio-value">%70</div>
+                <div class="ratio-label">Gider</div>
+                <div class="ratio-desc">Vergiden düşülebilir</div>
+            </div>
+            <div class="ratio-card kkeg">
+                <div class="ratio-value">%30</div>
+                <div class="ratio-label">KKEG</div>
+                <div class="ratio-desc">Vergiden düşülemez</div>
+            </div>
+        </div>
+
+        <div class="formula-section">
+            <div class="formula-title">📐 Hesaplama Formülleri</div>
+            <div class="formula-grid">
+                <div class="formula-item">
+                    <div class="formula-icon">💰</div>
+                    <div class="formula-name">Gider Tutarı</div>
+                    <div class="formula-calc">Brüt Tutar × 0.70</div>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">📊</div>
+                    <div class="formula-name">KKEG Gider</div>
+                    <div class="formula-calc">Brüt Tutar × 0.30</div>
+                </div>
+                <div class="formula-item">
+                    <div class="formula-icon">🧾</div>
+                    <div class="formula-name">KKEG KDV</div>
+                    <div class="formula-calc">KDV Tutarı × 0.30</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-icon">📊</div>
+                <div class="table-title">İstanbul İçi - Hesap Kodları</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Masraf Merkezi</th>
+                        <th>Gider Hesabı (%70)</th>
+                        <th>KKEG Gider (%30)</th>
+                        <th>KKEG KDV (%30)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="mm-badge">50G</span></td>
+                        <td><span class="code-badge gider">7704001207</span></td>
+                        <td><span class="code-badge kkeg-g">7707001721</span></td>
+                        <td><span class="code-badge kkeg-k">7707001720</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="mm-badge">Merkez Diğer</span></td>
+                        <td><span class="code-badge gider">7604001207</span></td>
+                        <td><span class="code-badge kkeg-g">7607001719</span></td>
+                        <td><span class="code-badge kkeg-k">7607001718</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="mm-badge">14U Fabrika</span></td>
+                        <td><span class="code-badge gider">7304001207</span></td>
+                        <td><span class="code-badge kkeg-g">7707001721</span></td>
+                        <td><span class="code-badge kkeg-k">7707001720</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-section">
+            <div class="table-header">
+                <div class="table-icon" style="background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);">📊</div>
+                <div class="table-title">İstanbul Dışı - Hesap Kodları</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Masraf Merkezi</th>
+                        <th>Gider Hesabı (%70)</th>
+                        <th>KKEG Gider (%30)</th>
+                        <th>KKEG KDV (%30)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="mm-badge">50G</span></td>
+                        <td><span class="code-badge gider">7704001201</span></td>
+                        <td><span class="code-badge kkeg-g">7707001721</span></td>
+                        <td><span class="code-badge kkeg-k">7707001720</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="mm-badge">Merkez Diğer</span></td>
+                        <td><span class="code-badge gider">7604001201</span></td>
+                        <td><span class="code-badge kkeg-g">7607001719</span></td>
+                        <td><span class="code-badge kkeg-k">7607001718</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="example-section">
+            <div class="example-title">💡 Örnek Hesaplama: 1.000 TL Binek Araç Yakıt Faturası</div>
+            <div class="example-grid">
+                <div class="example-item">
+                    <div class="example-label">Brüt Tutar</div>
+                    <div class="example-value">1.000 ₺</div>
+                    <div class="example-sub">KDV Dahil</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-label">Gider Hesabı</div>
+                    <div class="example-value">700 ₺</div>
+                    <div class="example-sub">%70 Oranı</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-label">KKEG Gider</div>
+                    <div class="example-value">300 ₺</div>
+                    <div class="example-sub">%30 Oranı</div>
+                </div>
+                <div class="example-item">
+                    <div class="example-label">KKEG KDV</div>
+                    <div class="example-value">60 ₺</div>
+                    <div class="example-sub">200₺ × %30</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Important Notes Section -->
+        <div style="background: linear-gradient(135deg, #fef9e7 0%, #fdf2d5 100%); border-left: 4px solid var(--flo-gold); padding: 25px 30px; border-radius: 0 16px 16px 0; margin-top: 40px;">
+            <div style="font-weight: 600; color: var(--flo-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 16px;">
+                ⚠️ Önemli Kurallar
+            </div>
+            <div style="font-size: 14px; color: var(--flo-gray); line-height: 1.8;">
+                <strong>KKEG Uygulaması:</strong> Yalnızca <strong>binek araç</strong> giderleri için uygulanır (yakıt, bakım, onarım vb.).<br><br>
+                <strong>14U (Fabrika) İstisnası:</strong> Fabrikada kullanılan <strong>ticari araçlar</strong> (kamyon, kamyonet vb.) KKEG kapsamı dışındadır. Bu araçlar için %100 gider yazılır.<br><br>
+                <strong>Otomatik Hesaplama:</strong> Sistem, binek araç gideri tespit ettiğinde KKEG ayrımını <strong>otomatik olarak</strong> yapar ve üç ayrı hesap koduna kaydeder.<br><br>
+                <strong>SAP Aktarımı:</strong> Her bir kalem (Gider, KKEG Gider, KKEG KDV) ayrı satır olarak SAP'a aktarılır.
+            </div>
+        </div>
+
+        <!-- Exception Box for Commercial Vehicles -->
+        <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 2px solid var(--flo-success); border-radius: 16px; padding: 25px 30px; margin-top: 30px;">
+            <div style="font-weight: 600; color: var(--flo-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 16px;">
+                🚛 Ticari Araç İstisnası (14U - Fabrika)
+            </div>
+            <div style="font-size: 14px; color: var(--flo-gray); line-height: 1.6;">
+                Fabrika (14U) masraf merkezinde <strong>ticari araç</strong> giderleri için KKEG ayrımı yapılmaz.<br>
+                Tüm tutar <strong>%100 gider</strong> olarak tek hesap koduna kaydedilir: <span style="font-family: monospace; background: #f8f9fa; padding: 4px 10px; border-radius: 6px; font-weight: 600;">7304001207</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.3
+            </p>
+        </div>
+    </div>
+</body>
+</html>

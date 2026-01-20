@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLO Motion - Cari Açılış Akışı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --flo-primary: #1a1a2e;
+            --flo-secondary: #16213e;
+            --flo-accent: #e94560;
+            --flo-gold: #c9a227;
+            --flo-success: #198754;
+            --flo-warning: #ffc107;
+            --flo-info: #0dcaf0;
+            --flo-gray: #6c757d;
+            --flo-light: #f8f9fa;
+            --flo-cari: #0d6efd;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-area {
+            margin-bottom: 20px;
+        }
+        .logo-area img {
+            height: 50px;
+            width: auto;
+        }
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: var(--flo-gray);
+        }
+
+        /* Cari Badge */
+        .cari-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--flo-cari) 0%, #3d8bfd 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        /* Phase Sections */
+        .phase {
+            background: linear-gradient(135deg, #fafbfc 0%, #f5f6f8 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .phase.special {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.05) 0%, rgba(61, 139, 253, 0.05) 100%);
+            border: 2px solid var(--flo-cari);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .phase-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--flo-cari) 0%, #3d8bfd 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .phase-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+
+        .phase-subtitle {
+            font-size: 14px;
+            color: var(--flo-gray);
+            margin-top: 4px;
+        }
+
+        /* Flow Diagram */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .node {
+            padding: 18px 28px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .node.start {
+            background: linear-gradient(135deg, var(--flo-primary) 0%, var(--flo-secondary) 100%);
+            color: white;
+            border-radius: 50px;
+        }
+
+        .node.process {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .node.cari {
+            background: linear-gradient(135deg, var(--flo-cari) 0%, #3d8bfd 100%);
+            color: white;
+        }
+
+        .node.decision {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            color: white;
+        }
+
+        .node.approval {
+            background: linear-gradient(135deg, var(--flo-success) 0%, #20c997 100%);
+            color: white;
+        }
+
+        .node.reject {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+            color: white;
+        }
+
+        .node.waiting {
+            background: linear-gradient(135deg, var(--flo-info) 0%, #6cb2eb 100%);
+            color: white;
+        }
+
+        .node.end {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border-radius: 50px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: var(--flo-gray);
+        }
+
+        /* Form Fields Section */
+        .form-section {
+            background: linear-gradient(135deg, var(--flo-cari) 0%, #3d8bfd 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .form-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .form-field {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-field.required {
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .form-field-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .form-field-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-field-badge {
+            font-size: 10px;
+            background: rgba(255,255,255,0.3);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        /* Decision Box */
+        .decision-box {
+            background: #fff;
+            border: 2px solid var(--flo-gold);
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .decision-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .decision-header .icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .decision-header h3 {
+            font-size: 18px;
+            color: var(--flo-primary);
+        }
+
+        .decision-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .decision-option {
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid;
+        }
+
+        .decision-option.approve {
+            border-color: var(--flo-success);
+            background: rgba(25, 135, 84, 0.05);
+        }
+
+        .decision-option.reject {
+            border-color: var(--flo-accent);
+            background: rgba(233, 69, 96, 0.05);
+        }
+
+        .decision-option h4 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .decision-option.approve h4 {
+            color: var(--flo-success);
+        }
+
+        .decision-option.reject h4 {
+            color: var(--flo-accent);
+        }
+
+        .decision-option p {
+            font-size: 13px;
+            color: var(--flo-gray);
+            line-height: 1.5;
+        }
+
+        /* Role Cards */
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .role-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 4px solid;
+        }
+
+        .role-card.employee {
+            border-left-color: #667eea;
+        }
+
+        .role-card.credit {
+            border-left-color: var(--flo-cari);
+        }
+
+        .role-card.sap {
+            border-left-color: var(--flo-success);
+        }
+
+        .role-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .role-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .role-card li {
+            font-size: 13px;
+            color: var(--flo-gray);
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .role-card li:last-child {
+            border-bottom: none;
+        }
+
+        .role-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--flo-cari);
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.05) 100%);
+            border: 2px solid var(--flo-warning);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .warning-box .icon {
+            font-size: 24px;
+        }
+
+        .warning-box .content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 5px;
+        }
+
+        .warning-box .content p {
+            font-size: 13px;
+            color: var(--flo-gray);
+            line-height: 1.5;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.1) 0%, rgba(13, 110, 253, 0.05) 100%);
+            border: 2px solid var(--flo-cari);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--flo-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box p {
+            font-size: 13px;
+            color: var(--flo-gray);
+            line-height: 1.6;
+        }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 16px;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .timeline-item {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--flo-cari), var(--flo-success));
+        }
+
+        .timeline-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin: 0 auto 10px;
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .timeline-icon.request {
+            background: linear-gradient(135deg, var(--flo-accent) 0%, #ff6b6b 100%);
+        }
+
+        .timeline-icon.form {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .timeline-icon.review {
+            background: linear-gradient(135deg, var(--flo-cari) 0%, #3d8bfd 100%);
+        }
+
+        .timeline-icon.sap {
+            background: linear-gradient(135deg, var(--flo-gold) 0%, #daa520 100%);
+        }
+
+        .timeline-icon.complete {
+            background: linear-gradient(135deg, var(--flo-success) 0%, #20c997 100%);
+        }
+
+        .timeline-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--flo-primary);
+        }
+
+        .timeline-desc {
+            font-size: 11px;
+            color: var(--flo-gray);
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--flo-gray);
+        }
+
+        .footer-brand {
+            font-weight: 600;
+            color: var(--flo-accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-area"><img src="flo-logo.svg" alt="FLO"></div>
+            <h1>Cari Açılış Akışı</h1>
+            <p class="subtitle">Fatura girişlerinde tedarikçi cari hesabı açılış süreci</p>
+            <div class="cari-badge">🏦 Cari Hesap Yönetimi</div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-icon request">❌</div>
+                <div class="timeline-label">Cari Yok</div>
+                <div class="timeline-desc">Fatura girişinde</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon form">📝</div>
+                <div class="timeline-label">Talep Oluştur</div>
+                <div class="timeline-desc">Bilgileri gir</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon review">👥</div>
+                <div class="timeline-label">Kredi Kontrol</div>
+                <div class="timeline-desc">İnceleme</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon sap">🏢</div>
+                <div class="timeline-label">SAP Açılış</div>
+                <div class="timeline-desc">Cari oluştur</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-icon complete">✅</div>
+                <div class="timeline-label">Tamamlandı</div>
+                <div class="timeline-desc">Masraf devam</div>
+            </div>
+        </div>
+
+        <!-- Phase 1: Cari Yok Tespiti -->
+        <div class="phase special">
+            <div class="phase-header">
+                <div class="phase-number">1</div>
+                <div>
+                    <div class="phase-title">Fatura Girişinde Cari Kontrolü</div>
+                    <div class="phase-subtitle">Tedarikçinin SAP'de cari hesabı olup olmadığının kontrolü</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node start">📄 Fatura Girişi</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">🔍 Cari Kontrol</div>
+                    <span class="arrow">→</span>
+                    <div class="node reject">❌ Cari Bulunamadı</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">⚠️</div>
+                <div class="content">
+                    <h4>Cari Olmadan Fatura Kabul Edilmez</h4>
+                    <p>İlgili faturanın carisi yok ise sistem uyarı vererek cari olmayan fatura kabul edilmez. Masraf girişi yapabilmek için önce cari açılış talebi oluşturulmalıdır.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Cari Açılış Talebi -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">2</div>
+                <div>
+                    <div class="phase-title">Cari Açılış Talebi Oluşturma</div>
+                    <div class="phase-subtitle">Masraf giren kişi tarafından cari açılış talebinin oluşturulması</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>📋 Cari Açılış Formu - Gerekli Bilgiler</h3>
+                <div class="form-grid">
+                    <div class="form-field required">
+                        <div class="form-field-icon">🏢</div>
+                        <div class="form-field-name">Firma Adı</div>
+                        <div class="form-field-badge">Zorunlu</div>
+                    </div>
+                    <div class="form-field required">
+                        <div class="form-field-icon">🔢</div>
+                        <div class="form-field-name">VKN / TCKN</div>
+                        <div class="form-field-badge">Zorunlu</div>
+                    </div>
+                    <div class="form-field required">
+                        <div class="form-field-icon">📍</div>
+                        <div class="form-field-name">Adres</div>
+                        <div class="form-field-badge">Zorunlu</div>
+                    </div>
+                    <div class="form-field">
+                        <div class="form-field-icon">📞</div>
+                        <div class="form-field-name">İletişim Bilgileri</div>
+                        <div class="form-field-badge">Opsiyonel</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>ℹ️ Talep Oluşturma Seçenekleri</h4>
+                <p>Masraf carisi, masraf giren kişi tarafından açtırılabilir. Masraf girişi ekranında talep oluşturarak da ilerlenebilir. Açıldıktan sonra masraf girişi yapılabilir.</p>
+            </div>
+        </div>
+
+        <!-- Phase 3: Kredi Kontrol İncelemesi -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">3</div>
+                <div>
+                    <div class="phase-title">Kredi Kontrol Ekibi İncelemesi</div>
+                    <div class="phase-subtitle">Tedarikçi bilgilerinin doğrulanması ve onay süreci</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node cari">📝 Talep Alındı</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">👥 Kredi Kontrol Ekibi</div>
+                    <span class="arrow">→</span>
+                    <div class="node decision">⚖️ İnceleme</div>
+                </div>
+            </div>
+
+            <div class="decision-box">
+                <div class="decision-header">
+                    <div class="icon">⚖️</div>
+                    <h3>Kredi Kontrol Karar Noktası</h3>
+                </div>
+                <div class="decision-options">
+                    <div class="decision-option approve">
+                        <h4>✅ ONAY</h4>
+                        <p>Tedarikçi bilgileri doğrulandı. SAP'de cari hesap açılır ve masraf otomatik olarak devam eder.</p>
+                    </div>
+                    <div class="decision-option reject">
+                        <h4>❌ RED</h4>
+                        <p>Tedarikçi uygun görülmedi veya bilgiler eksik. Talep reddedilir ve masraf kaydı iptal edilir.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="role-grid">
+                <div class="role-card employee">
+                    <h4>👤 Çalışan</h4>
+                    <ul>
+                        <li>Cari açılış talebi oluşturma</li>
+                        <li>Tedarikçi bilgilerini girme</li>
+                        <li>Eksik bilgi varsa tamamlama</li>
+                    </ul>
+                </div>
+                <div class="role-card credit">
+                    <h4>👥 Kredi Kontrol</h4>
+                    <ul>
+                        <li>VKN/TCKN doğrulama</li>
+                        <li>Tedarikçi risk değerlendirmesi</li>
+                        <li>Onay veya red kararı</li>
+                    </ul>
+                </div>
+                <div class="role-card sap">
+                    <h4>🏢 SAP İşlemleri</h4>
+                    <ul>
+                        <li>Cari hesap oluşturma</li>
+                        <li>Cari kodu atama</li>
+                        <li>Masraf kaydını aktive etme</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 4: SAP Cari Açılış -->
+        <div class="phase">
+            <div class="phase-header">
+                <div class="phase-number">4</div>
+                <div>
+                    <div class="phase-title">SAP'de Cari Hesap Açılması</div>
+                    <div class="phase-subtitle">Onaylanan talep için SAP'de cari hesabın oluşturulması</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node approval">✅ Kredi Kontrol Onayı</div>
+                    <span class="arrow">→</span>
+                    <div class="node cari">🏢 SAP Cari Açılış</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">🔢 Cari Kodu Atandı</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 5: Masraf Devam -->
+        <div class="phase special">
+            <div class="phase-header">
+                <div class="phase-number">5</div>
+                <div>
+                    <div class="phase-title">Masraf Kaydının Devam Etmesi</div>
+                    <div class="phase-subtitle">Cari açıldıktan sonra bekleyen masraf otomatik olarak devam eder</div>
+                </div>
+            </div>
+
+            <div class="flow-container">
+                <div class="flow-row">
+                    <div class="node cari">🏦 Cari Açıldı</div>
+                    <span class="arrow">→</span>
+                    <div class="node process">📋 Masraf Otomatik Devam</div>
+                    <span class="arrow">→</span>
+                    <div class="node waiting">⏳ SAP Kuyruğu</div>
+                    <span class="arrow">→</span>
+                    <div class="node end">🎉 TAMAMLANDI</div>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <div class="icon">✅</div>
+                <div class="content">
+                    <h4>Otomatik Devam Mekanizması</h4>
+                    <p>Cari hesap SAP'de açıldığında, beklemede olan masraf kaydı otomatik olarak SAP aktarım kuyruğuna eklenir. Çalışanın tekrar işlem yapmasına gerek yoktur.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-text">
+                <span class="footer-brand">FLO Motion</span> | Masraf Yönetim Sistemi | İş Analizi Dokümanı v7.1
+            </p>
+        </div>
+    </div>
+</body>
+</html>
