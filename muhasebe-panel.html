@@ -883,14 +883,12 @@
 
         function applyFilters() {
             const searchValue = document.getElementById('searchInput').value.toLowerCase();
-            const companyValue = document.getElementById('companySelect').value;
             const rows = document.querySelectorAll('#expenseTableBody tr');
 
             let visibleCount = 0;
 
             rows.forEach(row => {
                 const rowStatus = row.getAttribute('data-status');
-                const rowCompany = row.getAttribute('data-company');
                 const rowText = row.textContent.toLowerCase();
 
                 // Tab filtresi
@@ -910,11 +908,8 @@
                 // Arama filtresi
                 const searchMatch = searchValue === '' || rowText.includes(searchValue);
 
-                // Şirket filtresi
-                const companyMatch = companyValue === '' || rowCompany === companyValue;
-
                 // Tüm filtreler eşleşirse göster
-                if (tabMatch && searchMatch && companyMatch) {
+                if (tabMatch && searchMatch) {
                     row.style.display = '';
                     visibleCount++;
                 } else {
