@@ -211,12 +211,6 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                 <div style="display: flex; gap: 12px; align-items: center;">
                     <input type="text" class="form-input" id="searchInput" placeholder="🔍 Ara..." style="width: 250px;" oninput="applyFilters()">
-                    <select class="form-select" id="companySelect" onchange="applyFilters()">
-                        <option value="">Tüm Şirketler</option>
-                        <option value="FLO Mağazacılık">FLO Mağazacılık</option>
-                        <option value="Turuncu">Turuncu</option>
-                        <option value="FLO Teknoloji">FLO Teknoloji</option>
-                    </select>
                     <!-- Mağaza Filtresi (Uzman için SAP hiyerarşisine göre) -->
                     <select class="form-select" id="magazaSelect" onchange="applyFilters()" style="width: 180px;">
                         <option value="">Tüm Mağazalar</option>
@@ -227,9 +221,6 @@
                     </select>
                 </div>
                 <div style="display: flex; gap: 12px;">
-                    <button class="btn-outline" style="padding: 10px 16px;" onclick="bulkApprove()">
-                        ✓ Toplu Onayla
-                    </button>
                     <button class="btn-sap" onclick="createSAPList()">
                         📤 EBA2SAP Listesi Oluştur
                     </button>
